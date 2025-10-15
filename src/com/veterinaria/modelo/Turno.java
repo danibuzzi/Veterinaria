@@ -25,4 +25,8 @@ public class Turno {
     public int getIdMascota() { return idMascota; }
     public String getFechaTurno() { return fechaTurno; }
     public String getHora() { return hora; }
+
+
+
+
 }
