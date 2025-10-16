@@ -11,8 +11,8 @@ public class MascotaDAO {
 
     public List<Mascota> listarActivasPorPropietario(int idPropietario) {
         List<Mascota> mascotas = new ArrayList<>();
-        String sql = "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, sexo, seniasparticulares, activa " +
-                "FROM Mascota WHERE idPropietario = ? AND activa = TRUE ORDER BY nombre";
+        String sql = "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, sexo, seniasparticulares " +
+                "FROM Mascota WHERE idPropietario = ? ORDER BY nombre";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -29,9 +29,8 @@ public class MascotaDAO {
                     m.setFechaNacimiento(sqlDate != null ? sqlDate.toLocalDate() : null);
 
                     m.setEspecie(rs.getString("especie"));
-                    m.set.setSexo(rs.getString("sexo"));
+                    m.setSexo(rs.getString("sexo"));
                     m.setSeniasParticulares(rs.getString("seniasparticulares"));
-                    m.setActiva(rs.getBoolean("activa"));
                     mascotas.add(m);
                 }
             }

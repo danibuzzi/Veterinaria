@@ -1,12 +1,14 @@
 package com.veterinaria.controlador;
 
-import com.veterinaria.modelo.GestorGestionTurnos;
+import com.veterinaria.modelo.*;
 import com.veterinaria.vista.VentanaGestionTurnos;
-import com.veterinaria.modelo.ModeloTablaNoEditable; // 🛑 Usamos la utilidad personalizada
+import com.veterinaria.vista.VentanaModificacionTurnos;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -18,6 +20,11 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
     private final VentanaGestionTurnos vista;
     private final GestorGestionTurnos gestor;
 
+    private final TurnoDAO3 turnoDAO;
+    private final PropietarioDAO propietarioDAO;
+    private final MascotaDAO mascotaDAO;
+    private final TipoConsultaDAO tipoConsultaDAO;
+
     // Las columnas deben coincidir con lo que trae el Gestor/DAO.
     // El ID es la COLUMNA_ID_TURNO (Columna 0).
     private final String[] COLUMNAS = {
@@ -26,9 +33,13 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
     private static final int COLUMNA_ID_TURNO = 0;
 
     // 1. CONSTRUCTOR
-    public ControladorGestionTurnos(GestorGestionTurnos gestor, VentanaGestionTurnos vista) {
+    public ControladorGestionTurnos(GestorGestionTurnos gestor, VentanaGestionTurnos vista, TurnoDAO3 turnoDAO, PropietarioDAO propietarioDAO, MascotaDAO mascotaDAO, TipoConsultaDAO tipoConsultaDAO) {
         this.gestor = gestor; // 👈 Ahora inyecta el gestor
         this.vista = vista;
+        this.turnoDAO = turnoDAO;
+        this.propietarioDAO = propietarioDAO;
+        this.mascotaDAO = mascotaDAO;
+        this.tipoConsultaDAO = tipoConsultaDAO;
 
         // Conecta los botones de la Vista al controlador
         this.vista.setControlador(this);
@@ -37,6 +48,132 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
 
         // Inicializar los botones como deshabilitados
         actualizarEstadoBotones(false);
+    }
+
+    // Dentro de la clase ControladorGestionTurnos.java
+
+    // CORRECCIÓN A: Método fábrica para el Gestor de Modificación
+    public GestorModificacionTurnos crearGestorModificacion() {
+        // Pasa los 4 DAOs al constructor del Gestor (resuelve el error de inyección)
+        return new GestorModificacionTurnos(
+                this.turnoDAO,
+                this.propietarioDAO,
+                this.mascotaDAO,
+                this.tipoConsultaDAO
+        );
+    }
+
+// En ControladorGestionTurnos.java (método abrirVentanaModificacion)
+// En ControladorGestionTurnos.java (MÉTODO COMPLETO CORREGIDO)
+
+    private void abrirVentanaModificacion() throws SQLException {
+        JTable tabla = vista.getTablaTurnos();
+        int filaSeleccionada = tabla.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(vista, "Seleccione un turno para modificar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 1. OBTENER DATOS VISIBLES (6 columnas)
+        // El modelo es el que contiene los datos, incluyendo el ID en la columna 0.
+        int numColumnasVisibles = tabla.getColumnModel().getColumnCount();
+        Object[] datosVisibles = new Object[numColumnasVisibles];
+
+        // Obtener los datos visibles de la fila
+        for (int i = 0; i < numColumnasVisibles; i++) {
+            // Usamos el modelo de la tabla para obtener el valor
+            datosVisibles[i] = tabla.getModel().getValueAt(filaSeleccionada, i);
+        }
+
+        // 2. EXTRAER EL ID DEL TURNO PARA CONSULTA
+        // Asumimos que la columna 0 (el ID) es un Integer, como lo declaraste.
+
+        int idPropietario = -1;
+        int idMascota = -1;
+        int idTipoConsulta = -1;
+        int idTurno = -1; // Lo inicial
+
+        try {
+            idTurno = (Integer) datosVisibles[COLUMNA_ID_TURNO];
+        }catch (Exception e) {
+            // Muestra un mensaje de error si el ID del Turno es inválido o no se seleccionó
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un turno válido para modificar.", "Error de Selección", JOptionPane.ERROR_MESSAGE);
+            return; // Detiene la apertura de la ventana si no hay ID.
+        }
+
+        // -------------------------------------------------------------------------
+        // 🛑 3. OBTENER LOS 3 IDs OCULTOS (Construyendo el Array de 9 posiciones)
+        // -------------------------------------------------------------------------
+        if (idTurno>0) {
+            try{
+                //
+                idPropietario = turnoDAO.obtenerIDPropietarioPorTurnoID(String.valueOf(idTurno));
+
+                //idPropietario = gestor.obtenerIDPropietarioPorTurnoID(String.valueOf(idTurno));
+                idMascota = gestor.obtenerIDMascotaPorTurnoID(String.valueOf(idTurno));
+                idTipoConsulta = gestor.obtenerIDTipoConsultaPorTurnoID(String.valueOf(idTurno));
+            } catch (SQLException e) {
+                // Captura errores de conexión o SQL, pero el valor de los IDs queda en -1.
+                System.err.println("Error al obtener IDs ocultos: " + e.getMessage());
+            }}
+        else{return;}
+
+        // 4. CREAR EL ARRAY FINAL DE 9 POSICIONES
+        Object[] datosTurnoCompleto = new Object[9]; // 🛑 ¡TAMAÑO 9!
+
+        // Llenar las 6 columnas visibles (0 a 5)
+        for (int i = 0; i < numColumnasVisibles; i++) { // numColumnasVisibles es 6
+            datosTurnoCompleto[i] = datosVisibles[i];
+        }
+
+        // Llenar las 3 columnas ocultas (los IDs)
+        datosTurnoCompleto[6] = idPropietario;    // INDICE_ID_PROPIETARIO_TURNO
+        datosTurnoCompleto[7] = idMascota;        // INDICE_ID_MASCOTA_TURNO
+        datosTurnoCompleto[8] = idTipoConsulta;   // INDICE_ID_TIPO_CONSULTA
+
+        // -------------------------------------------------------------------------
+
+        // 5. CREACIÓN DE VISTA, GESTOR Y CONTROLADOR (Ensamblaje MVC)
+        // Usamos el método fábrica para crear el Gestor de Modificación.
+        GestorModificacionTurnos gestorMod = crearGestorModificacion();
+
+        // La Vista: Le pasamos el array de 9 columnas
+        VentanaModificacionTurnos vistaMod = new VentanaModificacionTurnos(
+                datosTurnoCompleto[5].toString(), // Asumiendo que la fecha visible está en el índice 5
+                datosTurnoCompleto,
+                this
+        );
+
+        // El Controlador de Modificación (Paso del array de 9 posiciones)
+        ControladorModificacionTurnos controladorModificacion = new ControladorModificacionTurnos(
+                gestorMod,
+                vistaMod,
+                this,
+                datosTurnoCompleto // ⬅️ CUARTO ARGUMENTO: Array de 9 elementos (¡No habrá más IndexOutOfBounds!)
+
+        );
+
+        // 6. VISUALIZACIÓN
+        JDesktopPane escritorio = vista.getEscritorio();
+
+        if (escritorio != null) {
+            escritorio.add(vistaMod);
+            vistaMod.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(vista, "Error: No se puede acceder al contenedor principal.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void recargarVistaPrincipal() {
+        // 1. Llama al método que carga o busca los turnos en la DB.
+
+        buscarTurnos();
+
+        // 2. Opcionalmente,
+
+        // List<Turno> turnos = gestor.obtenerTodosLosTurnos();
+        // vista.actualizarTabla(turnos);
     }
 
     // 2. MÉTODO PRINCIPAL DE EVENTOS
@@ -52,7 +189,11 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
                 eliminarTurno();
                 break;
             case "MODIFICAR":
-                iniciarModificacion();
+                try {
+                    iniciarModificacion();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 break;
             case "SALIR":
                 vista.dispose();
@@ -86,7 +227,7 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
             // Deshabilita botones al no haber resultados y la tabla está vacía
             actualizarEstadoBotones(false);
 
-            return; // ⬅️ Correcto: Salir aquí para detener el flujo.
+            return; //
         }
 
 
@@ -121,25 +262,40 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         }
     }
 
-    private void iniciarModificacion() {
+    private void iniciarModificacion() throws SQLException {
         JTable tabla = vista.getTablaTurnos();
         int filaSeleccionada = tabla.getSelectedRow();
 
         if (filaSeleccionada == -1) {
+            // Asumo que tienes un método mostrarMensaje en tu vista
             vista.mostrarMensaje("Debe seleccionar una fila para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 1. OBTENER EL ID del turno seleccionado (Columna 0, oculta)
-        Object idObjeto = tabla.getValueAt(filaSeleccionada, COLUMNA_ID_TURNO);
-        int idTurnoAActualizar = (Integer) idObjeto;
+        // --- 1. OBTENER TODOS LOS DATOS DE LA FILA SELECCIONADA ---
 
-        // 2. Llama al método de la Vista para que abra la VentanaModificacionTurno
-        vista.abrirVentanaModificacion(idTurnoAActualizar);
+        // Obtener la cantidad de columnas visibles en la tabla
+        int numColumnas = tabla.getColumnModel().getColumnCount();
+        Object[] datosTurno = new Object[numColumnas];
 
-        // 2. Llama al método de la Vista para que abra la VentanaModificacionTurno
-        vista.abrirVentanaModificacion(idTurnoAActualizar);
+        // Iterar sobre las columnas visibles para obtener todos los valores
+        // Nota: Si el ID está en una columna oculta, debes asegurarte de obtenerlo desde el modelo.
+        // Aquí usamos getValueAt() que trabaja sobre el modelo.
+        for (int i = 0; i < numColumnas; i++) {
+            datosTurno[i] = tabla.getValueAt(filaSeleccionada, i);
+        }
+
+        // 2. OBTENER LA FECHA SELECCIONADA (necesaria para el constructor de la Vista)
+        // Asumo que la columna 1 (índice 1) contiene la fecha como String ("2025-10-10")
+        String fechaSeleccionada = datosTurno[1].toString();
+
+        // 3. LLAMADA AL MÉTODO DE LA VISTA
+        // Debemos modificar el método en la Vista para que reciba la fecha y el array de datos.
+        //abrirVentanaModificacion(fechaSeleccionada, datosTurno);
+        abrirVentanaModificacion();
     }
+
+
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -155,5 +311,28 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
     private void actualizarEstadoBotones(boolean habilitar) {
         vista.getBtnModificar().setEnabled(habilitar);
         vista.getBtnEliminar().setEnabled(habilitar);
+    }
+
+
+    public void recargarTablaTurnos() {
+        // 1. OBTENER LA FECHA NECESARIA:
+
+
+        // 🛑 Obtener la fecha activa de la vista como String.
+
+        String fechaStringDB = vista.getFechaSeleccionadaComoString(); // <-- DEBES CREAR ESTE MÉTODO EN LA VISTA
+
+        if (fechaStringDB == null) {
+            // Manejar el caso si no hay fecha seleccionada (por ejemplo, usar la fecha de hoy o mostrar todo)
+            return;
+        }
+
+        // 2. Llama al gestor principal para obtener los datos actualizados.
+
+
+        Object[][] datosParaGrilla = gestor.obtenerDatosParaGrilla(fechaStringDB);
+
+        // 3. Llama a la vista para actualizar la tabla.
+        vista.actualizarTabla(datosParaGrilla);
     }
 }

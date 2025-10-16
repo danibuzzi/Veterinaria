@@ -1,5 +1,6 @@
 package com.veterinaria.modelo;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Propietario {
     private int idPropietario;
@@ -46,6 +47,21 @@ public class Propietario {
         return fechaNacimiento;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Propietario prop = (Propietario) o;
+        // CRÍTICO: SOLO SE COMPARA EL ID
+        return idPropietario == prop.idPropietario;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPropietario);
+    }
+
     public String getDireccion() {
         return direccion;
     }
@@ -74,4 +90,6 @@ public class Propietario {
     public String toString() {
         return apellido + ", " + nombre;
     }
+
+
 }

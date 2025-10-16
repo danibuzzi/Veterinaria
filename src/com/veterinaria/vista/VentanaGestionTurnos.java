@@ -1,19 +1,22 @@
 package com.veterinaria.vista;
 
-//import com.veterinaria.controlador.ControladorGestionTurnos;
-import com.veterinaria.controlador.ControladorGestionTurnos;
-import com.veterinaria.modelo.ModeloTablaNoEditable;
 
+import com.veterinaria.controlador.ControladorGestionTurnos;
+import com.veterinaria.modelo.Turno;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-// 🛑 AHORA UTILIZA LOS ESTILOS DEFINIDOS EN LA GUÍA DE REGISTRO DE TURNOS
-public class VentanaGestionTurnos extends JInternalFrame {
+//AHORA UTILIZA LOS ESTILOS DEFINIDOS EN LA GUÍA DE REGISTRO DE TURNOS
+public class    VentanaGestionTurnos extends JInternalFrame {
     private com.toedter.calendar.JDateChooser dateChooserFecha;
     // --- CONSTANTES DE ESTILO (Tomadas de VentanaRegistroTurno3) ---
     private static final Color COLOR_PRIMARIO = new Color(0, 123, 255); // Azul moderno (Modificar)
@@ -23,7 +26,7 @@ public class VentanaGestionTurnos extends JInternalFrame {
     private static final Color COLOR_BORDE = new Color(173, 216, 230); // Azul claro para bordes
     private static final Font FONT_FIELD = new Font("Segoe UI", Font.PLAIN, 15);
     private static final Font FONT_TITLE = new Font("Segoe UI", Font.BOLD, 14);
-
+    private final JDesktopPane escritorioContenedor; // <--- Nuevo campo
     // Componentes de la interfaz
     private JTable tablaTurnos;
     private DefaultTableModel modeloTabla;
@@ -31,11 +34,11 @@ public class VentanaGestionTurnos extends JInternalFrame {
     private JButton btnEliminar;
     private JButton btnBuscar;
     private JButton btnSalir;
-    private JTextField txtFechaSeleccionada;
 
     // 1. CONSTRUCTOR
-    public VentanaGestionTurnos() {
+    public VentanaGestionTurnos(JDesktopPane escritorioContenedor) {
         super("Agenda: Consulta y Gestión de Turnos Asignados", true, true, true, true);
+        this.escritorioContenedor = escritorioContenedor;
 
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(900, 700);
@@ -61,6 +64,11 @@ public class VentanaGestionTurnos extends JInternalFrame {
 
         // 4. Inicializar botones deshabilitados y agregar oyente de selección
         //inicializarAcciones();
+    }
+
+    // CONSTRUCTOR ADICIONAL (para compatibilidad sin argumentos)
+    public VentanaGestionTurnos() {
+        this(null); // Llama al constructor principal pasándole 'null'
     }
 
     // -------------------------------------------------------------------------
@@ -249,7 +257,13 @@ public class VentanaGestionTurnos extends JInternalFrame {
 
         // Modificar
         for(java.awt.event.ActionListener al : btnModificar.getActionListeners()) btnModificar.removeActionListener(al);
-        this.btnModificar.addActionListener(controlador);
+        this.btnModificar.removeActionListener(controlador);
+
+
+        // Ahora añades el nuevo (y único) listener
+        btnModificar.addActionListener(controlador);
+        btnModificar.setActionCommand("MODIFICAR");
+
 
         // Eliminar
         for(java.awt.event.ActionListener al : btnEliminar.getActionListeners()) btnEliminar.removeActionListener(al);
@@ -393,22 +407,60 @@ public class VentanaGestionTurnos extends JInternalFrame {
         return JOptionPane.showConfirmDialog(this, mensaje, "Confirmar Acción", JOptionPane.YES_NO_OPTION);
     }
 
-    /**
-     * MÉTODO CLAVE PARA LA MODIFICACIÓN
-     * Abre la ventana de edición, pasándole el ID del turno seleccionado.
-     */
-    public void abrirVentanaModificacion(int idTurno) {
-        // ------------------------------------------------------------------
-        // IMPLEMENTACIÓN PENDIENTE: Aquí instanciar y mostrar tu
-        //    clase VentanaModificacionTurno (la segunda pantalla),
-        //    pasándole el 'idTurno' en su constructor.
-        // ------------------------------------------------------------------
-
-        // NOTA: Esto es un PLACEHOLDER.
-        JOptionPane.showMessageDialog(this,
-                "Función Modificar activada para el ID: " + idTurno +
-                        "\nImplementar: new VentanaModificacionTurno(idTurno)",
-                "Abrir Edición",
-                JOptionPane.INFORMATION_MESSAGE);
+    public JDesktopPane getEscritorio() {
+        return this.escritorioContenedor;
     }
+
+    /*public void actualizarTabla(Object[] turnos) {
+        // Asumo que 'tablaTurnos' es el nombre de tu JTable.
+        DefaultTableModel modelo = (DefaultTableModel) tablaTurnos.getModel();
+
+        // 1. Limpiar filas existentes
+        modelo.setRowCount(0);
+
+        // 2. Llenar con los nuevos datos
+      /*  if (turnos != null) {
+            for (Object[]tturno : turnos) {
+                // Ejemplo de cómo llenar la fila (ADAPTAR A TUS COLUMNAS):
+                modelo.addRow(new Object[]{
+                        String.valueOf(turno.getIdTurno()),
+                        turno.getFechaTurno(),
+                        turno.getHora(),
+                        // ... Añadir más campos si tu tabla los tiene (Propietario, Mascota, etc.)
+                });
+            }*/
+
+
+
+    public void actualizarTabla(Object[][] datosGrilla) {
+        // Ya no necesitas el bucle 'for (Turno turno : turnos)'
+        // Este método asume que 'tablaTurnos' y 'modelo' ya están definidos.
+
+        DefaultTableModel modelo = (DefaultTableModel) tablaTurnos.getModel();
+        modelo.setRowCount(0); // Limpiar filas
+
+        if (datosGrilla != null) {
+            // Usar un bucle for-each simple para añadir las filas de la matriz
+            for (Object[] fila : datosGrilla) {
+                modelo.addRow(fila); // Añade directamente la fila de Object[]
+            }
+        }
+    }
+
+    public String getFechaSeleccionadaComoString() {
+        Date date = dateChooserFecha.getDate(); // Asume que 'dateChooserFecha' es el nombre de tu JDateChooser
+
+        if (date == null) {
+            return null;
+        }
+
+        // 1. Convertir Date a LocalDate
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // 2. Formatear como String (el método toString() de LocalDate usa el formato YYYY-MM-DD)
+        return localDate.toString();
+    }
+
+
+
 }

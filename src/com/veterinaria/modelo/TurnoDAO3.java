@@ -6,10 +6,10 @@ package com.veterinaria.modelo;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Date;
 
 // Se asume que tienes una clase Conexion con un método conectar() estático.
 // 🛑 IMPORTANTE: Asegúrate de que tienes un import y acceso a tu clase de Conexión.
@@ -38,7 +38,7 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
     // ----------------------------------------------------
 
     public boolean guardar(Turno turno) throws SQLException {
-        try (Connection con =Conexion.conectar();
+        try (Connection con = Conexion.conectar();
              PreparedStatement ps = con.prepareStatement(INSERT_SQL)) {
 
             ps.setInt(1, turno.getIdTipoConsulta());
@@ -51,7 +51,29 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
         }
     }
 
-    /** Obtiene todas las horas de inicio ya reservadas para una fecha dada. */
+    /**
+     * Obtiene todas las horas de inicio ya reservadas para una fecha dada.
+     */
+        /*public Set<String> obtenerHorasInicioOcupadas(Date fecha) throws SQLException {
+            Set<String> horasOcupadas = new HashSet<>();
+            SimpleDateFormat formatoFechaSQL = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaStr = formatoFechaSQL.format(fecha);
+
+            // La consulta obtiene solo la hora y minuto (HH:MM)
+            String sql = "SELECT SUBSTR(hora, 1, 5) AS hora_hhmm FROM turno WHERE fechaturno = ?";
+
+            try (Connection conexion = Conexion.conectar();
+                 PreparedStatement ps = conexion.prepareStatement(sql)) {
+
+                ps.setString(1, fechaStr);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        horasOcupadas.add(rs.getString("hora_hhmm"));
+                    }
+                }
+            }
+        return horasOcupadas;
+    }*/
     public Set<String> obtenerHorasInicioOcupadas(Date fecha) throws SQLException {
         Set<String> horasOcupadas = new HashSet<>();
         SimpleDateFormat formatoFechaSQL = new SimpleDateFormat("yyyy-MM-dd");
@@ -66,7 +88,17 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
             ps.setString(1, fechaStr);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    horasOcupadas.add(rs.getString("hora_hhmm"));
+                    // 1. Obtener la hora. Puede venir como "8:30" o "10:00"
+                    String horaSinFormato = rs.getString("hora_hhmm");
+
+                    // 2. 🛑 CORRECCIÓN: Normalizar el formato a HH:mm
+                    // Solo las horas de un dígito (8, 9) tienen 4 caracteres (8:30).
+                    if (horaSinFormato != null && horaSinFormato.length() == 4) {
+                        horaSinFormato = "0" + horaSinFormato; // Convierte "8:30" a "08:30"
+                    }
+
+                    // 3. Añadir la hora normalizada
+                    horasOcupadas.add(horaSinFormato);
                 }
             }
         }
@@ -172,27 +204,17 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
     public List<Object[]> buscarDatosParaGrillaPorFecha(String fecha) throws SQLException {
         List<Object[]> datosGrilla = new ArrayList<>();
 
-        // El SQL debe obtener el ID del Turno (t.idTurno) + los nombres/descripciones para la grilla.
-        String sql =   "SELECT t.idTurno, t.hora, " +
+        String sql = " SELECT t.idTurno, t.hora, " +
                 "tc.descripcion AS TipoConsultaNombre, " +
                 "CONCAT(p.apellido, ', ', p.nombre) AS NombrePropietario, " +
-                "m.nombre AS NombreMascota ,t.fechaturno " +
+                "m.nombre AS NombreMascota, t.fechaturno, " +
+                "t.idPropietario, t.idMascota, t.idTipoConsulta " +
                 "FROM turno t " +
                 "JOIN tipoconsulta tc ON t.idTipoConsulta = tc.idTipoConsulta " +
                 "JOIN propietario p ON t.idPropietario = p.idPropietario " +
                 "JOIN mascota m ON t.idMascota = m.idMascota " +
                 "WHERE t.fechaturno = ?";
 
-
-                /*/"SELECT t.idTurno, t.hora, " +
-                "tc.descripcion AS TipoConsultaNombre, " + // Nombre del Tipo
-                "CONCAT(p.apellido,', ',p.nombre) AS NombrePropietario, " + // Nombre del Propietario
-                "m.nombre AS NombreMascota ,t.fechaturno" + // Nombre de la Mascota
-                "FROM turno t " +
-                "JOIN tipoconsulta tc ON t.idTipoConsulta = tc.idTipoConsulta " +
-                "JOIN propietario p ON t.idPropietario = p.idPropietario " +
-                "JOIN mascota m ON t.idMascota = m.idMascota " +
-                "WHERE t.fechaturno = ?";*/
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -203,7 +225,7 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
                 while (rs.next()) {
 
                     // 🛑 Creamos el array genérico para una fila de la grilla (6 columnas)
-                    Object[] fila = new Object[6];
+                    Object[] fila = new Object[9];
 
                     // 1. ID del Turno (CLAVE para la gestión, columna oculta o primera en la tabla)
                     fila[0] = rs.getInt("idTurno");
@@ -219,7 +241,12 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
 
                     // 6. Mascota (Nombre)
                     fila[4] = rs.getString("NombreMascota");
+                    fila[5] = rs.getString("fechaturno");
 
+                    // 🛑 7. AÑADIR LOS IDs NUMÉRICOS (Índices 6, 7, 8)
+                    fila[6] = rs.getInt("idPropietario"); // El ID de la tabla Propietario
+                    fila[7] = rs.getInt("idMascota");     // El ID de la tabla Mascota
+                    fila[8] = rs.getInt("idTipoConsulta"); // El ID de la tabla TipoConsulta
                     datosGrilla.add(fila);
                 }
             }
@@ -258,4 +285,66 @@ public class TurnoDAO3 { // 🛑 Nombre de la clase corregido
             return ps.executeUpdate() > 0;
         }
     }
+
+    public int obtenerIDPropietarioPorTurnoID(String idTurnoStr) throws SQLException {
+        String sql = "SELECT idPropietario FROM turno WHERE idTurno = ?";
+        // Convertir el String a int para pasarlo al PreparedStatement
+        int idTurno = Integer.parseInt(idTurnoStr);
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTurno);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idPropietario");
+                } else {
+                    // Manejar el caso si no se encuentra el turno
+                    return 0; // O lanzar una excepción específica si lo prefieres
+                }
+            }
+        }
+    }
+
+    public int obtenerIDMascotaPorTurnoID(String idTurnoStr) throws SQLException {
+        String sql = "SELECT idMascota FROM turno WHERE idTurno = ?";
+        int idTurno = Integer.parseInt(idTurnoStr);
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTurno);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idMascota");
+                } else {
+                    // Manejar el caso si no se encuentra el turno
+                    return 0; // O lanzar una excepción específica si lo prefieres
+                }
+            }
+        }
+    }
+
+    public int obtenerIDTipoConsultaPorTurnoID(String idTurnoStr) throws SQLException {
+        String sql = "SELECT idTipoConsulta FROM turno WHERE idTurno = ?";
+        int idTurno = Integer.parseInt(idTurnoStr);
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idTurno);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idTipoConsulta");
+                } else {
+                    // Manejar el caso si no se encuentra el turno
+                    return 0; // O lanzar una excepción específica si lo prefieres
+                }
+            }
+        }
+    }
+
+
+
 }

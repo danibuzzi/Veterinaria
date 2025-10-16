@@ -1,5 +1,6 @@
 package com.veterinaria.vista;
 
+import com.veterinaria.controlador.ControladorGestionTurnos;
 import com.veterinaria.controlador.ILanzadorModulo;
 import com.veterinaria.controlador.LanzadorGestionTurnos;
 import com.veterinaria.controlador.LanzadorRegistroTurno;
@@ -17,8 +18,8 @@ public class VentanaPrincipal2 extends JFrame implements ActionListener {
     private final JDesktopPane escritorio; // ✅ 1. Escritorio para JInternalFrame
 
     // ✅ 2. Variables para los Lanzadores (Factoría de Controladores)
-    private final ILanzadorModulo lanzadorRegistroTurno;
-    private final ILanzadorModulo lanzadorGestionTurnos;
+   private final ILanzadorModulo lanzadorRegistroTurno;
+   private final ILanzadorModulo lanzadorGestionTurnos;
 
     private JMenuItem itemRegistroTurno;
     private JMenuItem itemVerReportes;
@@ -84,7 +85,7 @@ public class VentanaPrincipal2 extends JFrame implements ActionListener {
 
         } else if (comando.equals("ABRIR_GESTION_TURNOS")) {
             // ✅ Delegación limpia al Lanzador
-            this.lanzadorGestionTurnos.lanzar();
+           this.lanzadorGestionTurnos.lanzar();
 
         } else if (comando.equals("ABRIR_CLIENTES")) {
             JOptionPane.showMessageDialog(this, "Abriendo Gestión de Clientes...", "Módulo", JOptionPane.INFORMATION_MESSAGE);

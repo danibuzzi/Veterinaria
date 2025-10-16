@@ -1,5 +1,5 @@
 package com.veterinaria.modelo;
-
+import java.util.Objects;
 import java.time.LocalDate;
 
 public class Mascota {
@@ -65,6 +65,20 @@ public class Mascota {
 
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mascota mascota = (Mascota) o;
+        // CRÍTICO: SOLO SE COMPARA EL ID
+        return idMascota == mascota.idMascota;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idMascota);
     }
 
     @Override

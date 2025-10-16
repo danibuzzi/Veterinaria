@@ -12,7 +12,7 @@ public class PropietarioDAO {
 
     public List<Propietario> listarTodosActivos() {
         List<Propietario> propietarios = new ArrayList<>();
-        String sql = "SELECT idPropietario, dni, nombre, apellido, fechanacimiento, direccion, pais, ciudad FROM Propietario WHERE activo = TRUE ORDER BY apellido, nombre";
+        String sql = "SELECT idPropietario, dni, nombre, apellido, fechanacimiento, direccion, pais, ciudad FROM Propietario ORDER BY apellido, nombre";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
