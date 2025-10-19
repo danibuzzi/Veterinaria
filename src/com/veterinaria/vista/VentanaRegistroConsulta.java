@@ -1,18 +1,22 @@
 package com.veterinaria.vista;
 
 //import com.veterinaria.controlador.ControladorRegistroConsulta;
+import com.veterinaria.controlador.ControladorRegistroConsulta;
 import com.veterinaria.modelo.Mascota;
 import com.veterinaria.modelo.Propietario;
-import com.veterinaria.modelo.TipoConsulta;
+import com.veterinaria.modelo.TipoPractica;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class VentanaRegistroConsultas extends JFrame {
+public class VentanaRegistroConsulta extends JInternalFrame {
 
     // --- CONSTANTES DE ESTILO ---
     private static final Color BLUE_PRIMARY = new Color(37, 99, 235);
@@ -27,7 +31,7 @@ public class VentanaRegistroConsultas extends JFrame {
     private JLabel lblFechaActual;
     private JComboBox<Propietario> comboPropietario;
     private JComboBox<Mascota> comboMascota;
-    private JComboBox<TipoConsulta> comboTipoConsulta;
+    private JComboBox<TipoPractica> comboTipoPractica;
     private JTextArea txtResultadoEstudios;
     private JTextArea txtDiagnostico;
     private JTextArea txtPronostico;
@@ -36,8 +40,8 @@ public class VentanaRegistroConsultas extends JFrame {
     private JButton btnCancelar;
 
     // --- 2. CONSTRUCTOR ---
-    public VentanaRegistroConsultas() {
-        //super("Registro de Nueva Consulta", true, true, true, true);
+    public VentanaRegistroConsulta(JDesktopPane escritorioContenedor) {
+        super("Registro de Nueva Consulta", true, true, true, true);
 
         // El tamaño ajustado para el diseño compacto y las alturas definidas
         setSize(750, 720);
@@ -70,7 +74,7 @@ public class VentanaRegistroConsultas extends JFrame {
         // Inicialización de componentes
         comboPropietario = new JComboBox<>(); styleComboBox(comboPropietario);
         comboMascota = new JComboBox<>(); styleComboBox(comboMascota); comboMascota.setEnabled(false);
-        comboTipoConsulta = new JComboBox<>(); styleComboBox(comboTipoConsulta);
+        comboTipoPractica = new JComboBox<>(); styleComboBox(comboTipoPractica);
         txtResultadoEstudios = crearAreaTexto();
         txtDiagnostico = crearAreaTexto();
         txtPronostico = crearAreaTexto();
@@ -120,8 +124,9 @@ public class VentanaRegistroConsultas extends JFrame {
         gbc.fill = GridBagConstraints.NONE; // No rellenamos completamente para centrar mejor
         gbc.insets = new Insets(10, 20, 10, 20); // Márgenes internos
 
-        lblFechaActual = new JLabel("---");
+        lblFechaActual = new JLabel();
         lblFechaActual.setFont(FONT_FIELD);
+        lblFechaActual.setText(obtenerFechaActualFormateada());
 
         // Columna 0: Etiqueta "Fecha"
         gbc.gridx = 0;
@@ -166,7 +171,7 @@ public class VentanaRegistroConsultas extends JFrame {
 
         agregarFila(panelDetallesTurno, gbc, fila++, "Propietario", comboPropietario, 1.0, GridBagConstraints.HORIZONTAL);
         agregarFila(panelDetallesTurno, gbc, fila++, "Mascota", comboMascota, 1.0, GridBagConstraints.HORIZONTAL);
-        agregarFila(panelDetallesTurno, gbc, fila++, "Tipo de Consulta", comboTipoConsulta, 1.0, GridBagConstraints.HORIZONTAL);
+        agregarFila(panelDetallesTurno, gbc, fila++, "Pràctica profesional", comboTipoPractica, 1.0, GridBagConstraints.HORIZONTAL);
 
         return panelDetallesTurno;
     }
@@ -284,13 +289,25 @@ public class VentanaRegistroConsultas extends JFrame {
     }
 
     // --- 4. CONEXIÓN DE CONTROLADOR (PATRÓN MVC) ---
-    /*public void setControlador(ControladorRegistroConsulta controlador) {
+    public void setControlador(ControladorRegistroConsulta controlador) {
         btnGuardar.addActionListener(controlador);
         btnCancelar.addActionListener(controlador);
 
         comboPropietario.addActionListener(controlador);
         comboPropietario.setActionCommand("PROPIETARIO_CAMBIO");
-    }*/
+    }
+
+    private String obtenerFechaActualFormateada() {
+        // 1. Obtener el instante actual del sistema
+        Date fechaActual = new Date();
+
+        // 2. Definir el formato requerido (dd/MM/yyyy)
+        // 💡 NOTA: Las 'M' deben ser mayúsculas para el mes.
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+
+        // 3. Formatear y devolver la cadena
+        return formato.format(fechaActual);
+    }
 
     // --- 5. GETTERS Y SETTERS PARA EL CONTROLADOR ---
 
@@ -310,14 +327,16 @@ public class VentanaRegistroConsultas extends JFrame {
         comboMascota.setEnabled(true);
     }
 
-    public void setOpcionesTipoConsulta(List<TipoConsulta> tipos) {
-        comboTipoConsulta.removeAllItems();
-        tipos.forEach(comboTipoConsulta::addItem);
+    public void setOpcionesTipoPractica(List<TipoPractica> tipos) {
+        comboTipoPractica.removeAllItems();
+        tipos.forEach(comboTipoPractica::addItem);
     }
 
-    public Propietario getPropietarioSeleccionado() { return (Propietario) comboPropietario.getSelectedItem(); }
+    public Propietario getPropietarioSeleccionado() {
+        return (Propietario) comboPropietario.getSelectedItem();
+    }
     public Mascota getMascotaSeleccionada() { return (Mascota) comboMascota.getSelectedItem(); }
-    public TipoConsulta getTipoConsultaSeleccionada() { return (TipoConsulta) comboTipoConsulta.getSelectedItem(); }
+    public TipoPractica getTipoPracticaSeleccionada() { return (TipoPractica) comboTipoPractica.getSelectedItem(); }
     public String getResultadoEstudios() { return txtResultadoEstudios.getText(); }
     public String getDiagnostico() { return txtDiagnostico.getText(); }
     public String getPronostico() { return txtPronostico.getText(); }
@@ -329,18 +348,49 @@ public class VentanaRegistroConsultas extends JFrame {
         comboPropietario.setSelectedIndex(0);
         comboMascota.removeAllItems();
         comboMascota.setEnabled(false);
-        comboTipoConsulta.setSelectedIndex(0);
+        comboTipoPractica.setSelectedIndex(0);
         txtResultadoEstudios.setText("");
         txtDiagnostico.setText("");
         txtPronostico.setText("");
         txtTratamiento.setText("");
         setFechaHoraActual();
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-           VentanaRegistroConsultas frame = new VentanaRegistroConsultas();
-            frame.setVisible(true);
-        });
+
+    // --- MÉTODOS PÚBLICOS PARA EL CONTROLADOR (CLAVE) ---
+    public void setControlador(ActionListener controlador) {
+        btnGuardar.addActionListener(controlador);
+        btnCancelar.addActionListener(controlador);
     }
+
+    // Getters para el controlador (obtener OBJETOS seleccionados)
+    public JComboBox<Propietario> getComboPropietario() { return comboPropietario; }
+    public JComboBox<Mascota> getComboMascota() { return comboMascota; }
+    public JComboBox<TipoPractica> getComboTipoPractica() { return comboTipoPractica; }
+    //public JComboBox<String> getComboHora() { return comcomboHora; }
+
+    public Date getFechaSeleccionada() { return new Date(lblFechaActual.getText()); }
+
+    // Métodos para cargar datos (reciben DefaultComboBoxModel<T>)
+    /*public void cargarPropietarios(DefaultComboBoxModel<Propietario> model) {
+
+        comboPropietario.setModel(model);
+    }*/
+
+    public void cargarPropietarios(DefaultComboBoxModel<Propietario> model) {
+        comboPropietario.setModel(model);
+        // 🛑 AGREGUE ESTA LÍNEA si no la tiene, para asegurar que el primer elemento se lea.
+        if (model.getSize() > 0) {
+            comboPropietario.setSelectedIndex(0);
+        }
+    }
+
+    public void cargarMascotas(DefaultComboBoxModel<Mascota> model) {
+        comboMascota.setModel(model);
+    }
+
+    public void cargarTiposPractica(DefaultComboBoxModel<TipoPractica> model) {
+        comboTipoPractica.setModel(model);
+    }
+
 
 }

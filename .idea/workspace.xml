@@ -5,10 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="704de9b8-27da-49cf-b00b-d65902c68e99" name="Changes" comment="consulta y modificacion eliminacion de turnos">
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaHistoriaClinica.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaHistoriaClinica2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaRegistroConsultas.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorRegistroConsulta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorRegistroConsulta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Consulta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/ConsultaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/TipoPractica.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Conexion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Mascota.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Mascota.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Propietario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Propietario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaRegistroConsultas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaRegistroConsulta.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +74,13 @@
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.VentanaHistoriaClinica2">
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.veterinaria.modelo" />
+      <recent name="com.veterinaria.controlador" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Principal">
     <configuration name="BusquedaHistoriaClinicaFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BusquedaHistoriaClinicaFrame" />
       <module name="Veterinaria" />
@@ -112,8 +127,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="VentanaRegistroConsultas" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.veterinaria.vista.VentanaRegistroConsultas" />
+    <configuration name="VentanaRegistroConsulta" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.veterinaria.vista.VentanaRegistroConsulta" />
       <module name="Veterinaria" />
       <extension name="coverage">
         <pattern>
@@ -127,11 +142,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Principal" />
         <item itemvalue="Application.VentanaHistoriaClinica2" />
         <item itemvalue="Application.VentanaHistoriaClinica" />
-        <item itemvalue="Application.VentanaRegistroConsultas" />
         <item itemvalue="Application.BusquedaHistoriaClinicaFrame" />
-        <item itemvalue="Application.Principal" />
       </list>
     </recent_temporary>
   </component>

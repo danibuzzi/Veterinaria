@@ -26,6 +26,9 @@ public class Mascota {
         this.activa = activa;
     }
 
+    public Mascota(int i, String s, int i1) {
+    }
+
     // Getters esenciales para la lógica
     public int getIdMascota() { return idMascota; }
     public int getIdPropietario() { return idPropietario; }
@@ -83,6 +86,6 @@ public class Mascota {
 
     @Override
     public String toString() {
-        return nombre + " (" + especie + ")";
+        return nombre ;
     }
 }

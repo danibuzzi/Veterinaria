@@ -125,12 +125,14 @@ public class FactoriaServicios {
     private final PropietarioDAO propietarioDAO;
     private final MascotaDAO mascotaDAO;
     private final TipoConsultaDAO tipoConsultaDAO;
+    private final ConsultaService consultaService;
 
     // --- 2. DECLARACIÓN DE GESTORES ---
     private final GestorTurno3 gestorTurno;          // 🛑 Para Registro (Asume este nombre)
     private final GestorGestionTurnos gestorGestionTurnos; // Para Gestión
 
     public FactoriaServicios() {
+        this.consultaService = new ConsultaService();
         // A. CREACIÓN DE TODOS LOS DAOs
         this.turnoDAO = new TurnoDAO3();
         this.propietarioDAO = new PropietarioDAO();
@@ -174,15 +176,15 @@ public class FactoriaServicios {
         return new ControladorGestionTurnos(
                 // 1. GestorGestionTurnos: Ya inicializado arriba.
                 gestorGestionTurnos,
-
-                // 2. Vista
                 vista,
-
-                // 3, 4, 5, 6. Los 4 DAOs que el Controlador necesita para Modificación
                 turnoDAO,
                 propietarioDAO,
                 mascotaDAO,
                 tipoConsultaDAO
         );
+    }
+
+    public ConsultaService getConsultaService() {
+        return consultaService;
     }
 }

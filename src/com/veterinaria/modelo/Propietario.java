@@ -6,6 +6,12 @@ public class Propietario {
     private int idPropietario;
     private String dni;
 
+    public Propietario(int idPropietario, String nombre, String apellido) {
+        this.idPropietario = idPropietario;
+        this.nombre = nombre;
+        this.apellido = apellido;
+    }
+
     public String getDni() {
         return dni;
     }

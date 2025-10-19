@@ -56,7 +56,8 @@ public class Principal {
 
                     // 2. CREACIÓN DE LA VISTA PRINCIPAL (Inyección de la Factoría)
                     VentanaPrincipal2 vistaPrincipal = new VentanaPrincipal2(
-                            servicios.getGestorTurno(), servicios.getGestorGestionTurnos() // Pasar más gestores si es necesario
+                            servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
+                            servicios.getConsultaService()
                     );
 
                     // 3. MOSTRAR LA VISTA PRINCIPAL
