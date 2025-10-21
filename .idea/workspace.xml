@@ -5,19 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="704de9b8-27da-49cf-b00b-d65902c68e99" name="Changes" comment="consulta y modificacion eliminacion de turnos">
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorRegistroConsulta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorRegistroConsulta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Consulta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/ConsultaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/TipoPractica.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorHistoriaClinica.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorHistoriaClinica.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/HistoriaClinicaService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/TipoPracticaDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaDetalleConsulta.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaHistoriaClinica3.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Conexion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Conexion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Consulta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Consulta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/ConsultaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/ConsultaDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Mascota.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Mascota.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/Propietario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/Propietario.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaHistoriaClinica2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaHistoriaClinica2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaRegistroConsultas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaRegistroConsulta.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,8 +60,10 @@
     "Application.BusquedaHistoriaClinicaFrame.executor": "Run",
     "Application.Principal.executor": "Run",
     "Application.RegistroConsultaFrame.executor": "Run",
+    "Application.VentanaDetalleConsulta.executor": "Run",
     "Application.VentanaHistoriaClinica.executor": "Run",
     "Application.VentanaHistoriaClinica2.executor": "Run",
+    "Application.VentanaHistoriaClinica3.executor": "Run",
     "Application.VentanaRegistroConsultas.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -81,19 +83,25 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Principal">
-    <configuration name="BusquedaHistoriaClinicaFrame" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="BusquedaHistoriaClinicaFrame" />
-      <module name="Veterinaria" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Principal" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.veterinaria.principal.Principal" />
       <module name="Veterinaria" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.veterinaria.principal.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VentanaDetalleConsulta" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.veterinaria.vista.VentanaDetalleConsulta" />
+      <module name="Veterinaria" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.veterinaria.vista.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -127,8 +135,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="VentanaRegistroConsulta" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.veterinaria.vista.VentanaRegistroConsulta" />
+    <configuration name="VentanaHistoriaClinica3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.veterinaria.vista.VentanaHistoriaClinica3" />
       <module name="Veterinaria" />
       <extension name="coverage">
         <pattern>
@@ -144,8 +152,9 @@
       <list>
         <item itemvalue="Application.Principal" />
         <item itemvalue="Application.VentanaHistoriaClinica2" />
+        <item itemvalue="Application.VentanaDetalleConsulta" />
+        <item itemvalue="Application.VentanaHistoriaClinica3" />
         <item itemvalue="Application.VentanaHistoriaClinica" />
-        <item itemvalue="Application.BusquedaHistoriaClinicaFrame" />
       </list>
     </recent_temporary>
   </component>

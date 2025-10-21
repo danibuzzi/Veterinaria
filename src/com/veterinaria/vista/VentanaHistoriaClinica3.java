@@ -1,24 +1,22 @@
 package com.veterinaria.vista;
 
-import com.toedter.calendar.JDateChooser;
-import com.veterinaria.controlador.ControladorHistoriaClinica; // Importar el controlador
-import com.veterinaria.modelo.Mascota; // Importar el modelo Mascota
-import com.veterinaria.modelo.Propietario; // Importar el modelo Propietario
 
+
+import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class VentanaHistoriaClinica2 extends JInternalFrame {
+public class VentanaHistoriaClinica3 extends JInternalFrame {
 
-    // --- CONSTANTES DE ESTILO ---
-    private static final Color BLUE_PRIMARY = new Color(37, 99, 235);
+    // --- CONSTANTES DE ESTILO (Asegurando el azul primario de VentanaRegistroConsulta) ---
+    private static final Color BLUE_PRIMARY = new Color(37, 99, 235); // Fondo de botones
     private static final Color GRAY_BORDER = new Color(203, 213, 225);
     private static final Color GRAY_TEXT = new Color(71, 85, 105);
     private static final Font FONT_FIELD = new Font("Segoe UI", Font.PLAIN, 14);
@@ -26,9 +24,8 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
     private static final int FIELD_HEIGHT = 35;
 
     // --- 1. DECLARACIÓN DE COMPONENTES ---
-    // Componentes de la vista, usando los tipos de modelo
-    private JComboBox<Propietario> comboPropietario;
-    private JComboBox<Mascota> comboMascota;
+    private JComboBox<String> comboPropietario;
+    private JComboBox<String> comboMascota;
     private JDateChooser dateChooserFecha;
     private JButton btnBuscar;
     private JButton btnVerDetalle;
@@ -36,20 +33,20 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
     private DefaultTableModel modeloTabla;
     private JButton btnSalir;
 
-    // Columnas de la tabla: "ID Consulta" es la columna 0, siempre oculta.
+    // Columnas de la tabla (Incluye ID que será ocultado)
     private static final String[] COLUMNAS_TABLA = {"ID Consulta", "Fecha", "Tipo Práctica", "Diagnóstico Principal", "Pronóstico", "Tratamiento"};
-    private final JDesktopPane escritorio;
+
 
     // --- 2. CONSTRUCTOR ---
-    public VentanaHistoriaClinica2(JDesktopPane escritorio) {
+    public VentanaHistoriaClinica3() {
         super("Historia Clínica de Mascotas", true, true, true, true);
-        this.escritorio = escritorio;
         setSize(1050, 700);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
 
         initComponents();
-        // **IMPORTANTE**: No llamar a ocultarColumnaID aquí. Se llama en mostrarResultados.
+        // LLAMADA CLAVE PARA OCULTAR EL ID (Columna 0)
+        ocultarColumnaID();
     }
 
     private void initComponents() {
@@ -57,24 +54,28 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
+        // --- 1. PANEL SUPERIOR DE BÚSQUEDA Y FILTRO ---
         JPanel searchPanel = crearPanelBusqueda();
         mainPanel.add(searchPanel, BorderLayout.NORTH);
 
+        // --- 2. PANEL CENTRAL DE RESULTADOS (JTable) ---
         JScrollPane scrollTable = crearTablaResultados();
         mainPanel.add(scrollTable, BorderLayout.CENTER);
 
+        // --- 3. PANEL INFERIOR DE BOTONES ---
         JPanel buttonPanel = crearPanelBotones();
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         add(mainPanel);
     }
 
-    // --- MÉTODOS DE CONSTRUCCIÓN DE LA INTERFAZ (Se mantienen sin cambios) ---
+    // --- MÉTODOS DE CONSTRUCCIÓN DE LA INTERFAZ ---
 
     private JPanel crearPanelBusqueda() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.WHITE);
 
+        // Estilo TitledBorder consistente
         panel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(BLUE_PRIMARY, 1),
                 "Parámetros de Búsqueda de Historia",
@@ -141,6 +142,7 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         gbc.gridy = 1;
         gbc.weightx = 0.4;
         gbc.anchor = GridBagConstraints.EAST;
+        // Fondo AZUL, Texto BLANCO
         btnBuscar = crearBoton("Buscar", BLUE_PRIMARY);
         btnBuscar.setPreferredSize(new Dimension(150, FIELD_HEIGHT));
         btnBuscar.setActionCommand("BUSCAR");
@@ -163,22 +165,23 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         tablaResultados.setRowHeight(25);
         tablaResultados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Estilo de encabezado
-        JTableHeader header = tablaResultados.getTableHeader();
-        header.setFont(FONT_BOLD);
-        header.setBackground(new Color(230, 230, 230));
-        header.setForeground(Color.BLACK);
-        header.setOpaque(true);
+        // 🛑 ESTILO DE GRILLA PARA COINCIDIR CON "CONSULTA DE TURNOS":
+        // 1. Encabezado: Fondo AZUL_PRIMARY (sin oscurecer) y texto BLANCO
+        tablaResultados.getTableHeader().setFont(FONT_BOLD);
+        tablaResultados.getTableHeader().setBackground(BLUE_PRIMARY);
+        tablaResultados.getTableHeader().setForeground(Color.WHITE);
 
-        tablaResultados.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        // 2. Texto de las celdas: NEGRO
+        tablaResultados.setForeground(Color.BLACK);
 
-        // Asignación de anchos de columna
-        // La columna 0 (ID) se ocultará dinámicamente.
-        tablaResultados.getColumnModel().getColumn(1).setPreferredWidth(120); // Fecha
-        tablaResultados.getColumnModel().getColumn(2).setPreferredWidth(150); // Tipo Práctica
-        tablaResultados.getColumnModel().getColumn(3).setPreferredWidth(250); // Diagnóstico Principal
-        tablaResultados.getColumnModel().getColumn(4).setPreferredWidth(170); // Pronóstico
-        // La columna 5 (Tratamiento) toma el resto gracias a AUTO_RESIZE_LAST_COLUMN
+        // Ajuste de ancho de columnas (se mantiene igual)
+        tablaResultados.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tablaResultados.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tablaResultados.getColumnModel().getColumn(1).setPreferredWidth(120);
+        tablaResultados.getColumnModel().getColumn(2).setPreferredWidth(150);
+        tablaResultados.getColumnModel().getColumn(3).setPreferredWidth(250);
+        tablaResultados.getColumnModel().getColumn(4).setPreferredWidth(170);
+        tablaResultados.getColumnModel().getColumn(5).setPreferredWidth(250);
 
         JScrollPane scrollPane = new JScrollPane(tablaResultados);
         scrollPane.setBorder(BorderFactory.createTitledBorder(
@@ -190,13 +193,11 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         return scrollPane;
     }
 
-    /**
-     * Oculta la columna del ID (columna 0) para que no sea visible al usuario.
-     * **CORREGIDO**: Se asegura de que la tabla y sus columnas existan.
-     */
+    // MÉTODO CLAVE: OCULTAR LA COLUMNA ID (Técnica robusta)
     private void ocultarColumnaID() {
-        if (tablaResultados != null && tablaResultados.getColumnCount() > 0) {
+        if (tablaResultados.getColumnCount() > 0) {
             TableColumnModel tcm = tablaResultados.getColumnModel();
+
             // Oculta la primera columna (ID Consulta)
             tcm.getColumn(0).setMinWidth(0);
             tcm.getColumn(0).setMaxWidth(0);
@@ -209,10 +210,12 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         buttonPanel.setBackground(Color.WHITE);
 
+        // 🛑 Botón Ver Detalle: Fondo AZUL, Texto BLANCO
         btnVerDetalle = crearBoton("Ver Detalle", BLUE_PRIMARY);
         btnVerDetalle.setPreferredSize(new Dimension(180, 45));
         btnVerDetalle.setActionCommand("VER_DETALLE");
 
+        // 🛑 Botón Salir: Fondo AZUL, Texto BLANCO
         btnSalir = crearBoton("Salir", BLUE_PRIMARY);
         btnSalir.setPreferredSize(new Dimension(180, 45));
         btnSalir.setActionCommand("SALIR");
@@ -222,7 +225,7 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         return buttonPanel;
     }
 
-    // --- MÉTODOS AUXILIARES DE ESTILO (Se mantienen sin cambios) ---
+    // --- MÉTODOS AUXILIARES DE ESTILO ---
 
     private JLabel crearEtiqueta(String text) {
         JLabel label = new JLabel(text + ":");
@@ -235,50 +238,52 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         JButton button = new JButton(text);
         button.setFont(new Font("Segoe UI", Font.BOLD, 15));
         button.setBackground(bgColor);
+        // CORRECCIÓN: COLOR DE TEXTO BLANCO (Requerido)
         button.setForeground(Color.WHITE);
-        button.setOpaque(true);
-        button.setBorderPainted(false);
         button.setFocusPainted(false);
+        // Ajustamos el borde para que se vea limpio
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         return button;
     }
 
-    // --- 3. CONEXIÓN DEL CONTROLADOR (MVC) Y GETTERS NECESARIOS ---
-
-    /**
-     * Establece el controlador como ActionListener para los botones.
-     */
+    // --- 3. CONEXIÓN DEL CONTROLADOR (MVC) ---
     public void setControlador(ActionListener controlador) {
         btnBuscar.addActionListener(controlador);
         btnVerDetalle.addActionListener(controlador);
         btnSalir.addActionListener(controlador);
     }
 
-    // 🛑 Getters para los componentes que interactúan con el controlador
+    // --- 4. GETTERS PARA EL CONTROLADOR (Se mantienen como estaban) ---
 
-    public JButton getBtnBuscar() {
-        return btnBuscar;
+    public String getPropietarioSeleccionado() {
+        return (String) comboPropietario.getSelectedItem();
     }
 
-    public JButton getBtnVerDetalle() {
-        return btnVerDetalle;
-    }
-
-    public JComboBox<Propietario> getComboPropietario() {
-        return comboPropietario;
-    }
-
-    public JComboBox<Mascota> getComboMascota() {
-        return comboMascota;
+    public String getMascotaSeleccionada() {
+        return (String) comboMascota.getSelectedItem();
     }
 
     public Date getFechaDesde() {
         return dateChooserFecha.getDate();
     }
 
-    /**
-     * Recupera el ID de la consulta de la fila seleccionada, aunque la columna esté oculta.
-     */
+    public String getFechaDesdeFormateada() {
+        Date fecha = dateChooserFecha.getDate();
+        if (fecha != null) {
+            return new SimpleDateFormat("yyyy-MM-dd").format(fecha);
+        }
+        return null;
+    }
+
+    public DefaultTableModel getModeloTabla() {
+        return modeloTabla;
+    }
+
+    public int getFilaSeleccionada() {
+        return tablaResultados.getSelectedRow();
+    }
+
+    // MÉTODO CLAVE: Obtiene el ID seleccionado (aunque esté oculto)
     public Object getIdConsultaSeleccionada() {
         int fila = getFilaSeleccionada();
         if (fila != -1) {
@@ -288,31 +293,23 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         return null;
     }
 
-    private int getFilaSeleccionada() {
-        return tablaResultados.getSelectedRow();
-    }
+    // Métodos de Carga para Combos (para el Controlador)
+    public JComboBox<String> getComboPropietario() { return comboPropietario; }
+    public JComboBox<String> getComboMascota() { return comboMascota; }
 
-    // 🛑 Método de utilidad para mostrar mensajes
-    public void mostrarMensaje(String mensaje, int tipoMensaje) {
-        JOptionPane.showMessageDialog(this, mensaje, getTitle(), tipoMensaje);
-    }
-
-    /**
-     * Muestra los resultados en la tabla y llama a ocultarColumnaID().
-     */
     public void mostrarResultados(List<Object[]> datos) {
         modeloTabla.setRowCount(0);
         for (Object[] fila : datos) {
             modeloTabla.addRow(fila);
         }
-        // CRUCIAL: Ocultar el ID después de cargar nuevos datos.
+        // Re-ocultar la columna ID después de cargar nuevos datos
         ocultarColumnaID();
     }
 
 
-    // --- MAIN DE PRUEBA (Se mantiene sin cambios) ---
+    // --- MAIN DE PRUEBA (Sin datos simulados) ---
 
-   /* public static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -327,11 +324,11 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
             JDesktopPane desktopPane = new JDesktopPane();
             framePrincipal.setContentPane(desktopPane);
 
-            VentanaHistoriaClinica2 ventana = new VentanaHistoriaClinica2(escritorio);
+            VentanaHistoriaClinica3 ventana = new VentanaHistoriaClinica3();
 
             desktopPane.add(ventana);
             ventana.setVisible(true);
             framePrincipal.setVisible(true);
         });
-    }*/
+    }
 }

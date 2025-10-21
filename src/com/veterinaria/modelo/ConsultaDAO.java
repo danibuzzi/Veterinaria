@@ -6,6 +6,7 @@ import com.veterinaria.modelo.TipoPractica;
 import com.veterinaria.modelo.Consulta;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,4 +128,89 @@ public class ConsultaDAO {
             throw new RuntimeException("Fallo al registrar la consulta en la base de datos.", e);
         }
     }
+//Modifacion detalle
+
+    // 🛑 SQL para el listado RESUMEN (NO incluye los campos de texto largo)
+    private static final String SQL_SELECT_CONSULTAS_RESUMEN =
+            "SELECT c.idConsulta, c.fechaConsulta, c.hora, m.nombre AS Mascota, p.nombre || ' ' || p.apellido AS Propietario, t.descripcion AS Practica " +
+                    "FROM Consulta c " +
+                    "JOIN Mascota m ON c.idMascota = m.idMascota " +
+                    "JOIN Propietario p ON c.idPropietario = p.idPropietario " +
+                    "JOIN TipoPractica t ON c.idTipoPractica = t.idTipoPractica " +
+                    "WHERE p.idPropietario = ? " +
+                    "ORDER BY c.fechaConsulta DESC, c.hora DESC";
+
+    // 🛑 SQL para la consulta DETALLE (Incluye TODOS los campos, especialmente los textos largos)
+    private static final String SQL_SELECT_DETALLE_CONSULTA =
+            "SELECT c.idConsulta, c.fechaConsulta, c.hora, m.nombre AS Mascota, p.nombre || ' ' || p.apellido AS Propietario, t.descripcion AS Practica, " +
+                    "       c.resultadoEstudio, c.diagnostico, c.pronostico, c.tratamiento " +
+                    "FROM Consulta c " +
+                    "JOIN Mascota m ON c.idMascota = m.idMascota " +
+                    "JOIN Propietario p ON c.idPropietario = p.idPropietario " +
+                    "JOIN TipoPractica t ON c.idTipoPractica = t.idTipoPractica " +
+                    "WHERE c.idConsulta = ?";
+
+    public Object[] consultarDetalle(int idConsulta) {
+        Object[] detalle = null;
+        try (Connection conn = Conexion.obtenerConexion(); // Asume tu clase de conexión
+             PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_DETALLE_CONSULTA)) {
+
+            stmt.setInt(1, idConsulta);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    detalle = new Object[]{
+                            rs.getInt("idConsulta"),      // 0
+                            rs.getDate("fechaConsulta"),  // 1
+                            rs.getTime("hora"),           // 2
+                            rs.getString("Mascota"),      // 3
+                            rs.getString("Propietario"),  // 4
+                            rs.getString("Practica"),     // 5
+                            rs.getString("resultadoEstudio"), // 6
+                            rs.getString("diagnostico"),  // 7
+                            rs.getString("pronostico"),   // 8
+                            rs.getString("tratamiento")   // 9
+                    };
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error de BD al consultar detalle (consultarDetalle): " + e.getMessage());
+            throw new RuntimeException("Fallo al obtener el detalle de la consulta.", e);
+        }
+        return detalle;
+    }
+
+    // -------------------------------------------------------------
+    // 🛑 Método 2: LISTAR RESUMEN (Devuelve List<Object[]> para la tabla)
+    // -------------------------------------------------------------
+    public List<Object[]> listarConsultasResumen(int idPropietario) {
+        List<Object[]> lista = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        try (Connection conn = Conexion.obtenerConexion();
+             PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_CONSULTAS_RESUMEN)) {
+
+            stmt.setInt(1, idPropietario);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    // Orden de la tabla: ID | Fecha | Hora | Mascota | Propietario | Práctica
+                    Object[] c = new Object[]{
+                            rs.getInt("idConsulta"), // 0: ID (oculto)
+                            sdf.format(rs.getDate("fechaConsulta")), // 1: Fecha (Formato String)
+                            rs.getTime("hora").toString().substring(0, 5), // 2: Hora (HH:MM)
+                            rs.getString("Mascota"), // 3
+                            rs.getString("Propietario"), // 4
+                            rs.getString("Practica") // 5
+                    };
+                    lista.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error de BD al listar resumen: " + e.getMessage());
+            throw new RuntimeException("Fallo al obtener el listado de consultas.", e);
+        }
+        return lista;
+    }
+
 }

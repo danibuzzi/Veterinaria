@@ -57,14 +57,22 @@ public class Principal {
                     // 2. CREACIÓN DE LA VISTA PRINCIPAL (Inyección de la Factoría)
                     VentanaPrincipal2 vistaPrincipal = new VentanaPrincipal2(
                             servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
-                            servicios.getConsultaService()
+                            servicios.getConsultaService(),servicios.getHistoriaClinicaService()
                     );
 
                     // 3. MOSTRAR LA VISTA PRINCIPAL
                     vistaPrincipal.setVisible(true);
 
                 } catch (Exception e) {
-                    // ... (manejo de errores) ...
+                    // 🛑 MANEJO DE ERRORES: Muestra una ventana si falla la inicialización
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "La aplicación no pudo iniciar debido a un error crítico del sistema.\n" +
+                                    "Por favor, verifique la conexión a la base de datos o contacte a soporte técnico.\n" +
+                                    "Detalle técnico: " + e.getMessage(), // Incluye el mensaje técnico para el soporte
+                            "ERROR CRÍTICO AL INICIAR",
+                            JOptionPane.ERROR_MESSAGE);
 
                 }
             }

@@ -125,7 +125,10 @@ public class FactoriaServicios {
     private final PropietarioDAO propietarioDAO;
     private final MascotaDAO mascotaDAO;
     private final TipoConsultaDAO tipoConsultaDAO;
+    private final TipoPracticaDAO tipoPracticaDAO;
     private final ConsultaService consultaService;
+    private final ConsultaDAO consultaDAO;
+    private final HistoriaClinicaService historiaClinicaService;
 
     // --- 2. DECLARACIÓN DE GESTORES ---
     private final GestorTurno3 gestorTurno;          // 🛑 Para Registro (Asume este nombre)
@@ -134,11 +137,14 @@ public class FactoriaServicios {
     public FactoriaServicios() {
         this.consultaService = new ConsultaService();
         // A. CREACIÓN DE TODOS LOS DAOs
+        this.consultaDAO=new ConsultaDAO();
         this.turnoDAO = new TurnoDAO3();
         this.propietarioDAO = new PropietarioDAO();
         this.mascotaDAO = new MascotaDAO();
         this.tipoConsultaDAO = new TipoConsultaDAO();
-
+        this.tipoPracticaDAO=new TipoPracticaDAO();
+        this.historiaClinicaService = new HistoriaClinicaService(consultaDAO,
+                propietarioDAO,mascotaDAO,tipoPracticaDAO);
         // B. CREACIÓN DE GESTORES (Inyección de dependencias)
 
         // 1. GESTOR DE REGISTRO DE TURNOS (CORREGIDO)
@@ -187,4 +193,9 @@ public class FactoriaServicios {
     public ConsultaService getConsultaService() {
         return consultaService;
     }
+
+    public HistoriaClinicaService getHistoriaClinicaService() { // ⬅️ Asegúrate de que exista
+        return historiaClinicaService;
+    }
+
 }

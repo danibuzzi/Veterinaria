@@ -35,6 +35,20 @@ public class Consulta {
         this.tratamiento = tratamiento;
     }
 
+    public Consulta(int idConsulta, java.sql.Date fechaConsulta, Time hora, String mascota, String propietario, String practica) {
+        this.idConsulta=idConsulta;
+        this.fechaConsulta = fechaConsulta;
+        this.hora = hora;
+    }
+
+    public Consulta(int idConsulta, java.sql.Date fechaConsulta, Time hora, String mascota, String propietario, String practica, String resultadoEstudio, String diagnostico, String pronostico, String tratamiento) {
+    this.diagnostico=diagnostico;
+    this.resultadoEstudio=resultadoEstudio;
+    this.pronostico=pronostico;
+    this.tratamiento=tratamiento;
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -89,8 +103,14 @@ public class Consulta {
         return "Consulta{" +
                 "idConsulta=" + idConsulta +
                 ", idMascota=" + idMascota +
-                ", fecha=" + fechaConsulta +
+                ", idPropietario=" + idPropietario +
+                ", idTipoPractica=" + idTipoPractica +
+                ", fechaConsulta=" + fechaConsulta +
+                ", hora=" + hora +
+                ", resultadoEstudio='" + resultadoEstudio + '\'' +
                 ", diagnostico='" + diagnostico + '\'' +
+                ", pronostico='" + pronostico + '\'' +
+                ", tratamiento='" + tratamiento + '\'' +
                 '}';
     }
 }
