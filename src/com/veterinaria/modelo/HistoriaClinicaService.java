@@ -41,9 +41,14 @@ public class HistoriaClinicaService {
      * @param idPropietario El ID del propietario a buscar.
      * @return Una lista de Object[] con el resumen de las consultas.
      */
-    public List<Object[]> listarConsultasResumen(int idPropietario) {
+    /*public List<Object[]> listarConsultasResumen(int idPropietario) {
         // Llama al método modificado en ConsultaDAO que devuelve List<Object[]>
         return consultaDAO.listarConsultasResumen(idPropietario);
+    }*/
+
+    public List<Object[]> buscarConsultasResumen(int idPropietario, Integer idMascota, java.sql.Date fechaDesde) {
+        // Llama al método del DAO con el nombre MODIFICADO (listarConsultasResumen)
+        return consultaDAO.listarConsultasResumen(idPropietario, idMascota, fechaDesde);
     }
 
     /**

@@ -32,6 +32,9 @@ public class ControladorHistoriaClinica implements ActionListener {
         this.vistaListado.getBtnBuscar().setActionCommand("BUSCAR");
         this.vistaListado.getBtnVerDetalle().setActionCommand("VER_DETALLE");
 
+
+        this.vistaListado.getBtnSalir().setActionCommand("SALIR");
+
         // Listener para el cambio de Propietario
         JComboBox<Propietario> comboPropietario = this.vistaListado.getComboPropietario();
         comboPropietario.setActionCommand("PROPIETARIO_CAMBIO");
@@ -71,7 +74,7 @@ public class ControladorHistoriaClinica implements ActionListener {
         DefaultComboBoxModel<Mascota> modeloMascota = new DefaultComboBoxModel<>();
 
         // 🛑 Item por defecto/filtro
-        modeloMascota.addElement(new Mascota(0, "TODAS", 0)); // Usamos un constructor dummy si es necesario.
+        modeloMascota.addElement(new Mascota(0, ".Seleccione un propietario.", 0)); // Usamos un constructor dummy si es necesario.
 
         if (idPropietario != 0) {
             try {
@@ -86,7 +89,7 @@ public class ControladorHistoriaClinica implements ActionListener {
         comboMascota.setModel(modeloMascota);
     }
 
-    private void buscarConsultas() {
+   /* private void buscarConsultas() {
         // 🛑 1. Obtener el objeto Propietario directamente del JComboBox
         Propietario propietarioSeleccionado = (Propietario) vistaListado.getComboPropietario().getSelectedItem();
 
@@ -96,16 +99,14 @@ public class ControladorHistoriaClinica implements ActionListener {
             return;
         }
 
+
+
         int idPropietario = propietarioSeleccionado.getIdPropietario();
 
         try {
             // 🛑 Llamada al service para obtener List<Object[]>
             List<Object[]> resultados = service.listarConsultasResumen(idPropietario);
 
-            // NOTA: Si quisieras filtrar por mascota, harías lo mismo aquí:
-            // Mascota mascotaSeleccionada = (Mascota) vistaListado.getComboMascota().getSelectedItem();
-            // int idMascota = mascotaSeleccionada.getIdMascota();
-            // Y adaptarías el DAO para usar idMascota en el WHERE.
 
             vistaListado.mostrarResultados(resultados);
 
@@ -116,9 +117,71 @@ public class ControladorHistoriaClinica implements ActionListener {
         } catch (Exception e) {
             vistaListado.mostrarMensaje("Error al realizar la búsqueda de consultas: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
         }
+    }*/
+
+    private void buscarConsultas() {
+        // 1. OBTENER VALORES DE LOS TRES CAMPOS OBLIGATORIOS
+
+        // Propietario
+        Propietario propietario = (Propietario) vistaListado.getComboPropietario().getSelectedItem();
+
+        // Mascota
+
+        Mascota mascota = (Mascota) vistaListado.getComboMascota().getSelectedItem();
+
+        // Fecha
+        // 🛑 ASUME que tienes un getter para el componente de fecha
+        java.util.Date utilDate = vistaListado.getFechaDesde();
+
+        // 2. 🛑 VALIDACIÓN GENERAL ESTRICTA (TODOS LOS CAMPOS OBLIGATORIOS)
+
+        // Verificamos si alguno de los campos obligatorios falta o es inválido (ID <= 0)
+        boolean propietarioSeleccionado = (propietario != null && propietario.getIdPropietario() > 0);
+        boolean mascotaSeleccionada = (mascota != null && mascota.getIdMascota() > 0);
+        boolean fechaIngresada = (utilDate != null);
+
+        if (!propietarioSeleccionado || !mascotaSeleccionada || !fechaIngresada) {
+            // Un solo mensaje de error si falta CUALQUIER campo
+            vistaListado.mostrarMensaje(
+                    "Debe seleccionar el Propietario, la Mascota y la Fecha de Búsqueda para realizar la consulta.",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            vistaListado.mostrarResultados(List.of()); // Limpiar la tabla si la validación falla
+            return;
+        }
+
+        // 3. PREPARACIÓN DE DATOS Y LLAMADA AL SERVICIO
+
+        // Si llegamos aquí, sabemos que los tres valores son válidos y no null.
+
+        Integer idPropietario = propietario.getIdPropietario();
+        Integer idMascota = mascota.getIdMascota();
+
+        // Convertir la fecha de java.util.Date a java.sql.Date
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+        try {
+            // 🛑 Llamada al nuevo método del servicio que acepta los 3 filtros
+            // ¡DEBES CREAR ESTE MÉTODO EN EL SERVICIO!
+            List<Object[]> resultados = service.buscarConsultasResumen(
+                    idPropietario,
+                    idMascota,
+                    sqlDate
+            );
+
+            vistaListado.mostrarResultados(resultados);
+
+            if (resultados.isEmpty()) {
+                vistaListado.mostrarMensaje("No se encontraron consultas con los criterios seleccionados.", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            vistaListado.mostrarMensaje("Error al buscar: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // verDetalleConsulta() se mantiene igual ya que solo usa el ID de la tabla.
+    // Visualizar el datos de la consulta seleccionada.
+
     private void verDetalleConsulta() {
         // 1. Obtener el ID de la consulta de la tabla (Columna 0 oculta)
         Object idObj = vistaListado.getIdConsultaSeleccionada();
@@ -176,6 +239,10 @@ public class ControladorHistoriaClinica implements ActionListener {
             case "VER_DETALLE":
                 verDetalleConsulta();
                 break;
+
+            case "SALIR":
+                vistaListado.dispose();
+                break; // Salir del switch
             default:
                 break;
         }

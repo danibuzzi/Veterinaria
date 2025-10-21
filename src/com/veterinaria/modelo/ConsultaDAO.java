@@ -132,18 +132,18 @@ public class ConsultaDAO {
 
     // 🛑 SQL para el listado RESUMEN (NO incluye los campos de texto largo)
     private static final String SQL_SELECT_CONSULTAS_RESUMEN =
-            "SELECT c.idConsulta, c.fechaConsulta, c.hora, m.nombre AS Mascota, p.nombre || ' ' || p.apellido AS Propietario, t.descripcion AS Practica " +
+            "SELECT c.idConsulta, c.fechaConsulta, t.descripcion AS Practica, c.diagnostico, c.pronostico, c.tratamiento " +
                     "FROM Consulta c " +
-                    "JOIN Mascota m ON c.idMascota = m.idMascota " +
-                    "JOIN Propietario p ON c.idPropietario = p.idPropietario " +
+                    "JOIN Mascota m ON c.idMascota = m.idMascota " + // Necesarios para el WHERE
+                    "JOIN Propietario p ON c.idPropietario = p.idPropietario " + // Necesarios para el WHERE
                     "JOIN TipoPractica t ON c.idTipoPractica = t.idTipoPractica " +
-                    "WHERE p.idPropietario = ? " +
-                    "ORDER BY c.fechaConsulta DESC, c.hora DESC";
+                    "WHERE p.idPropietario = ? AND c.idMascota = ? AND c.fechaConsulta >= ? " +
+                    "ORDER BY c.fechaConsulta DESC";
 
     // 🛑 SQL para la consulta DETALLE (Incluye TODOS los campos, especialmente los textos largos)
     private static final String SQL_SELECT_DETALLE_CONSULTA =
-            "SELECT c.idConsulta, c.fechaConsulta, c.hora, m.nombre AS Mascota, p.nombre || ' ' || p.apellido AS Propietario, t.descripcion AS Practica, " +
-                    "       c.resultadoEstudio, c.diagnostico, c.pronostico, c.tratamiento " +
+            "SELECT c.idConsulta, c.fechaConsulta, m.nombre AS Mascota, CONCAT(p.apellido, ', ', p.nombre) AS Propietario, " +
+                    "       t.descripcion AS Practica, c.resultadoEstudio, c.diagnostico, c.pronostico, c.tratamiento " +
                     "FROM Consulta c " +
                     "JOIN Mascota m ON c.idMascota = m.idMascota " +
                     "JOIN Propietario p ON c.idPropietario = p.idPropietario " +
@@ -160,16 +160,15 @@ public class ConsultaDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     detalle = new Object[]{
-                            rs.getInt("idConsulta"),      // 0
-                            rs.getDate("fechaConsulta"),  // 1
-                            rs.getTime("hora"),           // 2
-                            rs.getString("Mascota"),      // 3
-                            rs.getString("Propietario"),  // 4
-                            rs.getString("Practica"),     // 5
-                            rs.getString("resultadoEstudio"), // 6
-                            rs.getString("diagnostico"),  // 7
-                            rs.getString("pronostico"),   // 8
-                            rs.getString("tratamiento")   // 9
+                            rs.getInt("idConsulta"),      // 0: ID (int)
+                            rs.getDate("fechaConsulta"),  // 1: Fecha (Date)// 2: Hora (Time)
+                            rs.getString("Mascota"),      // 3: Mascota (String)
+                            rs.getString("Propietario"),  // 4: Propietario (String)
+                            rs.getString("Practica"),     // 5: Practica (String)
+                            rs.getString("resultadoEstudio"), // 6: Resultado Estudio (String)
+                            rs.getString("diagnostico"),  // 7: Diagnóstico (String)
+                            rs.getString("pronostico"),   // 8: Pronóstico (String)
+                            rs.getString("tratamiento")   // 9: Tratamiento (String)
                     };
                 }
             }
@@ -183,7 +182,7 @@ public class ConsultaDAO {
     // -------------------------------------------------------------
     // 🛑 Método 2: LISTAR RESUMEN (Devuelve List<Object[]> para la tabla)
     // -------------------------------------------------------------
-    public List<Object[]> listarConsultasResumen(int idPropietario) {
+    public List<Object[]> listarConsultasResumen(int idPropietario,int idMascota, java.sql.Date fecha) {
         List<Object[]> lista = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -191,17 +190,19 @@ public class ConsultaDAO {
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_CONSULTAS_RESUMEN)) {
 
             stmt.setInt(1, idPropietario);
+            stmt.setInt(2, idMascota); // ⬅️ Segundo Parámetro (idMascota)
+            stmt.setDate(3, fecha);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     // Orden de la tabla: ID | Fecha | Hora | Mascota | Propietario | Práctica
                     Object[] c = new Object[]{
-                            rs.getInt("idConsulta"), // 0: ID (oculto)
-                            sdf.format(rs.getDate("fechaConsulta")), // 1: Fecha (Formato String)
-                            rs.getTime("hora").toString().substring(0, 5), // 2: Hora (HH:MM)
-                            rs.getString("Mascota"), // 3
-                            rs.getString("Propietario"), // 4
-                            rs.getString("Practica") // 5
+                            rs.getInt("idConsulta"),                   // 0: ID (oculto)
+                            sdf.format(rs.getDate("fechaConsulta")),   // 1: Fecha
+                            rs.getString("Practica"),                  // 2: Tipo Práctica
+                            rs.getString("diagnostico"),               // 3: Diagnóstico Principal
+                            rs.getString("pronostico"),                // 4: Pronóstico
+                            rs.getString("tratamiento")
                     };
                     lista.add(c);
                 }

@@ -37,7 +37,7 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
     private JButton btnSalir;
 
     // Columnas de la tabla: "ID Consulta" es la columna 0, siempre oculta.
-    private static final String[] COLUMNAS_TABLA = {"ID Consulta", "Fecha", "Tipo Práctica", "Diagnóstico Principal", "Pronóstico", "Tratamiento"};
+    private static final String[] COLUMNAS_TABLA = {"","Fecha", "Tipo Práctica", "Diagnóstico", "Pronóstico", "Tratamiento"};
     private final JDesktopPane escritorio;
 
     // --- 2. CONSTRUCTOR ---
@@ -254,7 +254,7 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         btnSalir.addActionListener(controlador);
     }
 
-    // 🛑 Getters para los componentes que interactúan con el controlador
+    // Getters para los componentes que interactúan con el controlador
 
     public JButton getBtnBuscar() {
         return btnBuscar;
@@ -307,6 +307,10 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         }
         // CRUCIAL: Ocultar el ID después de cargar nuevos datos.
         ocultarColumnaID();
+    }
+
+    public JButton getBtnSalir() {
+        return btnSalir;
     }
 
 

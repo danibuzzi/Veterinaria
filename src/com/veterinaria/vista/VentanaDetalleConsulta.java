@@ -245,7 +245,7 @@ public class VentanaDetalleConsulta extends JInternalFrame {
     }
 
     public void cargarDatosConsulta(Object[] detalle) {
-        if (detalle == null || detalle.length < 10) {
+        if (detalle == null || detalle.length < 9) {
             this.setTitle("Detalle de Consulta - No Encontrada o Datos Inválidos");
             return;
         }
@@ -253,26 +253,26 @@ public class VentanaDetalleConsulta extends JInternalFrame {
         // Extracción de datos (el casting es necesario y CRÍTICO)
         int idConsulta = (int) detalle[0];
         Date fechaConsulta = (Date) detalle[1];
-        Time hora = (Time) detalle[2];
-        String nombreMascota = (String) detalle[3];
-        String nombrePropietario = (String) detalle[4];
-        String descripcionPractica = (String) detalle[5];
-        String resultadoEstudio = (String) detalle[6];
-        String diagnostico = (String) detalle[7];
-        String pronostico = (String) detalle[8];
-        String tratamiento = (String) detalle[9];
+       // Time hora = (Time) detalle[2];
+        String nombreMascota = (String) detalle[2];
+        String nombrePropietario = (String) detalle[3];
+        String descripcionPractica = (String) detalle[4];
+        String resultadoEstudio = (String) detalle[5];
+        String diagnostico = (String) detalle[6];
+        String pronostico = (String) detalle[7];
+        String tratamiento = (String) detalle[8];
 
 
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy");
-
+        String fecha =sdfDate.format(fechaConsulta);
         // Carga de campos cortos
         txtValorPropietario.setText(nombrePropietario);
         txtValorMascota.setText(nombreMascota);
         txtValorTipoPractica.setText(descripcionPractica);
 
         // Formato de fecha y hora
-        String fechaHora = sdfDate.format(fechaConsulta) + " " + hora.toString().substring(0, 5);
-        txtValorFecha.setText(fechaHora);
+        //String fechaHora = sdfDate.format(fechaConsulta) + " " + hora.toString().substring(0, 5);
+        txtValorFecha.setText(fecha);
 
         // Carga de JTextArea (Campos largos)
         txtAreaResultadoEstudio.setText(resultadoEstudio);
@@ -295,7 +295,7 @@ public class VentanaDetalleConsulta extends JInternalFrame {
 
     // --- MAIN DE PRUEBA (Sin datos simulados) ---
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
@@ -316,5 +316,5 @@ public class VentanaDetalleConsulta extends JInternalFrame {
             ventana.setVisible(true);
             framePrincipal.setVisible(true);
         });
-    }
+    }*/
 }

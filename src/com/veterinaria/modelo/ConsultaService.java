@@ -77,4 +77,14 @@ public class ConsultaService {
         }
     }
 
+    public List<Object[]> buscarConsultasResumen(int idPropietario, Integer idMascota, java.sql.Date fechaDesde) {
+        try {
+            // Delega la llamada al DAO, usando la firma corregida
+            return consultaDAO.listarConsultasResumen(idPropietario, idMascota, fechaDesde);
+        } catch (RuntimeException e) {
+            // Re-lanza cualquier error de BD para que el Controlador lo maneje
+            throw e;
+        }
+    }
+
 }
