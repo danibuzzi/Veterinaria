@@ -2,7 +2,6 @@ package com.veterinaria.modelo;
 
 
 
-// Clase que encapsula los datos del formulario (INSERT)
 public class Turno {
     private int idTurno;
     private int idTipoConsulta;

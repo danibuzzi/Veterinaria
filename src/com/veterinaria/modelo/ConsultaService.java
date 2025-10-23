@@ -47,25 +47,24 @@ public class ConsultaService {
     // --- Método de Guardado con Lógica de Negocio ---
     public void guardarNuevaConsulta(Consulta consulta) {
 
-        // Lógica de Validación de Negocio (mínima, la del Controlador es más estricta):
+        // Lógica de Validación de Negocio )
         if (consulta.getIdMascota() <= 0 || consulta.getIdPropietario() <= 0 || consulta.getIdTipoPractica() <= 0) {
-            // En un servicio limpio, esto debería ser una IllegalArgumentException
+
             throw new IllegalArgumentException("Error de Negocio: ID de Mascota, Propietario o Tipo de Práctica inválido.");
         }
 
-        // 🛑 LLAMADA AL DAO CON MANEJO DE ERRORES
+        //  LLAMADA AL DAO CON MANEJO DE ERRORES
         try {
-            // El DAO es void y lanza RuntimeException si falla.
+
             consultaDAO.insertar(consulta);
         } catch (RuntimeException e) {
             // Relanza la excepción del DAO para que el Controlador la atrape y muestre el JOptionPane.
             throw e;
         }
     }
-// Archivo: ConsultaService.java (Método a ELIMINAR/IGNORAR)
-// public List<Mascota> buscarMascotasPorPropietario(int idPropietario) { ... return List.of(); }
 
-    // 🛑 USA ESTE MÉTODO, que ya tienes implementado correctamente:
+
+    // Listado de mascotas por propietario:
     public List<Mascota> listarMascotasPorPropietario(int idPropietario) {
         if (idPropietario <= 0) {
             return List.of();
@@ -79,7 +78,7 @@ public class ConsultaService {
 
     public List<Object[]> buscarConsultasResumen(int idPropietario, Integer idMascota, java.sql.Date fechaDesde) {
         try {
-            // Delega la llamada al DAO, usando la firma corregida
+            // Delega la llamada al DAO
             return consultaDAO.listarConsultasResumen(idPropietario, idMascota, fechaDesde);
         } catch (RuntimeException e) {
             // Re-lanza cualquier error de BD para que el Controlador lo maneje

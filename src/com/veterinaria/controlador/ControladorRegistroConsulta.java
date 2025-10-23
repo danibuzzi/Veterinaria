@@ -38,15 +38,15 @@ public class ControladorRegistroConsulta implements ActionListener {
 
     private void cargarDatosIniciales() {
         try {
-            // 1. Cargar Propietarios y Tipos de Práctica
+            // Cargar Propietarios y Tipos de Práctica
             List<Propietario> propietarios = consultaService.listarPropietarios();
             List<TipoPractica> tipos = consultaService.listarTiposPractica();
 
-            // Compatible con Vista
+
             vista.cargarPropietarios(new DefaultComboBoxModel<>(propietarios.toArray(new Propietario[0])));
             vista.cargarTiposPractica(new DefaultComboBoxModel<>(tipos.toArray(new TipoPractica[0])));
 
-            // 2. Carga inicial de Mascotas.
+            // Carga inicial de Mascotas.
             if (!propietarios.isEmpty()) {
                 actualizarMascotasDelPropietario();
             }
@@ -57,7 +57,7 @@ public class ControladorRegistroConsulta implements ActionListener {
         }
     }
 
-    // LÓGICA UNIFICADA: Carga inicial y cambio de propietario
+    //  Carga inicial y cambio de propietario
     private void actualizarMascotasDelPropietario() {
         Object selectedItem = vista.getComboPropietario().getSelectedItem();
         Propietario propietarioSeleccionado = null;
@@ -72,10 +72,10 @@ public class ControladorRegistroConsulta implements ActionListener {
             System.out.println(" id propietario "+idPropietario);
 
             try {
-                // La lista que trae correctamente la mascota
+                // Traemos la lsita de mascotas
                 List<Mascota> mascotas = consultaService.listarMascotasPorPropietario(idPropietario);
                 System.out.println("Lista mascotas "+mascotas.get(0).getIdMascota());
-                // 🛑 Envío del DefaultComboBoxModel
+                // Envío del DefaultComboBoxModel
                 vista.cargarMascotas(new DefaultComboBoxModel<>(mascotas.toArray(new Mascota[0])));
                 vista.getComboMascota().setEnabled(!mascotas.isEmpty());
 
@@ -155,7 +155,7 @@ public class ControladorRegistroConsulta implements ActionListener {
         }
     }*/
 
-    // Archivo: ControladorRegistroConsulta.java
+    // Guardado de la nueva consulta
 
     private void guardarConsulta() {
         Propietario propietario = (Propietario) vista.getComboPropietario().getSelectedItem();
@@ -169,7 +169,7 @@ public class ControladorRegistroConsulta implements ActionListener {
         String pronostico = vista.getPronostico().trim();
         String tratamiento = vista.getTratamiento().trim();
 
-        // 🛑 VALIDACIÓN DE CAMOS
+        // 🛑 VALIDACIÓN DE CAMOPOS
         if (propietario == null || propietario.getIdPropietario() == 0 ||
                 mascota == null || mascota.getIdMascota() == 0 || tipoPractica == null ||
                 tipoPractica.getIdTipoPractica() == 0 || fechaUtil == null

@@ -26,7 +26,7 @@ public class ConsultaDAO {
     public List<Propietario> listarPropietarios() {
         List<Propietario> propietarios = new ArrayList<>();
 
-        // 🛑 CLAVE: try-with-resources asegura el cierre automático de la conexión
+
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_PROPIETARIOS);
              ResultSet rs = stmt.executeQuery()) {
@@ -37,16 +37,17 @@ public class ConsultaDAO {
             return propietarios;
 
         } catch (SQLException e) {
-            // 🛑 Envolvemos la SQLException en RuntimeException (Error de BD)
+            // Envolvemos la SQLException en RuntimeException (Error de BD)
+
             System.err.println("Error de BD al listar propietarios: " + e.getMessage());
             throw new RuntimeException("Fallo al obtener la lista de propietarios.", e);
         }
     }
-    // Archivo: ConsultaDAO.java
+    // Lista de mascotas por propietario
     public List<Mascota> listarMascotasPorPropietario(int idPropietario) {
         List<Mascota> mascotas = new ArrayList<>();
 
-        try (Connection conn = Conexion.obtenerConexion(); // Obtiene la conexión FRESCA
+        try (Connection conn = Conexion.obtenerConexion(); // Obtiene la conexión
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_MASCOTAS_BY_PROPIETARIO)) {
 
             stmt.setInt(1, idPropietario); // 🛑 Verifique que el índice es '1' y el ID no es 0
@@ -62,7 +63,7 @@ public class ConsultaDAO {
             }
         } catch (SQLException e) {
             System.err.println("Error de BD al listar mascotas: " + e.getMessage());
-            // 🛑 Propagar como RuntimeException para que el Controlador la atrape
+            // 🛑 Propagamos como RuntimeException para que el Controlador la atrape
             throw new RuntimeException("Fallo al obtener las mascotas.", e);
         }
         return mascotas;
@@ -72,7 +73,6 @@ public class ConsultaDAO {
         List<TipoPractica> tipos = new ArrayList<>();
 
 
-        // 🛑 CLAVE: try-with-resources
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_TIPOS_CONSULTA);
              ResultSet rs = stmt.executeQuery()) {
@@ -96,12 +96,12 @@ public class ConsultaDAO {
     }
 
     // ---------------------------------------------
-    // MÉTODO DE ESCRITURA (Insertar)
+    // MÉTODO DE ESCRITURA (Insertamos la oncsulta)
     // ---------------------------------------------
 
     public void insertar(Consulta consulta) { // Método es VOID
 
-        // 🛑 CLAVE: try-with-resources
+
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(SQL_INSERT_CONSULTA)) {
 
@@ -128,9 +128,9 @@ public class ConsultaDAO {
             throw new RuntimeException("Fallo al registrar la consulta en la base de datos.", e);
         }
     }
-//Modifacion detalle
+// Sql especicifo para detalle de la consulta seleccionada
 
-    // 🛑 SQL para el listado RESUMEN (NO incluye los campos de texto largo)
+    // SQL para el listado RESUMEN (NO incluye los campos de texto largo)
     private static final String SQL_SELECT_CONSULTAS_RESUMEN =
             "SELECT c.idConsulta, c.fechaConsulta, t.descripcion AS Practica, c.diagnostico, c.pronostico, c.tratamiento " +
                     "FROM Consulta c " +
@@ -140,7 +140,7 @@ public class ConsultaDAO {
                     "WHERE p.idPropietario = ? AND c.idMascota = ? AND c.fechaConsulta >= ? " +
                     "ORDER BY c.fechaConsulta DESC";
 
-    // 🛑 SQL para la consulta DETALLE (Incluye TODOS los campos, especialmente los textos largos)
+    // SQL para la consulta DETALLE (Incluye TODOS los campos, especialmente los textos largos)
     private static final String SQL_SELECT_DETALLE_CONSULTA =
             "SELECT c.idConsulta, c.fechaConsulta, m.nombre AS Mascota, CONCAT(p.apellido, ', ', p.nombre) AS Propietario, " +
                     "       t.descripcion AS Practica, c.resultadoEstudio, c.diagnostico, c.pronostico, c.tratamiento " +
@@ -150,9 +150,10 @@ public class ConsultaDAO {
                     "JOIN TipoPractica t ON c.idTipoPractica = t.idTipoPractica " +
                     "WHERE c.idConsulta = ?";
 
+    //Consulta de los datos  la  consulta profesional seleeceionada
     public Object[] consultarDetalle(int idConsulta) {
         Object[] detalle = null;
-        try (Connection conn = Conexion.obtenerConexion(); // Asume tu clase de conexión
+        try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_DETALLE_CONSULTA)) {
 
             stmt.setInt(1, idConsulta);
@@ -160,15 +161,15 @@ public class ConsultaDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     detalle = new Object[]{
-                            rs.getInt("idConsulta"),      // 0: ID (int)
-                            rs.getDate("fechaConsulta"),  // 1: Fecha (Date)// 2: Hora (Time)
-                            rs.getString("Mascota"),      // 3: Mascota (String)
-                            rs.getString("Propietario"),  // 4: Propietario (String)
-                            rs.getString("Practica"),     // 5: Practica (String)
-                            rs.getString("resultadoEstudio"), // 6: Resultado Estudio (String)
-                            rs.getString("diagnostico"),  // 7: Diagnóstico (String)
-                            rs.getString("pronostico"),   // 8: Pronóstico (String)
-                            rs.getString("tratamiento")   // 9: Tratamiento (String)
+                            rs.getInt("idConsulta"),      //  ID (int)
+                            rs.getDate("fechaConsulta"),  // Fecha (Date)// 2: Hora (Time)
+                            rs.getString("Mascota"),      // Mascota (String)
+                            rs.getString("Propietario"),  // Propietario (String)
+                            rs.getString("Practica"),     // Practica (String)
+                            rs.getString("resultadoEstudio"), // Resultado Estudio (String)
+                            rs.getString("diagnostico"),  // Diagnóstico (String)
+                            rs.getString("pronostico"),   // Pronóstico (String)
+                            rs.getString("tratamiento")   // Tratamiento (String)
                     };
                 }
             }
@@ -180,7 +181,7 @@ public class ConsultaDAO {
     }
 
     // -------------------------------------------------------------
-    // 🛑 Método 2: LISTAR RESUMEN (Devuelve List<Object[]> para la tabla)
+    // 🛑 Método: LISTAR RESUMEN (Devuelve List<Object[]> para la tabla)
     // -------------------------------------------------------------
     public List<Object[]> listarConsultasResumen(int idPropietario,int idMascota, java.sql.Date fecha) {
         List<Object[]> lista = new ArrayList<>();

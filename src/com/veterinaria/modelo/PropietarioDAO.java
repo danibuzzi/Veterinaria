@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-// Asumimos que existe la clase 'Conexion' con el método estático obtenerConexion()
+
 public class PropietarioDAO {
 
     public PropietarioDAO() {}

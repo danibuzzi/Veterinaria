@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JDesktopPane;
-import javax.swing.DefaultComboBoxModel; // Necesario para cargar modelos
+import javax.swing.DefaultComboBoxModel;
 
 public class ControladorHistoriaClinica implements ActionListener {
 
@@ -20,14 +20,14 @@ public class ControladorHistoriaClinica implements ActionListener {
     private final HistoriaClinicaService service;
     private final JDesktopPane desktopPane;
 
-    // 🛑 ¡SE HAN ELIMINADO LOS HASHMAPS!
+    //Constructor de controlador
 
     public ControladorHistoriaClinica(HistoriaClinicaService service, VentanaHistoriaClinica2 vistaListado, JDesktopPane desktopPane) {
         this.service = service;
         this.vistaListado = vistaListado;
         this.desktopPane = desktopPane;
 
-        // 1. Configurar Listeners y ActionCommands
+        // Configurar Listeners y ActionCommands
         this.vistaListado.setControlador(this);
         this.vistaListado.getBtnBuscar().setActionCommand("BUSCAR");
         this.vistaListado.getBtnVerDetalle().setActionCommand("VER_DETALLE");
@@ -40,13 +40,13 @@ public class ControladorHistoriaClinica implements ActionListener {
         comboPropietario.setActionCommand("PROPIETARIO_CAMBIO");
         comboPropietario.addActionListener(this);
 
-        // 2. Cargar datos iniciales
+        // Cargar datos iniciales
         cargarDatosIniciales();
     }
 
     private void cargarDatosIniciales() {
         try {
-            // 1. Cargar Propietarios
+            // Cargar Propietarios
             List<Propietario> propietarios = service.listarPropietarios();
             JComboBox<Propietario> comboPropietario = vistaListado.getComboPropietario();
 
@@ -61,7 +61,7 @@ public class ControladorHistoriaClinica implements ActionListener {
             }
             comboPropietario.setModel(modeloPropietario);
 
-            // 2. Inicializar Mascota
+            // Inicializar Mascota
             cargarMascotas(0); // Carga la lista de mascotas con ID 0 al inicio
         } catch (RuntimeException e) {
             vistaListado.mostrarMensaje("Error al cargar datos iniciales: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -89,38 +89,10 @@ public class ControladorHistoriaClinica implements ActionListener {
         comboMascota.setModel(modeloMascota);
     }
 
-   /* private void buscarConsultas() {
-        // 🛑 1. Obtener el objeto Propietario directamente del JComboBox
-        Propietario propietarioSeleccionado = (Propietario) vistaListado.getComboPropietario().getSelectedItem();
 
-        if (propietarioSeleccionado == null || propietarioSeleccionado.getIdPropietario() == 0) {
-            vistaListado.mostrarMensaje("Seleccione un Propietario específico para buscar su historial.", JOptionPane.WARNING_MESSAGE);
-            vistaListado.mostrarResultados(List.of()); // Limpiar la tabla
-            return;
-        }
-
-
-
-        int idPropietario = propietarioSeleccionado.getIdPropietario();
-
-        try {
-            // 🛑 Llamada al service para obtener List<Object[]>
-            List<Object[]> resultados = service.listarConsultasResumen(idPropietario);
-
-
-            vistaListado.mostrarResultados(resultados);
-
-            if (resultados.isEmpty()) {
-                vistaListado.mostrarMensaje("No se encontraron consultas para el propietario seleccionado.", JOptionPane.INFORMATION_MESSAGE);
-            }
-
-        } catch (Exception e) {
-            vistaListado.mostrarMensaje("Error al realizar la búsqueda de consultas: " + e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }
-    }*/
 
     private void buscarConsultas() {
-        // 1. OBTENER VALORES DE LOS TRES CAMPOS OBLIGATORIOS
+        //  OBTENER VALORES DE LOS  CAMPOS OBLIGATORIOS
 
         // Propietario
         Propietario propietario = (Propietario) vistaListado.getComboPropietario().getSelectedItem();
@@ -130,10 +102,10 @@ public class ControladorHistoriaClinica implements ActionListener {
         Mascota mascota = (Mascota) vistaListado.getComboMascota().getSelectedItem();
 
         // Fecha
-        // 🛑 ASUME que tienes un getter para el componente de fecha
+
         java.util.Date utilDate = vistaListado.getFechaDesde();
 
-        // 2. 🛑 VALIDACIÓN GENERAL ESTRICTA (TODOS LOS CAMPOS OBLIGATORIOS)
+        // VALIDACIÓN GENERAL ESTRICTA (TODOS LOS CAMPOS OBLIGATORIOS)
 
         // Verificamos si alguno de los campos obligatorios falta o es inválido (ID <= 0)
         boolean propietarioSeleccionado = (propietario != null && propietario.getIdPropietario() > 0);
@@ -141,7 +113,7 @@ public class ControladorHistoriaClinica implements ActionListener {
         boolean fechaIngresada = (utilDate != null);
 
         if (!propietarioSeleccionado || !mascotaSeleccionada || !fechaIngresada) {
-            // Un solo mensaje de error si falta CUALQUIER campo
+            // mensaje de error si falta CUALQUIER campo
             vistaListado.mostrarMensaje(
                     "Debe seleccionar el Propietario, la Mascota y la Fecha de Búsqueda para realizar la consulta.",
                     JOptionPane.WARNING_MESSAGE
@@ -150,19 +122,18 @@ public class ControladorHistoriaClinica implements ActionListener {
             return;
         }
 
-        // 3. PREPARACIÓN DE DATOS Y LLAMADA AL SERVICIO
+        // 3. PREPARACIÓN DE DATOS Y LLAMADA AL SERVICIO o gestor
 
-        // Si llegamos aquí, sabemos que los tres valores son válidos y no null.
 
         Integer idPropietario = propietario.getIdPropietario();
         Integer idMascota = mascota.getIdMascota();
 
-        // Convertir la fecha de java.util.Date a java.sql.Date
+        // Convertimos la fecha de java.util.Date a java.sql.Date
         java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
         try {
-            // 🛑 Llamada al nuevo método del servicio que acepta los 3 filtros
-            // ¡DEBES CREAR ESTE MÉTODO EN EL SERVICIO!
+            // Llamada al nuevo método del servicio o gestor que acepta los 3 filtros
+
             List<Object[]> resultados = service.buscarConsultasResumen(
                     idPropietario,
                     idMascota,
@@ -180,10 +151,10 @@ public class ControladorHistoriaClinica implements ActionListener {
         }
     }
 
-    // Visualizar el datos de la consulta seleccionada.
+    // Visualizar los datos de la consulta seleccionada.
 
     private void verDetalleConsulta() {
-        // 1. Obtener el ID de la consulta de la tabla (Columna 0 oculta)
+        // Obtener el ID de la consulta de la tabla (Columna 0 oculta)
         Object idObj = vistaListado.getIdConsultaSeleccionada();
 
         if (idObj == null) {
@@ -194,7 +165,7 @@ public class ControladorHistoriaClinica implements ActionListener {
         try {
             int idConsulta = (int) idObj;
 
-            // 2. Llamar al service para obtener el Object[] de detalle
+            // Llamar al service para obtener el Object[] de detalle
             Object[] detalle = service.consultarDetalle(idConsulta);
 
             if (detalle == null) {
@@ -202,9 +173,9 @@ public class ControladorHistoriaClinica implements ActionListener {
                 return;
             }
 
-            // 3. Crear y mostrar la VentanaDetalleConsulta
+            //  Crear y mostrar la VentanaDetalleConsulta
             VentanaDetalleConsulta ventanaDetalle = new VentanaDetalleConsulta();
-            ventanaDetalle.cargarDatosConsulta(detalle); // <--- Se usa el Object[]
+            ventanaDetalle.cargarDatosConsulta(detalle);
 
             desktopPane.add(ventanaDetalle);
             ventanaDetalle.setVisible(true);
@@ -228,7 +199,7 @@ public class ControladorHistoriaClinica implements ActionListener {
 
         switch (command) {
             case "PROPIETARIO_CAMBIO":
-                // 🛑 Obtener el ID del objeto Propietario seleccionado
+                // Obtener el ID del objeto Propietario seleccionado
                 Propietario p = (Propietario) vistaListado.getComboPropietario().getSelectedItem();
                 int idPropietario = (p != null) ? p.getIdPropietario() : 0;
                 cargarMascotas(idPropietario);

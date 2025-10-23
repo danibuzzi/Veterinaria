@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-// Asume la existencia de PropietarioDAO, MascotaDAO y ConsultaDAO con sus metodos.
+
 public class HistoriaClinicaService {
 
     private final ConsultaDAO consultaDAO;
@@ -12,7 +12,7 @@ public class HistoriaClinicaService {
     private final MascotaDAO mascotaDAO;
     private final TipoPracticaDAO tipoPracticaDAO;
 
-    // Inyección de dependencias (se asume que se pasan instancias de los DAOs)
+    // Inyección de dependencias
     public HistoriaClinicaService(ConsultaDAO consultaDAO, PropietarioDAO propietarioDAO, MascotaDAO mascotaDAO,TipoPracticaDAO tipoPracticaDAO) {
         this.consultaDAO = consultaDAO;
         this.propietarioDAO = propietarioDAO;
@@ -24,7 +24,7 @@ public class HistoriaClinicaService {
      * Lista todos los propietarios activos.
      */
     public List<Propietario> listarPropietarios() {
-        // Llama al metodo del DAO de Propietario (asumiendo que existe)
+        // Llama al metodo del DAO de Propietario
         return propietarioDAO.listarTodosActivos();
     }
 
@@ -32,14 +32,13 @@ public class HistoriaClinicaService {
      * Lista las mascotas activas que pertenecen a un propietario.
      */
     public List<Mascota> listarMascotasPorPropietario(int idPropietario) {
-        // Llama al metodo del DAO de Mascota (asumiendo que existe)
+        // Llama al metodo del DAO de Mascota
         return mascotaDAO.listarActivasPorPropietario(idPropietario);
     }
 
     /**
      * Obtiene el listado de consultas (resumen) para un propietario.
-     * @param idPropietario El ID del propietario a buscar.
-     * @return Una lista de Object[] con el resumen de las consultas.
+     * @retorna Una lista de Object[] con el resumen de las consultas.
      */
     /*public List<Object[]> listarConsultasResumen(int idPropietario) {
         // Llama al método modificado en ConsultaDAO que devuelve List<Object[]>
@@ -53,8 +52,7 @@ public class HistoriaClinicaService {
 
     /**
      * Obtiene todos los detalles de una consulta específica, incluyendo nombres/descripciones.
-     * @param idConsulta El ID de la consulta.
-     * @return Un Object[] con todos los campos (modelo DTO implícito).
+     * @returna Un Object[] con todos los campos.
      */
     public Object[] consultarDetalle(int idConsulta) {
         // Llama al método modificado en ConsultaDAO que devuelve Object[]

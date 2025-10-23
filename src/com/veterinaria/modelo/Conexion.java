@@ -12,6 +12,7 @@ import java.sql.SQLException;
     public class Conexion {
 
         // --- CONFIGURACIÓN DE LA BASE DE DATOS ---
+
         private static final String URL = "jdbc:mysql://localhost:3306/veterinaria";
         private static final String USUARIO = "root";
         private static final String CLAVE = "1234"; // ¡CAMBIAR!
@@ -35,7 +36,7 @@ import java.sql.SQLException;
 
             } catch (SQLException e) {
                 // Manejo y diagnóstico de errores en la consola del IDE
-                System.err.println("❌ [ERROR CRÍTICO DE CONEXIÓN] La conexión a la base de datos ha fallado.");
+                System.err.println("  [ERROR CRÍTICO DE CONEXIÓN] La conexión a la base de datos ha fallado.");
                 System.err.println("   Causa: " + e.getMessage());
                 System.err.println("   Código SQL: " + e.getSQLState());
 
@@ -76,20 +77,20 @@ import java.sql.SQLException;
 
         public static Connection obtenerConexion() throws SQLException {
 
-            // 1. Cargar el Driver
+            // Cargar el Driver
             try {
                 Class.forName(JDBC_DRIVER);
             } catch (ClassNotFoundException e) {
                 throw new SQLException("Error: No se encontró el driver JDBC.", e);
             }
 
-            // 2. CLAVE: SIEMPRE crea una NUEVA instancia de conexión
+            // SIEMPRE se crea una NUEVA instancia de conexión
             try {
                 Connection connection = DriverManager.getConnection(URL, USUARIO, CLAVE);
                 System.out.println("✅ [DEBUG] Conexión a MySQL exitosa.");
                 return connection;
             } catch (SQLException e) {
-                System.err.println("❌ [ERROR CRÍTICO] La conexión ha fallado. Causa: " + e.getMessage());
+                System.err.println(" [ERROR CRÍTICO] La conexión ha fallado. Causa: " + e.getMessage());
                 throw new SQLException("Fallo de Conexión a BD. Verifique el servidor y las credenciales.", e);
             }
         }

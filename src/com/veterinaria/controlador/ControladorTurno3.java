@@ -19,78 +19,79 @@ public class ControladorTurno3 implements ActionListener {
 
     public ControladorTurno3(GestorTurno3 gestorTurno, VentanaRegistroTurno3 vistaRegistro) {
 
-        // ✅ INICIALIZACIÓN CRUCIAL: Asigna los parámetros a las variables de la clase.
-        // Esto resuelve los errores de "debo inicializar la variable" y "parámetros del constructor".
+        // ✅  Asigna los parámetros a las variables de la clase.
+
         this.gestorTurno = gestorTurno;
         this.vistaRegistro = vistaRegistro;
 
         // CONEXIONES DE OYENTES
+
         this.vistaRegistro.setControlador(this); // Botones (ActionListener)
         this.vistaRegistro.setListenerCargaMascotas(this); // Propietario (ActionListener)
 
         // ✅ CONEXIÓN CORRECTA DEL JDateChooser (PropertyChangeListener)
-        // Asegúrate de que las llaves y la sintaxis estén limpias.
+
         this.vistaRegistro.setListenerFecha(e -> {
             if ("date".equals(e.getPropertyName())) {
                 Date nuevaFecha = vistaRegistro.getDateChooserFechaTurno().getDate();
                 cargarHorariosDisponibles(nuevaFecha);
             }
-        }); // 🛑 Solo un punto y coma aquí
+        });
 
-        // Carga de datos
+        // Carga de datos iniciales
         cargarDatosIniciales();
     }
-// Archivo: com/veterinaria/controlador/ControladorTurno3.java (Método necesario)
+// Manejar cambio de fecha
 
     private void manejarCambioFecha() {
-        // 1. Obtener la fecha seleccionada del componente de la Vista
+        //  Obtener la fecha seleccionada del componente de la Vista
         Date fechaSeleccionada = vistaRegistro.getDateChooserFechaTurno().getDate();
 
-        // 2. Si hay fecha seleccionada...
+        // Si hay fecha seleccionada...
         if (fechaSeleccionada != null) {
-            // 3. Llamar al Gestor para obtener la lista de horarios disponibles para esa fecha
+            // Llamar al Gestor para obtener la lista de horarios disponibles para esa fecha
             List<String> horarios = gestorTurno.cargarHorariosDisponibles(fechaSeleccionada);
 
-            // 4. Cargar la nueva lista en el ComboBox de la Vista
+            // Cargar la nueva lista en el ComboBox de la Vista
             vistaRegistro.cargarItems(vistaRegistro.getComboHora(), horarios);
         }
     }
-    // VOID: NO NECESITA RETURN
+
     private void cargarDatosIniciales() {
-// 1. Cargar Tipos de Consulta
+       // Cargar Tipos de Consulta
         List<String> tiposConsulta = gestorTurno.cargarNombresTiposConsulta();
         tiposConsulta.add(0, "--- Seleccione Tipo de Consulta ---");
 
-        // ✅ CORRECCIÓN CLAVE: Usar la lista modificada (tiposConsulta)
+        //  Usamos la lista modificada (tiposConsulta)
         vistaRegistro.cargarItems(vistaRegistro.getComboTipoConsulta(), tiposConsulta);
 
 
-        // 2. Cargar Propietarios
+        // Cargar Propietarios
         List<String> propietarios = gestorTurno.cargarNombresPropietarios();
         propietarios.add(0, "--- Seleccione Propietario ---");
 
-        // ✅ CORRECCIÓN CLAVE: Usar la lista modificada (propietarios)
+        // Usar la lista modificada (propietarios)
         vistaRegistro.cargarItems(vistaRegistro.getComboPropietario(), propietarios);
 
 
-        // 3. Mascota (Inicia solo con la opción de control)
+        // Mascota (Inicia solo con la opción de control)
         List<String> mascotasInicial = new ArrayList<>();
         mascotasInicial.add("--- Seleccione Mascota ---");
         vistaRegistro.cargarItems(vistaRegistro.getComboMascota(), mascotasInicial);
 
 
-        // 4. Horarios (Asume que este método ya está correcto)
+        // Cargamos los horarios
         cargarHorariosDisponibles(vistaRegistro.getDateChooserFechaTurno().getDate());
     }
 
-    // VOID: NO NECESITA RETURN
+     //CArga de mascotas
     private void cargarMascotas() {
         String nombrePropietario = vistaRegistro.getNombrePropietarioSeleccionado();
         List<String> mascotas = gestorTurno.cargarNombresMascotasPorPropietario(nombrePropietario);
         vistaRegistro.cargarItems(vistaRegistro.getComboMascota(), mascotas);
     }
 
-    // VOID: NO NECESITA RETURN
+    // Carga de hoarios dispnibles
     private void cargarHorariosDisponibles(Date fechaSeleccionada) {
         if (fechaSeleccionada == null) return;
 
@@ -115,19 +116,19 @@ public class ControladorTurno3 implements ActionListener {
     }
 
     private boolean validarCampos() {
-        // 1. Verificar Propietario
+        // Verificar Propietario
         if (vistaRegistro.getComboPropietario().getSelectedItem().toString().startsWith("---")) {
             return false;
         }
-        // 2. Verificar Mascota
+        // Verificar Mascota
         if (vistaRegistro.getComboMascota().getSelectedItem().toString().startsWith("---")) {
             return false;
         }
-        // 3. Verificar Tipo de Consulta
+        // Verificar Tipo de Consulta
         if (vistaRegistro.getComboTipoConsulta().getSelectedItem().toString().startsWith("---")) {
             return false;
         }
-        // 4. Verificar Hora
+        // Verificar Hora
         if (vistaRegistro.getComboHora().getSelectedItem().toString().startsWith("---")) {
             return false;
         }
@@ -141,11 +142,11 @@ public class ControladorTurno3 implements ActionListener {
     }
 
 
-// Archivo: com/veterinaria/controlador/ControladorTurno3.java
+// Limpieza da campos (cancelar)
 
     private void limpiarCampos() {
 
-        // ✅ VERIFICACIÓN DE SEGURIDAD: Solo establece el índice si hay ítems.
+        // VERIFICACIÓN DE SEGURIDAD: Solo  se establece el índice si hay ítems.
 
         // Propietario
         if (vistaRegistro.getComboPropietario().getItemCount() > 0) {
@@ -173,29 +174,27 @@ public class ControladorTurno3 implements ActionListener {
         vistaRegistro.getDateChooserFechaTurno().setDate(new Date());
     }
 
-    // ✅ Asegúrate de tener un método para restablecer las mascotas al estado inicial.
+    //  REstablecemos mascotas a su estado inicial
+
     private void cargarMascotasIniciales() {
-        // Esto es lo que se hacía en cargarDatosIniciales() para las mascotas.
+
         List<String> mascotasInicial = new ArrayList<>();
         mascotasInicial.add("--- Seleccione Mascota ---");
         //vistaRegistro.cargarItems(vistaRegistro.getComboMascota(), mascotasInicial);
     }
 
-    // VOID: NO NECESITA RETURN
+    // Registro del turno
     private void registrarTurno() {
 
-        // 1. VALIDACIÓN
+        // VALIDACIÓN de Campos
         if (!validarCampos()) {
             vistaRegistro.mostrarMensajeError("Debe seleccionar todos los campos obligatorios.");
             vistaRegistro.getBtnGuardar().setEnabled(true);
             return; // Sale si la validación falla
         }
 
-        // 2. CREACIÓN DEL OBJETO TURNO (Asignar valores, etc.)
-        // ...
-        // 2. CREACIÓN DEL OBJETO TURNO (AÑADIR ESTO)
-        // 2. ✅ OBTENER TODOS LOS PARÁMETROS INDIVIDUALMENTE
-        // (Asegúrate de que tus métodos getter existen en VentanaRegistroTurno3)
+        // CREACIÓN DEL OBJETO TURNO (Asignar valores, etc.)
+
         Date fechaTurno = vistaRegistro.getDateChooserFechaTurno().getDate();
         String horaTurno = vistaRegistro.getHoraSeleccionada(); // Formato HH:MM:SS
         String nombrePropietario = vistaRegistro.getNombrePropietarioSeleccionado();
@@ -204,8 +203,7 @@ public class ControladorTurno3 implements ActionListener {
 
 
         // 3. REGISTRO EN EL GESTOR con PARÁMETROS INDIVIDUALES
-        // 🛑 ADVERTENCIA: El orden de los parámetros es CRÍTICO.
-        // Asegúrate de que el orden aquí coincida con la definición del método en tu Gestor.
+
         try {
             // 3. REGISTRO EN EL GESTOR (Se ejecuta y si hay error, salta al 'catch')
             gestorTurno.registrarTurno(
@@ -219,13 +217,12 @@ public class ControladorTurno3 implements ActionListener {
             vistaRegistro.mostrarMensajeExito("El turno ha sido registrado con éxito.");
 
             limpiarCampos();
-            return; // CLAVE: Termina el método inmediatamente
+            return;
 
-        } catch (Exception e) { // Puedes reemplazar 'Exception' por la clase específica de error (ej: SQLException)
+        } catch (Exception e) {
 
-            // 5. FALLO
-            // Opcional: imprimir la excepción para depuración
-            // e.printStackTrace();
+
+            e.printStackTrace();
 
             vistaRegistro.mostrarMensajeError("Error al registrar el turno. Detalle: " + e.getMessage());
             vistaRegistro.getBtnGuardar().setEnabled(true);

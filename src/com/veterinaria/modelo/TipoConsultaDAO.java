@@ -18,10 +18,10 @@ public class TipoConsultaDAO {
      */
     public List<TipoConsulta> obtenerTodos() throws SQLException {
         List<TipoConsulta> tipos = new ArrayList<>();
-        // ASUMO que tu tabla se llama TipoConsulta
+
         String sql = "SELECT idTipoConsulta, descripcion FROM TipoConsulta ORDER BY descripcion";
 
-        try (Connection conn = Conexion.conectar(); // Usar tu clase de conexión
+        try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 

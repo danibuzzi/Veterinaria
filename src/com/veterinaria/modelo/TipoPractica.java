@@ -6,7 +6,7 @@ public class TipoPractica {
     private int idTipoPractica;
     private String descripcion;
 
-    // Constructor vacío (necesario si usas frameworks o para deserialización)
+    // Constructor vacío
     public TipoPractica() {
     }
 
@@ -39,8 +39,8 @@ public class TipoPractica {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-       TipoPractica tipo = (TipoPractica) o;
-        // CRÍTICO: SOLO SE COMPARA EL ID
+        TipoPractica tipo = (TipoPractica) o;
+
         return idTipoPractica == tipo.idTipoPractica;
     }
 

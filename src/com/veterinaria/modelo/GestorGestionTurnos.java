@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * Clase que maneja la lógica de negocio para la gestión de turnos.
- * Actúa como intermediario entre el Controlador y el TurnoDAO3.
  */
 public class GestorGestionTurnos {
 
@@ -27,7 +26,7 @@ public class GestorGestionTurnos {
         this.factoria = factoria;
     }
 
-    // Método que necesita el Lanzador para obtener la Factoría
+    //Para que lanzador obtenga la factoria
     public FactoriaServicios getFactoria() {
         return factoria;
     }
@@ -47,16 +46,14 @@ public class GestorGestionTurnos {
     /**
      * Busca los turnos para una fecha y los convierte en una matriz Object[][]
      * apta para el modelo de la JTable.
-     * @param fecha La fecha para la cual buscar turnos (formato "yyyy-MM-dd").
-     * @return Una matriz Object[][] con los datos de la grilla (incluye el ID en la Columna 0).
      */
     private Object[][] datosGrillaCompleta;
 
-    // 🛑 NUEVO MÉTODO GETTER para que el Controlador pueda acceder a la fila completa de 9
+    //  MÉTODO GETTER para que el Controlador pueda acceder a la fila completa de 9
     public Object[] obtenerFilaCompleta(int indiceFila) {
         // Verifica que la matriz exista y que el índice sea válido
         if (datosGrillaCompleta != null && indiceFila >= 0 && indiceFila < datosGrillaCompleta.length) {
-            return datosGrillaCompleta[indiceFila]; // Devuelve el array de 9 posiciones
+            return datosGrillaCompleta[indiceFila];
         }
         return null; // Devuelve null si no hay datos o el índice es inválido
     }
@@ -101,7 +98,7 @@ public class GestorGestionTurnos {
 
             int filas = listaDatos.size();
 
-            // 🛑 CORRECCIÓN: Obtener el número REAL de columnas (que el DAO devuelve, que debe ser 9)
+            // Obtenemos el número REAL de columnas (que el DAO devuelve, que debe ser 9)
             int columnas = listaDatos.get(0).length;
 
             Object[][] matrizDatos = new Object[filas][columnas];
@@ -110,27 +107,26 @@ public class GestorGestionTurnos {
                 matrizDatos[i] = listaDatos.get(i);
             }
 
-            // 🛑 CAMBIO CLAVE: Guardar la matriz COMPLETA de 9 columnas antes de salir
+            // Guardamos la matriz COMPLETA de 9 columnas antes de salir
             this.datosGrillaCompleta = matrizDatos;
 
             return matrizDatos;
 
         } catch (SQLException e) {
             System.err.println("Error de SQL al obtener datos para la grilla: " + e.getMessage());
-            this.datosGrillaCompleta = new Object[0][0]; // 🛑 Inicializar a vacío en caso de error
+            this.datosGrillaCompleta = new Object[0][0]; // Inicializamos a vacío en caso de error
             return new Object[0][0];
         }
     }
 
 
     // ----------------------------------------------------
-    // 2. GESTIÓN DE ELIMINACIÓN
+    // GESTIÓN DE ELIMINACIÓN
     // ----------------------------------------------------
 
     /**
      * Llama al DAO para eliminar un turno por su ID.
-     * @param idTurno El ID del turno a eliminar, obtenido de la Columna 0 de la grilla.
-     * @return true si se eliminó con éxito, false en caso contrario.
+     * retornando true si se eliminó con éxito, false en caso contrario.
      */
     public boolean eliminarTurno(int idTurno) {
         try {
@@ -147,10 +143,9 @@ public class GestorGestionTurnos {
 
     /**
      * Llama al DAO para actualizar los datos de un turno.
-     * @param idTurno El ID del turno a modificar, obtenido de la Columna 0 de la grilla.
-     * @param datosNuevos Objeto Turno con los nuevos datos (fecha, hora, tipoConsulta)
-     * que fueron capturados del formulario de modificación.
-     * @return true si se actualizó con éxito, false en caso contrario.
+     * obtenemos el id de turno de la columna de la grilla.
+     * y los nuevos datos que fueron capturados del formulario de modificación.
+     * @devuelve true si se actualizó con éxito, false en caso contrario.
      */
     public boolean modificarTurno(int idTurno, Turno datosNuevos) {
         try {
@@ -162,9 +157,9 @@ public class GestorGestionTurnos {
         }
     }
 
-    // ----------------------------------------------------
-    // 4. REGISTRO (CREACIÓN) - SI ES NECESARIO DESDE AQUÍ
-    // ----------------------------------------------------
+    // ------------------------
+    // REGISTRO (CREACIÓN)
+    // ------------------------
 
     /**
      * Llama al DAO para registrar un nuevo turno (si la gestión de registro pasa por aquí).
@@ -181,8 +176,8 @@ public class GestorGestionTurnos {
 
 
     /*public int obtenerIDPropietarioPorTurnoID(String idTurnoStr) throws SQLException {
-        // 🛑 ESTE MÉTODO ES EL QUE FALTA Y POR ESO NO SE USA EL DAO.
-        // Llama al DAO correcto:
+
+        // Llama al DAO correcto
         return new TurnoDAO().obtenerIDPropietarioPorTurnoID(idTurnoStr);
     }*/
 
@@ -204,11 +199,11 @@ public class GestorGestionTurnos {
 
     public int obtenerIDMascotaPorTurnoID(String idTurnoStr) throws SQLException {
         try {
-            // 1. CONVERSIÓN SEGURA: Convertir el String recibido a un Integer.
+            // CONVERSIÓN SEGURA: Convertir el String recibido a un Integer.
             int idTurno = Integer.parseInt(idTurnoStr);
 
-            // 2. LLAMADA AL DAO
-            // 🛑 Nota: He corregido el error de sintaxis (doble 'id' en el retorno).
+            // LLAMADA AL DAO
+
             return turnoDAO.obtenerIDMascotaPorTurnoID(idTurnoStr);
 
         } catch (NumberFormatException e) {
@@ -220,11 +215,11 @@ public class GestorGestionTurnos {
 
     public int obtenerIDTipoConsultaPorTurnoID(String idTurnoStr) throws SQLException {
         try {
-            // 1. CONVERSIÓN SEGURA: Convertir el String recibido a un Integer.
+            //  CONVERSIÓN SEGURA: Convertir el String recibido a un Integer.
             int idTurno = Integer.parseInt(idTurnoStr);
 
-            // 2. LLAMADA AL DAO
-            // 🛑 Nota: He corregido el error de sintaxis (doble 'id' en el retorno).
+            // LLAMADA AL DAO
+
             return turnoDAO.obtenerIDTipoConsultaPorTurnoID(idTurnoStr);
 
         } catch (NumberFormatException e) {

@@ -27,15 +27,16 @@ public class LanzadorHistoriaClinica implements ILanzadorModulo {
             VentanaHistoriaClinica2 vistaListado = new VentanaHistoriaClinica2(escritorio);
 
             // 2. CREAR EL CONTROLADOR
-            // Mantenemos los 3 argumentos tal como lo tienes
+            // Mantenemos los 3 argumentos
+
             ControladorHistoriaClinica controlador = new ControladorHistoriaClinica(
-                    this.historiaClinicaService, // El Modelo/Service
-                    vistaListado,               // La Vista
-                    this.escritorio             // El tercer argumento que necesitas
+                    this.historiaClinicaService,
+                    vistaListado,
+                    this.escritorio
             );
 
-            // 🛑 CRÍTICO: La conexión vista-controlador sucede dentro del constructor de 'ControladorHistoriaClinica'
-            // NO se necesita vistaListado.setControlador(controlador); aquí.
+            // La conexión vista-controlador sucede dentro del constructor de 'ControladorHistoriaClinica'
+
 
             // 3. Añadir, centrar y mostrar
             this.escritorio.add(vistaListado);

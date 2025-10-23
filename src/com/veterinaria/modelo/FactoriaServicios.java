@@ -116,11 +116,12 @@ package com.veterinaria.modelo;
 import com.veterinaria.controlador.ControladorGestionTurnos;
 import com.veterinaria.vista.VentanaGestionTurnos;
 
-// Se asume que todas estas clases existen y están disponibles en este paquete o han sido importadas.
+
 
 public class FactoriaServicios {
 
-    // --- 1. DECLARACIÓN DE TODOS LOS DAOs ---
+    // --- DECLARACIÓN DE TODOS LOS DAOs ---
+
     private final TurnoDAO3 turnoDAO;
     private final PropietarioDAO propietarioDAO;
     private final MascotaDAO mascotaDAO;
@@ -131,7 +132,8 @@ public class FactoriaServicios {
     private final HistoriaClinicaService historiaClinicaService;
 
     // --- 2. DECLARACIÓN DE GESTORES ---
-    private final GestorTurno3 gestorTurno;          // 🛑 Para Registro (Asume este nombre)
+
+    private final GestorTurno3 gestorTurno;          // 🛑 Para Registro (
     private final GestorGestionTurnos gestorGestionTurnos; // Para Gestión
 
     public FactoriaServicios() {
@@ -145,20 +147,21 @@ public class FactoriaServicios {
         this.tipoPracticaDAO=new TipoPracticaDAO();
         this.historiaClinicaService = new HistoriaClinicaService(consultaDAO,
                 propietarioDAO,mascotaDAO,tipoPracticaDAO);
-        // B. CREACIÓN DE GESTORES (Inyección de dependencias)
 
-        // 1. GESTOR DE REGISTRO DE TURNOS (CORREGIDO)
-        // Recibe 1 argumento: TurnoDAO
+        // CREACIÓN DE GESTORES (Inyección de dependencias)
+
+        // GESTOR DE REGISTRO DE TURNOS
+
         this.gestorTurno = new GestorTurno3(turnoDAO);
 
-        // 2. GESTOR DE GESTIÓN DE TURNOS (Con la 'CÁPSULA' para Modificación)
-        // Recibe 4 argumentos: 3 DAOs + la Factoría (this)
+        // GESTOR DE GESTIÓN DE TURNOS
+
         this.gestorGestionTurnos = new GestorGestionTurnos(
                 turnoDAO,
                 propietarioDAO,
                 mascotaDAO,
                 tipoConsultaDAO,
-                this // 🛑 Esencial: Pasa la referencia de la Factoría
+                this // referencia a la factoria
         );
     }
 

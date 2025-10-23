@@ -23,20 +23,15 @@ public class LanzadorRegistroConsulta implements ILanzadorModulo {
     @Override
     public void lanzar() {
         try {
-            // 1. Crear la Vista (la que ya diseñamos con los combos tipados)
+            // 1. Crear la Vista
             VentanaRegistroConsulta vistaConsulta = new VentanaRegistroConsulta(escritorio);
 
-            // 2. Crear el Controlador (Asumimos que tiene este constructor)
-            ControladorRegistroConsulta controladorConsulta = new ControladorRegistroConsulta(
-                    this.consultaService, // <-- ✅ Servicio (Modelo)
-                    vistaConsulta       // <-- ✅ Vista
-            );
-            // 🛑 NOTA: EL CONTROLADOR DEBE RECIBIR EL SERVICE EN SU CONSTRUCTOR O TENER UN SETTER.
-            // Para simplificar, asumiremos que usa el constructor que ya diseñamos:
-            // new ControladorRegistroConsulta(VentanaRegistroConsulta vista)
-            // donde el Service se inicializa dentro del Controlador.
+            // 2. Crear el Controlador
 
-            // 3. El Controlador ya se encarga de: vista.setControlador(this) y cargar datos iniciales.
+            ControladorRegistroConsulta controladorConsulta = new ControladorRegistroConsulta(
+                    this.consultaService,
+                    vistaConsulta
+            );
 
             // 4. Añadir, centrar y mostrar
             this.escritorio.add(vistaConsulta);

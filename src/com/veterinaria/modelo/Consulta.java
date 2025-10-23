@@ -54,7 +54,7 @@ public class Consulta {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Consulta consulta = (Consulta) o;
-        // CRÍTICO: SOLO SE COMPARA EL ID
+
         return idConsulta == consulta.idConsulta;
     }
 

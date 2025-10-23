@@ -56,7 +56,7 @@ public class Main {
         formu7.setVisible(true);*/
 
 
-        TurnosFrame formu9 = new TurnosFrame(); // Crea una instancia de tu formulario
+        TurnosFrame formu9 = new TurnosFrame(); // Crea una instancia del formulario
         formu9.setVisible(true);
         ReservaTurnosFrame form10=new ReservaTurnosFrame();
         form10.setVisible(true);

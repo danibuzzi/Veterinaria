@@ -20,17 +20,17 @@ public class LanzadorRegistroTurno implements ILanzadorModulo {
 
     @Override
     public void lanzar() {
-        // Asumiendo que GestorTurno3 es la versión que queremos usar para Registro
+        //  La,kamao el gestor para Registro
         if (this.gestorTurno instanceof GestorTurno3) {
             GestorTurno3 gestorV3 = (GestorTurno3) this.gestorTurno;
 
-            // 1. Crear la Vista (Debe extender JInternalFrame)
+            // 1. Crear la Vista
             VentanaRegistroTurno3 vistaRegistro = new VentanaRegistroTurno3(gestorV3);
 
             // 2. Crear el Controlador e Inyectar
             ControladorTurno3 controladorTurno = new ControladorTurno3(gestorV3, vistaRegistro);
 
-            // 3. Conectar el Controlador a la Vista (para el botón Guardar, etc.)
+            // 3. Conectar el Controlador a la Vista
             vistaRegistro.setControlador(controladorTurno);
 
             // 4. Añadir y mostrar en el escritorio
@@ -43,13 +43,13 @@ public class LanzadorRegistroTurno implements ILanzadorModulo {
                     (escritorio.getHeight() - vistaRegistro.getHeight()) / 2
             );
 
-            // Opcional: Intentar seleccionar la ventana y traerla al frente
+
             try {
                 vistaRegistro.setSelected(true);
             } catch (java.beans.PropertyVetoException e) {}
 
         } else {
-            // Manejo de la lógica V2 o de versiones anteriores si es necesario
+            // Manejo de la lógica
         }
     }
 }

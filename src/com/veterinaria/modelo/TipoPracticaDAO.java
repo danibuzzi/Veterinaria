@@ -19,13 +19,12 @@ public class TipoPracticaDAO {
 
     /**
      * Obtiene un TipoPractica por su ID (crucial para mostrar el detalle).
-     * @param idTipoPractica El ID de la práctica a buscar.
-     * @return El objeto TipoPractica o null si no se encuentra.
+     * retorna El objeto TipoPractica o null si no se encuentra.
      */
     public TipoPractica obtenerPorId(int idTipoPractica) {
         TipoPractica tipoPractica = null;
 
-        try (Connection conn = Conexion.conectar(); // Usar el método de tu clase Conexion
+        try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(SQL_SELECT_BY_ID)) {
 
             ps.setInt(1, idTipoPractica);
@@ -46,7 +45,7 @@ public class TipoPracticaDAO {
 
     /**
      * Lista todos los Tipos de Práctica disponibles (útil para ComboBoxes).
-     * @return Una lista de objetos TipoPractica.
+     * retorna Una lista de objetos TipoPractica.
      */
     public List<TipoPractica> listarTodos() {
         List<TipoPractica> tipos = new ArrayList<>();

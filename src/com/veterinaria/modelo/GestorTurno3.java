@@ -17,9 +17,9 @@ public class GestorTurno3 {
         this.turnoDAO = turnoDAO;
     }
 
-    // ----------------------------------------------------
-    // LÓGICA DE CARGA DE DATOS (Corrección de returns)
-    // ----------------------------------------------------
+    // ----------------------------
+    // LÓGICA DE CARGA DE DATOS
+    // ---------------------------
 
     public List<String> cargarNombresTiposConsulta() {
         try {
@@ -100,7 +100,7 @@ public class GestorTurno3 {
     }
 
     // ----------------------------------------------------
-    // LÓGICA DE REGISTRO
+    // LÓGICA DE REGISTRO DEL TURNO
     // ----------------------------------------------------
 
     public String registrarTurno(String nombreTipo, String nombrePropietario, String nombreMascota, Date fecha, String hora) {
@@ -117,7 +117,7 @@ public class GestorTurno3 {
         }
 
         try {
-            // 1. Obtener IDs
+            // Obtener IDs
             int idTipo = turnoDAO.obtenerIdTipoConsulta(nombreTipo);
             int idPropietario = turnoDAO.obtenerIdPropietario(nombrePropietario);
             int idMascota = turnoDAO.obtenerIdMascota(nombreMascota);
@@ -126,13 +126,13 @@ public class GestorTurno3 {
                 return "ERROR: No se pudo encontrar uno de los IDs seleccionados en la base de datos.";
             }
 
-            // 2. Formatear Fecha y Hora para SQL
+            // Formatear Fecha y Hora para SQL
             SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
             String fechaTurnoStr = formatoFecha.format(fecha);
-            // 🛑 AQUÍ SE DECLARA E INICIALIZA:
+
             String horaConSegundos = hora + ":00"; // ⬅️ La variable se crea aquí.
 
-            // 3. Crear el objeto Turno y guardar
+            // Creamos el objeto Turno y guardar
             //Turno nuevoTurno = new Turno();
 
             Turno nuevoTurno = new Turno(idTipo, idPropietario, idMascota, fechaTurnoStr, horaConSegundos);
@@ -159,7 +159,7 @@ public class GestorTurno3 {
     // MÉTODOS AUXILIARES DE FECHA/HORA
     // ----------------------------------------------------
 
-    /** Bloquea fechas estrictamente anteriores a HOY (ignorando hora). */
+    /** Bloquea fechas estrictamente anteriores a HOY (ignorando la hora). */
     public boolean esFechaPasada(Date fechaSeleccionada) {
         if (fechaSeleccionada == null) {
             return false;
@@ -176,7 +176,7 @@ public class GestorTurno3 {
             String horaActualStr = new SimpleDateFormat("HH:mm").format(new Date());
             int minutosActuales = obtenerMinutos(horaActualStr);
 
-            // Redondeamos al siguiente slot de 15 minutos
+            // Redondeamos al siguiente turno posible de 15 minutos
             int modulo = minutosActuales % DURACION_CONSULTA_MINUTOS;
             int minutosRedondeados = minutosActuales;
 
@@ -207,7 +207,7 @@ public class GestorTurno3 {
         return cal.getTime();
     }
 
-    /** Compara si dos objetos Date son el mismo día (ignora la hora) */
+    /** Comparamos si dos objetos Date son el mismo día (ignora la hora) */
     public boolean esMismoDia(Date d1, Date d2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(d1);

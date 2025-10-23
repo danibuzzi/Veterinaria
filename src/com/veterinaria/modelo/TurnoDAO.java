@@ -1,8 +1,8 @@
 
-// Archivo: com/vetapp/modelo/dao/TurnoDAO.java
+
 package com.veterinaria.modelo;
 
-// Archivo: com/vetapp/modelo/dao/TurnoDAO.java
+
 
 
 import com.veterinaria.modelo.Conexion;
@@ -95,7 +95,7 @@ public class TurnoDAO {
 
     // --- BÚSQUEDA DE ID (Traducción de String a Int al GUARDAR) ---
 
-    // Usa la cadena única (Nombre + DNI)
+    // Usamos la cadena única (Nombre + DNI)
     public int obtenerIdPropietarioPorNombre(String cadenaUnica) throws SQLException {
         final String SQL = "SELECT idPropietario FROM propietario WHERE CONCAT(nombre, ' ', apellido, ' (DNI: ', dni, ')') = ?";
         try (Connection con = Conexion.conectar(); PreparedStatement ps = con.prepareStatement(SQL)) {
@@ -107,7 +107,7 @@ public class TurnoDAO {
         return 0;
     }
 
-    // Requiere el ID de Propietario para ser precisa.
+    // Obtenemos id de mascota por nombre
     public int obtenerIdMascotaPorNombre(String nombreMascota, int idPropietario) throws SQLException {
         final String SQL = "SELECT idMascota FROM mascota WHERE nombre = ? AND idPropietario = ?";
         try (Connection con = Conexion.conectar(); PreparedStatement ps = con.prepareStatement(SQL)) {
@@ -131,18 +131,17 @@ public class TurnoDAO {
         return 0;
     }
 
-    // Archivo: TurnoDAO.java (Debe ser añadido a su clase)
+    // Obtencion de los tipos de consulta
 
     public List<String> obtenerTiposConsulta() throws SQLException {
         List<String> tipos = new ArrayList<>();
         String sql = "SELECT nombre FROM tipoconsulta ORDER BY nombre"; // Asumiendo que existe una tabla 'tipo_consulta'
 
-        // Asumiendo que su clase TurnoDAO tiene un método para obtener la conexión
         try (Connection conn = getConnection(sql);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            // Añadir una opción predeterminada al inicio
+            // Añadimos una opción predeterminada al inicio
             tipos.add("--- Seleccione Tipo de Consulta ---");
 
             while (rs.next()) {
@@ -160,11 +159,11 @@ public class TurnoDAO {
         String formatoFecha = "yyyy-MM-dd";
         String fechaStr = new SimpleDateFormat(formatoFecha).format(fecha);
 
-        // 🛑 QUERY: Debe traer solo la hora de inicio del turno.
-        // AJUSTA ESTA FUNCIÓN SEGÚN TU BASE DE DATOS (MySQL: DATE_FORMAT(hora, '%H:%i'), SQL Server: FORMAT(hora, 'HH:mm'))
+        // Traemos solo la hora de inicio del turno.
+
         String sql = "SELECT DATE_FORMAT(hora, '%H:%i') AS hora_inicio FROM Turnos WHERE fecha = ?";
 
-        // Asumiendo que existe un método obtenerConexion()
+
         try (Connection conexion =  getConnection(sql);
              PreparedStatement ps = conexion.prepareStatement(sql)) {
 
@@ -184,7 +183,6 @@ public class TurnoDAO {
         String sql = "SELECT COUNT(*) FROM turno WHERE fechaturno = ? AND hora = ?";
         int count = 0;
 
-        // 🛑 DEBES ADAPTAR ESTE BLOQUE TRY-WITH-RESOURCES A TU LÓGICA DE CONEXIÓN A LA BD
         try (Connection conn =  Conexion.conectar(); // Asume que tienes un método obtenerConexion()
              PreparedStatement ps = conn.prepareStatement(sql)) {
 

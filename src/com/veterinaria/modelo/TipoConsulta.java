@@ -6,7 +6,7 @@ public class TipoConsulta {
     private int idTipoConsulta;
     private String descipcion;
 
-    // Constructor vacío (necesario si usas frameworks o para deserialización)
+    // Constructor vacío
     public TipoConsulta() {
     }
 

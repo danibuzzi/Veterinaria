@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.Calendar;
 import java.util.Collections;
 
-// La clase GestorTurno ya no inicializa el DAO directamente, lo recibe en el constructor.
+
 public class GestorTurno {
 
     private final TurnoDAO turnoDAO;
@@ -42,7 +42,7 @@ public class GestorTurno {
             return Collections.singletonList("Error de BD");
         }
 
-        // --- 2. Aplicar Regla de Bloqueo de 60 minutos (30 min turno + 30 min buffer) ---
+        // - Aplicar Regla de Bloqueo de 60 minutos (30 min turno + 30 min buffer) ---
         Set<String> horariosBloqueados = new HashSet<>();
         for (String horaInicio : horasInicioOcupadas) {
             int minutosInicio = convertirA_MinutosDesdeCero(horaInicio);
@@ -55,7 +55,7 @@ public class GestorTurno {
             horariosBloqueados.add(convertirA_String(minutosInicio + 60));
         }
 
-        // --- 3. Generar Posibles y Aplicar Filtros ---
+        // 3. Generar Posibles horarios y Aplicar Filtros ---
         List<String> todosLosPosibles = generarHorariosPosibles(); // (08:00 a 19:30)
         List<String> disponibles = new ArrayList<>();
         disponibles.add("--- Seleccione Horario ---");
@@ -114,14 +114,14 @@ public class GestorTurno {
         }
     }
 
-    // ----------------------------------------------------
-    // MÉTODO PRINCIPAL DE REGISTRO (Basado en tu código anterior)
-    // ----------------------------------------------------
+    // -------------------------------
+    // MÉTODO PRINCIPAL DE REGISTRO
+    // ---------------------------------
 
     /** Registra un nuevo turno. Retorna un mensaje de éxito o un código de error. */
     public String registrarTurno(String nombreTipoConsulta, String nombrePropietario, String nombreMascota, Date fechaTurno, String hora) {
 
-        // 1. VALIDACIÓN
+        // 1. VALIDACIÓN DE CAMPOS DEL FORMULARIO
         if (nombrePropietario == null || nombrePropietario.startsWith("---") ||
                 nombreMascota == null || nombreMascota.startsWith("---") ||
                 nombreTipoConsulta == null || nombreTipoConsulta.startsWith("---") ||
@@ -129,7 +129,7 @@ public class GestorTurno {
             return "ERROR_VALIDACION: Debe completar todos los campos de selección y el horario.";
         }
 
-        // 🛑 2. LUGAR Y CÓDIGO DE VALIDACIÓN DE FECHA Y HORA FUNCIONAL
+        //  VALIDACIÓN DE FECHA Y HORA
 
 
         String fechaTurnoStr = new SimpleDateFormat("yyyy-MM-dd").format(fechaTurno);
@@ -139,7 +139,7 @@ public class GestorTurno {
 
 
 
-            // 2. CONVERSIÓN DE NOMBRES A IDs (CONSULTAS A BD)
+        //  CONVERSIÓN DE NOMBRES A IDs (CONSULTAS A BD)
         int idPropietario;
         int idMascota;
         int idTipoConsulta;
@@ -165,7 +165,7 @@ public class GestorTurno {
 
         // 3. INSERCIÓN
         try {
-            // 🛑 NOTA: Necesitas la clase Turno en tu modelo para que esto compile.
+
             if (turnoDAO.verificarDisponibilidad(fechaTurnoStr, horaLimpia)) {
                 return "ERROR_DUPLICADO: ...";
             }
@@ -179,13 +179,13 @@ public class GestorTurno {
     }
 
     // ----------------------------------------------------
-    // HELPER FUNCTIONS (AUXILIARES PRIVADAS)
+    // Funciones auziliares (AUXILIARES PRIVADAS)
     // ----------------------------------------------------
 
-    /** Genera la lista maestra de 08:00 a 19:30 (intervalos de 30 min) */
+    /** Genera la lista maestra de horarios de 08:00 a 19:30 (intervalos de 30 min) */
     private List<String> generarHorariosPosibles() {
         List<String> horarios = new ArrayList<>();
-        // El horario de cierre es a las 20:00, el último slot comienza a las 19:30.
+        // El horario de cierre es a las 20:00, el último turno comienza a las 19:30.
         for (int hora = 8; hora < 20; hora++) {
             for (int minuto = 0; minuto < 60; minuto += 30) {
                 if (hora == 20 && minuto == 0) continue;
@@ -215,7 +215,7 @@ public class GestorTurno {
         return new SimpleDateFormat("HH:mm").format(new Date());
     }
 
-    /** Compara si dos objetos Date son el mismo día (ignora la hora) */
+    /** Compara si dos objetos Date son del mismo día (ignora la hora) */
     private boolean esMismoDia(Date d1, Date d2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(d1);
