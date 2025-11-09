@@ -2,7 +2,7 @@ package com.veterinaria.principal;
 
 
 import com.veterinaria.modelo.FactoriaServicios; // Importamos la factoria de servicios
-import com.veterinaria.vista.VentanaPrincipal2;
+import com.veterinaria.vista.VentanaPrincipal;
 
 import javax.swing.*;
 
@@ -16,14 +16,12 @@ public class Principal {
                     FactoriaServicios servicios = new FactoriaServicios();
 
                     // CREACIÓN DE LA VISTA PRINCIPAL (Inyección de la Factoría)
-                    VentanaPrincipal2 vistaPrincipal = new VentanaPrincipal2(
+                    VentanaPrincipal vistaPrincipal = new VentanaPrincipal(
                             servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
                             servicios.getConsultaService(),servicios.getHistoriaClinicaService()
                     );
-
                     // MOSTRAR LA VISTA PRINCIPAL
                     vistaPrincipal.setVisible(true);
-
                 } catch (Exception e) {
                     // MANEJO DE ERRORES: Muestra una ventana si falla la inicialización
                     e.printStackTrace();

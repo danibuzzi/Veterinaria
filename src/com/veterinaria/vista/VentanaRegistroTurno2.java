@@ -1,6 +1,8 @@
 package com.veterinaria.vista;
 
 import com.toedter.calendar.JDateChooser;
+import com.veterinaria.modelo.GestorTurno;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -9,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import com.veterinaria.modelo.GestorTurno;
 import javax.swing.border.TitledBorder;
 
 // 🛑 CAMBIO CLAVE: Nombre de la clase cambiado a VentanaRegistroTurno2

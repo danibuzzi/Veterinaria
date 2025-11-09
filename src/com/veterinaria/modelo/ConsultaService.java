@@ -30,13 +30,13 @@ public class ConsultaService {
 
     public List<TipoPractica> listarTiposPractica() {
         try {
-            // 1. Obtiene la lista, que puede tener duplicados (diferente ID)
+            // Obtiene la lista, que puede tener duplicados (diferente ID)
             List<TipoPractica> listaOriginal = consultaDAO.listarTiposPractica();
 
-            // 🛑 2. FILTRO FORZADO: Usar HashSet para eliminar duplicados lógicos (mismo ID).
+            // FILTRO FORZADO: Usamos HashSet para eliminar duplicados lógicos (mismo ID).
             HashSet<TipoPractica> setUnico = new HashSet<>(listaOriginal);
 
-            // 3. Devuelve la lista sin duplicados
+            // Devuelve la lista sin duplicados
             return new ArrayList<>(setUnico);
 
         } catch (RuntimeException e) {

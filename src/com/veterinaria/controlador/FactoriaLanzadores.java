@@ -2,7 +2,7 @@ package com.veterinaria.controlador;
 
 // Archivo: com/veterinaria/controlador/FactoriaLanzadores.java
 
-import com.veterinaria.modelo.GestorTurno3;
+/*import com.veterinaria.modelo.GestorTurno3;
 
 import javax.swing.*;
 
@@ -30,4 +30,4 @@ public class FactoriaLanzadores implements IFactoriaLanzadores {
                 throw new IllegalArgumentException("Módulo no reconocido: " + modulo);
         }
     }
-}
+}*/

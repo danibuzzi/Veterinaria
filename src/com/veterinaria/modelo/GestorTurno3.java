@@ -130,12 +130,13 @@ public class GestorTurno3 {
             SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
             String fechaTurnoStr = formatoFecha.format(fecha);
 
-            String horaConSegundos = hora + ":00"; // ⬅️ La variable se crea aquí.
+            String horaConSegundos = hora + ":00"; // .
 
             // Creamos el objeto Turno y guardar
             //Turno nuevoTurno = new Turno();
 
-            Turno nuevoTurno = new Turno(idTipo, idPropietario, idMascota, fechaTurnoStr, horaConSegundos);
+            Turno nuevoTurno = new Turno(idTipo, idPropietario,
+                    idMascota, fechaTurnoStr, horaConSegundos);
             /*nuevoTurno.setIdTipoConsulta(idTipo);
             nuevoTurno.setIdPropietario(idPropietario);
             nuevoTurno.setIdMascota(idMascota);
@@ -150,7 +151,7 @@ public class GestorTurno3 {
 
         } catch (SQLException e) {
             System.err.println("Error al registrar turno: " + e.getMessage());
-            // 🛑 RETURN CORREGIDO
+
             return "ERROR: Falló la conexión o la consulta a la base de datos. Detalle: " + e.getMessage();
         }
     }
