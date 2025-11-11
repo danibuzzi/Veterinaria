@@ -5,6 +5,7 @@ import com.veterinaria.modelo.ConsultaService;
 import com.veterinaria.modelo.GestorGestionTurnos;
 import com.veterinaria.modelo.GestorTurno3;
 import com.veterinaria.modelo.HistoriaClinicaService;
+import com.veterinaria.modelo.MascotaService;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -19,17 +20,27 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private final ILanzadorModulo lanzadorGestionTurnos;
     private final ILanzadorModulo lanzadorRegistroConsulta;
     private final ILanzadorModulo lanzadorHistoriaClinica;
+    private final ILanzadorModulo lanzadorRegistroMascota;
+
+    private final ILanzadorModulo lanzadorConsultaMascotas;
+    // Componentes del Menú
+    // ... (items existentes)
+
 
 
     private JMenuItem itemRegistroTurno;
     private JMenuItem itemGestionTurnos;
     private JMenuItem itemRegistroConsulta;
     private JMenuItem itemHistoriaClinica;
+    private  JMenuItem itemRegistroMascota;
+    private JMenuItem itemConsultaMascotas;
 
     // 1. CONSTRUCTOR
     public VentanaPrincipal(GestorTurno3 gestorRegistro, GestorGestionTurnos gestorGestionTurnos, ConsultaService consultaService
-    ,HistoriaClinicaService historiaClinicaService) {
+    , HistoriaClinicaService historiaClinicaService, MascotaService mascotaService) {
         super("Veterinaria Los Llanos");
+
+        //this.lanzadorRegistroMascota = lanzadorRegistroMascota;
         //private final GestorTurno3 gestorTurno;
         // Renombrado de gestorTurno para claridad
         // ILanzadorModulo lanzadorRegistroConsulta1 = lanzadorRegistroConsulta;
@@ -51,6 +62,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         this.lanzadorGestionTurnos = new LanzadorGestionTurnos(gestorGestionTurnos, escritorio);
         this.lanzadorRegistroConsulta = new LanzadorRegistroConsulta(consultaService, escritorio);
         this.lanzadorHistoriaClinica = new LanzadorHistoriaClinica(historiaClinicaService,escritorio);
+        this.lanzadorRegistroMascota=new LanzadorRegistroMascota(mascotaService,escritorio);
+        this.lanzadorConsultaMascotas =new LanzadorConsultaMascota(mascotaService,escritorio);
+
         // --- CONFIGURACIÓN DEL MENÚ ---
 
         JMenuBar menuBar = new JMenuBar();
@@ -79,6 +93,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
 
         JMenu menuPacientes = new JMenu("Gestión de propietarios/pacientes");
+
+        itemRegistroMascota = new JMenuItem("Registro de Mascota");
+        itemRegistroMascota.addActionListener(this);
+        itemRegistroMascota.setActionCommand("ABRIR_REGISTRO_MASCOTA");
+
+
+        itemConsultaMascotas = new JMenuItem("Consulta y Modificación de Mascotas");
+        itemConsultaMascotas.addActionListener(this);
+        itemConsultaMascotas.setActionCommand("ABRIR_CONSULTA_MASCOTAS");
+
         JMenu menuConfiguracion = new JMenu("Gestión configuraciòn maestra");
 
         menuTurnos.add(itemRegistroTurno);
@@ -87,6 +111,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         menuConsultas.add(itemRegistroConsulta);
         menuConsultas.add(itemHistoriaClinica);
+
+        menuPacientes.add(itemRegistroMascota);
+        menuPacientes.add(itemConsultaMascotas);
 
         menuBar.add(menuTurnos);
         menuBar.add(menuConsultas);
@@ -115,6 +142,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         } else if (comando.equals("ABRIR_HISTORIA_CLINICA")) {
             // ✅ Delegación limpia al Lanzador
             this.lanzadorHistoriaClinica.lanzar();
+        }
+        else if (comando.equals("ABRIR_REGISTRO_MASCOTA")) {
+            this.lanzadorRegistroMascota.lanzar();
+        }
+
+        else if (comando.equals("ABRIR_CONSULTA_MASCOTAS")) {
+            this.lanzadorConsultaMascotas.lanzar();
         }
     }
 

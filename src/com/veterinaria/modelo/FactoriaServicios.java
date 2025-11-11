@@ -133,8 +133,9 @@ public class FactoriaServicios {
 
     // --- 2. DECLARACIÓN DE GESTORES ---
 
-    private final GestorTurno3 gestorTurno;          // 🛑 Para Registro (
+    private final GestorTurno3 gestorTurno;          // Para Registro turno (
     private final GestorGestionTurnos gestorGestionTurnos; // Para Gestión
+    private final MascotaService mascotaService; //Para registro de mascota
 
     public FactoriaServicios() {
         this.consultaService = new ConsultaService();
@@ -147,6 +148,8 @@ public class FactoriaServicios {
         this.tipoPracticaDAO=new TipoPracticaDAO();
         this.historiaClinicaService = new HistoriaClinicaService(consultaDAO,
                 propietarioDAO,mascotaDAO,tipoPracticaDAO);
+
+        this.mascotaService = new MascotaService(propietarioDAO, mascotaDAO);
 
         // CREACIÓN DE GESTORES (Inyección de dependencias)
 
@@ -199,6 +202,10 @@ public class FactoriaServicios {
 
     public HistoriaClinicaService getHistoriaClinicaService() { // ⬅️ Asegúrate de que exista
         return historiaClinicaService;
+    }
+
+    public MascotaService getMascotaService() {
+        return mascotaService;
     }
 
 }

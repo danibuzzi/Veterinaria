@@ -15,7 +15,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 
-public class ControladorRegistroConsulta implements ActionListener {
+public class    ControladorRegistroConsulta implements ActionListener {
 
     private final VentanaRegistroConsulta vista;
     private final ConsultaService consultaService;

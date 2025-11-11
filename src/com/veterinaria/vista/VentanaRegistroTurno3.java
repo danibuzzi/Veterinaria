@@ -248,7 +248,7 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
         comboMascota.addItem("--- Seleccione Mascota ---");
         comboTipoConsulta = new JComboBox<>();
         comboTipoConsulta.addItem("--- Seleccione Tipo de Consulta ---");
-        comboHora = new JComboBox<>(); // 🛑 ComboBox para la Hora
+        comboHora = new JComboBox<>(); // ComboBox para la Hora
         comboHora.addItem("--- Seleccione Hora ---");
 
         // 4 campos en el formulario

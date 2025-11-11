@@ -12,13 +12,16 @@ public class Principal {
             @Override
             public void run() {
                 try {
+
+
                     // Inicialización ÚNICA de la Factoría de Servicios
                     FactoriaServicios servicios = new FactoriaServicios();
 
                     // CREACIÓN DE LA VISTA PRINCIPAL (Inyección de la Factoría)
                     VentanaPrincipal vistaPrincipal = new VentanaPrincipal(
                             servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
-                            servicios.getConsultaService(),servicios.getHistoriaClinicaService()
+                            servicios.getConsultaService(),servicios.getHistoriaClinicaService(),
+                            servicios.getMascotaService()
                     );
                     // MOSTRAR LA VISTA PRINCIPAL
                     vistaPrincipal.setVisible(true);

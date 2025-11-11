@@ -5,28 +5,44 @@ import java.util.Objects;
 public class Propietario {
     private int idPropietario;
     private String dni;
-
-    public Propietario(int idPropietario, String nombre, String apellido) {
-        this.idPropietario = idPropietario;
-        this.nombre = nombre;
-        this.apellido = apellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
     private String nombre;
     private String apellido;
     private LocalDate fechaNacimiento;
     private String direccion;
     private String pais;
     private String ciudad;
+    private String telefono;
+    private String email;
+
+    public Propietario(int idPropietario, String nombre, String apellido
+                   ) {
+        this.idPropietario = idPropietario;
+        this.nombre = nombre;
+        this.apellido = apellido;
+
+    }
+    public Propietario(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String direccion, String pais, String ciudad
+                       ,String telefono,String email) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fechaNacimiento = fechaNacimiento;
+        this.direccion = direccion;
+        this.pais = pais;
+        this.ciudad = ciudad;
+        this.telefono=telefono;
+        this.email=email;
+
+    }
+
+
+
 
     public Propietario() {}
 
     // Constructor completo
-    public Propietario(int idPropietario, String dni, String nombre, String apellido, LocalDate fechaNacimiento, String direccion, String pais, String ciudad) {
+   public Propietario(int idPropietario, String dni, String nombre, String apellido, LocalDate fechaNacimiento, String direccion, String pais, String ciudad
+            ,String telefono,String email) {
         this.idPropietario = idPropietario;
         this.dni = dni;
         this.nombre = nombre;
@@ -35,10 +51,15 @@ public class Propietario {
         this.direccion = direccion;
         this.pais = pais;
         this.ciudad = ciudad;
+        this.telefono=telefono;
+        this.email=email;
     }
 
     // Getters esenciales para la lógica
     public int getIdPropietario() { return idPropietario; }
+    public String getDni() {
+        return dni;
+    }
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
 
@@ -53,6 +74,21 @@ public class Propietario {
         return fechaNacimiento;
     }
 
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -99,3 +135,4 @@ public class Propietario {
 
 
 }
+

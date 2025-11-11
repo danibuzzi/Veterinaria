@@ -53,7 +53,7 @@ public class ControladorHistoriaClinica implements ActionListener {
             // Usamos DefaultComboBoxModel para manejar objetos
             DefaultComboBoxModel<Propietario> modeloPropietario = new DefaultComboBoxModel<>();
 
-            // 🛑 Item por defecto/filtro, usa un Propietario con ID 0 y nombre especial
+            // Item por defecto/filtro, usa un Propietario con ID 0 y nombre especial
             modeloPropietario.addElement(new Propietario(0, "TODOS", ""));
 
             for (Propietario p : propietarios) {
@@ -73,8 +73,8 @@ public class ControladorHistoriaClinica implements ActionListener {
         JComboBox<Mascota> comboMascota = vistaListado.getComboMascota();
         DefaultComboBoxModel<Mascota> modeloMascota = new DefaultComboBoxModel<>();
 
-        // 🛑 Item por defecto/filtro
-        modeloMascota.addElement(new Mascota(0, ".Seleccione un propietario.", 0)); // Usamos un constructor dummy si es necesario.
+        // Item por defecto/filtro
+        modeloMascota.addElement(new Mascota(0, ".Seleccione una mascota.", 0)); // Usamos un constructor dummy si es necesario.
 
         if (idPropietario != 0) {
             try {
