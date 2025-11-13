@@ -345,7 +345,7 @@ import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public class VentanaModificacionPropietario extends JFrame {
+public class VentanaModificacionPropietario extends JInternalFrame {
 
     // CAMPOS DE LA VISTA (Para que el Controlador los acceda)
     private JTextField txtDni;
@@ -377,7 +377,7 @@ public class VentanaModificacionPropietario extends JFrame {
         setTitle("Modificación de Propietario");
         setSize(750, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
 
         // Panel principal (BorderLayout)

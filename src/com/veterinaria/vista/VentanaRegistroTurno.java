@@ -15,12 +15,12 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.border.TitledBorder;
 
-public class VentanaRegistroTurno extends JFrame { // Renombrada de VentanaRegistroTurno2
+public class VentanaRegistroTurno extends JInternalFrame { // Renombrada de VentanaRegistroTurno2
 
     private JComboBox<String> comboTipoConsulta;
     private JComboBox<String> comboPropietario;
     private JComboBox<String> comboMascota;
-    private JComboBox<String> comboHorario; // 🛑 REEMPLAZA txtHora
+    private JComboBox<String> comboHorario;
     private JDateChooser dateChooserFechaTurno;
     private JButton btnGuardar;
     private JButton btnSalir;
@@ -29,7 +29,7 @@ public class VentanaRegistroTurno extends JFrame { // Renombrada de VentanaRegis
         super("Reserva de Turnos");
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
 
         // 1. Panel principal con espacio alrededor
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));

@@ -5,7 +5,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class VentanaConsultaPropietario extends JFrame {
+public class VentanaConsultaPropietario extends JInternalFrame {
     private JTextField searchField;
     private JButton buscarTextoButton; // El nuevo botón de texto
     private JRadioButton apellidoRadio;
@@ -21,7 +21,7 @@ public class VentanaConsultaPropietario extends JFrame {
         setTitle("Consulta y Gestión de Propietarios");
         setSize(780, 480); // Ligeramente más ancho para el botón Buscar
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
 
         // --- Panel Principal ---

@@ -14,7 +14,7 @@ import java.util.List;
 import javax.swing.border.TitledBorder;
 
 // 🛑 CAMBIO CLAVE: Nombre de la clase cambiado a VentanaRegistroTurno2
-public class VentanaRegistroTurno2 extends JFrame {
+public class VentanaRegistroTurno2 extends JInternalFrame {
     private final GestorTurno gestorTurno;
     private JComboBox<String> comboTipoConsulta;
     private JComboBox<String> comboPropietario;
@@ -29,7 +29,7 @@ public class VentanaRegistroTurno2 extends JFrame {
         this.gestorTurno = gestorTurno;
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
 
         // 1. Panel principal con espacio alrededor
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));

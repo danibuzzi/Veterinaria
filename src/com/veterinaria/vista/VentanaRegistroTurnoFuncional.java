@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.border.TitledBorder;
 
-public class VentanaRegistroTurnoFuncional extends JFrame {
+public class VentanaRegistroTurnoFuncional extends JInternalFrame {
 
     private JComboBox<String> comboTipoConsulta;
     private JComboBox<String> comboPropietario;
@@ -26,7 +26,7 @@ public class VentanaRegistroTurnoFuncional extends JFrame {
         super("Reserva de Turnos");
         setSize(850, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBackground(Color.WHITE);

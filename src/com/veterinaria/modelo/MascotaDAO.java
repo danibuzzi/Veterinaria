@@ -12,8 +12,11 @@ public class MascotaDAO {
             "INSERT INTO Mascota (idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     //  Se actualizan todos los campos editables, se usa idMascota en el WHERE
+   // private static final String SQL_UPDATE_MASCOTA =
+     //       "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ? WHERE idMascota = ?";
+
     private static final String SQL_UPDATE_MASCOTA =
-            "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ? WHERE idMascota = ?";
+            "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ?, activa = ? WHERE idMascota = ?";
 
     // ELIMINACIÓN LÓGICA: Marca como inactiva (activa = false)
     private static final String SQL_DELETE_LOGICO_MASCOTA =
@@ -128,7 +131,7 @@ public class MascotaDAO {
         return mascota;
     }
 
-    // --- NUEVO MÉTODO: Actualizar Mascota (Modificación) ---
+    // Actualizar Mascota (Modificación)
     public void actualizar(Mascota mascota) {
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(SQL_UPDATE_MASCOTA)) {
@@ -137,12 +140,19 @@ public class MascotaDAO {
             ps.setString(i++, mascota.getNombre());
             ps.setDate(i++, mascota.getFechaNacimiento() != null ? Date.valueOf(mascota.getFechaNacimiento()) : null);
             ps.setString(i++, mascota.getEspecie());
-            ps.setString(i++, mascota.getRaza()); // <--- Se incluye raza
+            ps.setString(i++, mascota.getRaza());
             ps.setString(i++, mascota.getSexo());
             ps.setString(i++, mascota.getSeniasParticulares());
 
-            // Clave: ID de la Mascota para el WHERE
-            ps.setInt(i++, mascota.getIdMascota());
+            //  activa
+            ps.setBoolean(i++, mascota.isActiva());
+            // ID de la Mascota para el WHERE
+           ps.setInt(i++, mascota.getIdMascota());
+
+            //idPropietario
+            //ps.setInt(i++, mascota.getIdPropietario());
+
+
 
             if (ps.executeUpdate() == 0) {
                 throw new RuntimeException("Error: No se encontró la mascota para actualizar.");

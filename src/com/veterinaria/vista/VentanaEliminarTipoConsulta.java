@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class VentanaEliminarTipoConsulta extends JFrame {
+public class VentanaEliminarTipoConsulta extends JInternalFrame {
     private JComboBox<String> tipoConsultaCombo;
     private JButton eliminarButton;
     private JButton salirButton;
@@ -13,7 +13,7 @@ public class VentanaEliminarTipoConsulta extends JFrame {
         setTitle("Eliminar tipo de consulta");
         setSize(700, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
 
         // Main panel

@@ -665,7 +665,7 @@ import com.toedter.calendar.JDateChooser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class VentanaRegistroPropietario extends JFrame {
+public class VentanaRegistroPropietario extends JInternalFrame {
 
     // CAMPOS DE TEXTO
     private JTextField txtDni;
@@ -698,7 +698,7 @@ public class VentanaRegistroPropietario extends JFrame {
         setTitle("Registro de Propietario");
         setSize(700, 580);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
 
         // Inicialización de campos de texto

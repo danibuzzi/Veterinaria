@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class VentanaRegistroTipoConsulta extends JFrame {
+public class VentanaRegistroTipoConsulta extends JInternalFrame {
     private JTextField txtDescripcion;
     private JButton btnGuardar;
     private JButton btnSalir;
@@ -14,7 +14,7 @@ public class VentanaRegistroTipoConsulta extends JFrame {
         setTitle("Registro de tipo de consulta");
         setSize(700, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
     }
 

@@ -7,6 +7,9 @@ import com.veterinaria.modelo.Mascota;
 import com.veterinaria.modelo.MascotaService;
 import com.veterinaria.vista.VentanaModificacionMascota;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,8 +57,32 @@ public class ControladorModificacionMascota implements ActionListener {
             //  La vista crea una nueva instancia de Mascota
             // con los datos editados, pero le re-asigna el ID de Propietario
             // de la instancia original (mascotaOriginal) para la actualización.
-            Mascota mascotaModificada = vista.getMascotaParaGuardar(mascotaOriginal.getIdPropietario());
+            //Mascota mascotaModificada = vista.getMascotaParaGuardar(mascotaOriginal.getIdPropietario());
 
+            Date fechaUtil = vista.getFechaNacimiento();
+
+            // Convertir java.util.Date a java.time.LocalDate
+            LocalDate fechaLocal = null;
+            if (fechaUtil != null) {
+                // Convierte Date -> Instant -> ZonedDateTime (zona horaria del sistema) -> LocalDate
+                fechaLocal = fechaUtil.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+            }
+
+
+            Mascota mascotaModificada= new Mascota(
+                    mascotaOriginal.getIdMascota(), // ID ORIGINAL
+                    mascotaOriginal.getIdPropietario(), // ID PROPIETARIO ORIGINAL
+                    vista.getNombre(),
+                    fechaLocal, // Datos Editados
+                    //vista.getFechaNacimiento(), // Datos Editados
+                    vista.getEspecie(), // Datos Editados
+                    vista.getRaza(), // Datos Editados
+                    vista.getSexo(),
+                    vista.getSeniasParticulares(),
+                    mascotaOriginal.isActiva() //
+            );
             // Llamamos al Service para hacer la actualización en la BD
             mascotaService.actualizarMascota(mascotaModificada);
 

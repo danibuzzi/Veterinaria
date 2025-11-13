@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class VentanaEliminarPractica extends JFrame {
+public class VentanaEliminarPractica extends JInternalFrame {
     private JComboBox<String> comboTipoPractica;
     private JButton btnEliminar;
     private JButton btnSalir;
@@ -14,7 +14,7 @@ public class VentanaEliminarPractica extends JFrame {
         setTitle("Eliminar tipo de práctica");
         setSize(700, 250);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
     }
 

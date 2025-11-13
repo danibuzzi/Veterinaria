@@ -11,7 +11,7 @@ import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public class VentanaTurnosPropietario extends JFrame {
+public class VentanaTurnosPropietario extends JInternalFrame {
     private JComboBox<String> propietarioCombo;
     private JDateChooser dateChooserFechaDesde;
     private JTable turnosTable;
@@ -23,7 +23,7 @@ public class VentanaTurnosPropietario extends JFrame {
         setTitle("Consulta de Turnos por Propietario");
         setSize(800, 450);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
         setResizable(false);
 
         // Panel principal

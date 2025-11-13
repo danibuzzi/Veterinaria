@@ -150,7 +150,7 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
     private JComboBox<String> comboTipoConsulta;
     private JComboBox<String> comboPropietario;
     private JComboBox<String> comboMascota;
-    private JComboBox<String> comboHora; // 🛑 CAMBIO CLAVE: ComboBox para la hora
+    private JComboBox<String> comboHora;
     private JDateChooser dateChooserFechaTurno;
     // Se elimina private JTextField txtHora;
     private JButton btnGuardar;

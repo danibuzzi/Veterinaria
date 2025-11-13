@@ -98,6 +98,18 @@ public class ControladorConsultaMascota implements ActionListener {
                 // Obtener datos completos de la mascota por ID (por si se necesita más info)
                 Mascota mascotaCompleta = mascotaService.obtenerMascotaPorId(mascotaSeleccionada.getIdMascota());
 
+                //Obtener el Propietario seleccionado del JComboBox de la vista de consulta
+                Propietario propietarioSeleccionado = (Propietario) vista.getPropietarioComboBox().getSelectedItem();
+
+                // Formateao la cadena del Propietario con el orden Apellido, Nombre
+                String infoPropietario;
+                if (propietarioSeleccionado != null) {
+                    infoPropietario = propietarioSeleccionado.getApellido() + ", " + propietarioSeleccionado.getNombre();
+                } else {
+
+                    infoPropietario = "Propietario Desconocido";
+                }
+
                 // Crear e inicializar la ventana de modificación
                 VentanaModificacionMascota vistaModificacion = new VentanaModificacionMascota(mascotaCompleta.getIdMascota(), vista);
 
@@ -111,7 +123,8 @@ public class ControladorConsultaMascota implements ActionListener {
                 // Cargar datos en la nueva ventana
                 vistaModificacion.cargarDatosMascota(
                         mascotaCompleta,
-                        mascotaSeleccionada.toString() // Mostrar el nombre del propietario si está disponible
+                        //mascotaSeleccionada.toString() // Mostrar el nombre del propietario si está disponible
+                        infoPropietario
                 );
 
                 // Mostrar la ventana

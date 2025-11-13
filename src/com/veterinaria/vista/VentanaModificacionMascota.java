@@ -680,6 +680,7 @@ public class VentanaModificacionMascota extends JInternalFrame {
         // Inicialización de componentes clave
         txtNombre = new JTextField(20);
         dcFechaNacimiento = new JDateChooser();
+        dcFechaNacimiento.setDateFormatString("dd/MM/yyyy");
         txtEspecie = new JTextField(20);
         txtRaza = new JTextField(20);
         cmbSexo = new JComboBox<>();
@@ -745,7 +746,7 @@ public class VentanaModificacionMascota extends JInternalFrame {
         }
     }
 
-    // 🛑 CRÍTICO: Obtiene la Mascota actualizada de la UI (usando el constructor/setters)
+    // : Obtiene la Mascota actualizada de la UI (usando el constructor/setters)
     public Mascota getMascotaParaGuardar(int idPropietarioOriginal) {
         Mascota mascota = new Mascota(); // Usa el constructor por defecto
 
@@ -798,4 +799,13 @@ public class VentanaModificacionMascota extends JInternalFrame {
     public void salir() {
         dispose();
     }
+
+    // Métodos para que el Controlador acceda a los datos (Getters) ---
+
+    public String getNombre() { return txtNombre.getText().trim(); }
+    public Date getFechaNacimiento() { return dcFechaNacimiento.getDate(); }
+    public String getEspecie() { return txtEspecie.getText().trim(); }
+    public String getRaza() { return txtRaza.getText().trim(); }
+    public String getSexo() { return (String) cmbSexo.getSelectedItem(); }
+    public String getSeniasParticulares() { return txtSenasParticulares.getText().trim(); }
 }
