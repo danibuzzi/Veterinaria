@@ -8,7 +8,8 @@ import java.util.List;
 
 public class PropietarioDAO {
 
-    public PropietarioDAO() {}
+    public PropietarioDAO() {
+    }
 
     public List<Propietario> listarTodosActivos() {
         List<Propietario> propietarios = new ArrayList<>();
@@ -49,6 +50,7 @@ public class PropietarioDAO {
         Propietario p = new Propietario();
         p.setIdPropietario(rs.getInt("idPropietario"));
         p.setDni(rs.getString("dni"));
+        System.out.println(rs.getString("dni"));
         p.setNombre(rs.getString("nombre"));
         p.setApellido(rs.getString("apellido"));
         Date sqlDate = rs.getDate("fechaNacimiento");
@@ -86,7 +88,7 @@ public class PropietarioDAO {
 
     public Propietario obtenerPorId(int idPropietario) {
         Propietario propietario = null;
-        String sql = "SELECT idPropietario, dni, nombre, apellido, fechaNacimiento, direccion, pais, ciudad, telefono, email, activa FROM Propietario WHERE idPropietario = ?";
+        String sql = "SELECT idPropietario, dni, nombre, apellido, fechaNacimiento, direccion, pais, ciudad, telefono, email FROM Propietario WHERE idPropietario = ?";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -135,7 +137,7 @@ public class PropietarioDAO {
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idPropietario);
-            int filasAfectadas=ps.executeUpdate();
+            int filasAfectadas = ps.executeUpdate();
             if (filasAfectadas == 0) {
                 // Esto solo ocurre si el ID no existe
                 throw new RuntimeException("No se encontró el propietario con ID " + idPropietario + " para eliminar.");
@@ -146,4 +148,6 @@ public class PropietarioDAO {
         }
     }
 
+
 }
+

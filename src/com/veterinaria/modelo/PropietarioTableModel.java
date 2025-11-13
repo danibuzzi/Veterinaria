@@ -45,7 +45,17 @@ public class PropietarioTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+
+        if (datos == null || datos.isEmpty() || rowIndex < 0 || rowIndex >= datos.size()) {
+            return null;
+        }
+
         Propietario p = datos.get(rowIndex);
+
+        if (p == null) {
+            return null;
+        }
+
         switch (columnIndex) {
             case 0: return p.getIdPropietario(); // ID (Se usará para la modificación/eliminación, generalmente se oculta en la vista)
             case 1: return p.getDni();
@@ -67,10 +77,20 @@ public class PropietarioTableModel extends AbstractTableModel {
     }
 
     // Método para obtener el objeto Propietario de una fila (útil para el Controlador)
-    public Propietario getPropietarioAt(int rowIndex) {
+    /*public Propietario getPropietarioAt(int rowIndex) {
         if (rowIndex >= 0 && rowIndex < datos.size()) {
             return datos.get(rowIndex);
         }
         return null;
+    }*/
+
+
+    public Propietario getPropietarioAt(int rowIndex) {
+        if (datos == null || rowIndex < 0 || rowIndex >= datos.size()) {
+            // Devuelve null si no hay datos o el índice es inválido
+            return null;
+        }
+        // Devuelve el objeto, que podría ser null si se insertó incorrectamente
+        return datos.get(rowIndex);
     }
 }

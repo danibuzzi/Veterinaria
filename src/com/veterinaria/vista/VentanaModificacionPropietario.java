@@ -421,6 +421,10 @@ public class VentanaModificacionPropietario extends JInternalFrame {
 
         txtDni = createNumericTextField(15, 10);
         txtDni.setPreferredSize(new Dimension(150, 28));
+        txtDni.setEditable(false);
+        txtDni.setBorder(null);
+        txtDni.setBackground(new java.awt.Color(240, 240, 240));
+
         txtDni.setMaximumSize(new Dimension(150, 28)); // Asegurar tamaño máximo
 
         JPanel dniPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));

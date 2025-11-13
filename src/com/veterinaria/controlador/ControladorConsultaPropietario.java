@@ -82,8 +82,9 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
 
             // 2. Mapear datos a la tabla (Aquí necesitamos un TableModel)
 
-            PropietarioTableModel model = new PropietarioTableModel(resultados, COLUMNAS);
-            vista.setTableModel(model);
+           // PropietarioTableModel model = new PropietarioTableModel(resultados, COLUMNAS);
+            vista.getTableModel().setDatos(resultados);
+           // vista.setTableModel(model);
 
             // Si la búsqueda fue exitosa, pero no hubo resultados:
             if (resultados.isEmpty()) {
@@ -101,8 +102,99 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
         }
     }
 
-    // --- 4. Lógica de Modificación ---
+    // Archivo: ControladorConsultaPropietario.java
+
     private void iniciarModificacion() {
+        int selectedRow = vista.getTable().getSelectedRow();
+
+        // Si no hay fila seleccionada, salimos.
+        if (selectedRow == -1) {
+            vista.mostrarError("Debe seleccionar un propietario de la lista para modificar.");
+            return;
+        }
+
+        // --- DECLARACIÓN DE VARIABLES CON VALORES SEGUROS ---
+        int idPropietario = -1;
+        Propietario propietarioOriginal = null;
+        // ----------------------------------------------------
+
+        try {
+            // Validación de la nueva excepción que viste (Index 0 out of bounds)
+            if (vista.getTableModel().getRowCount() == 0) {
+                vista.mostrarError("Error: El modelo de datos está vacío. No hay datos para modificar.");
+                return;
+            }
+
+            // 1. OBTENCIÓN DEL ID: Usamos la función aislada para convertir el Object a int
+            Object idObj = vista.getTableModel().getValueAt(selectedRow, 0);
+            idPropietario = obtenerIdPropietario(idObj); // ¡LLAMADA LIMPIA!
+
+            if (idPropietario <= 0) {
+                vista.mostrarError("Error: El ID seleccionado no es válido.");
+                return;
+            }
+
+            // 2. OBTENER LA INSTANCIA FRESCA DESDE EL SERVICE (Sabemos que funciona)
+            propietarioOriginal = propietarioService.obtenerPropietarioPorId(idPropietario);
+
+            // ¡VERIFICACIÓN CRÍTICA!
+            if (propietarioOriginal == null) {
+                vista.mostrarError("Error: El propietario no se pudo cargar desde la base de datos con el ID " + idPropietario + ".");
+                return;
+            }
+
+        } catch (NumberFormatException ex) {
+            // Captura errores de ID nulo, no numérico o Index out of bounds
+            vista.mostrarError("Error de datos: El ID de la tabla no es un número válido. Por favor, reinicie.");
+            ex.printStackTrace();
+            return;
+        } catch (Exception ex) {
+            // Captura errores generales (conexión, servicio, etc.)
+            vista.mostrarError("Error crítico al obtener datos: " + ex.getMessage());
+            ex.printStackTrace();
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // --- LÓGICA DE APERTURA (Solo se ejecuta si TODO lo anterior es válido) ---
+        // ----------------------------------------------------------------------
+
+        try {
+            // 3. Ensamblaje MVC para Modificación
+            VentanaModificacionPropietario vistaMod = new VentanaModificacionPropietario(String.valueOf(idPropietario), vista);
+
+            ControladorModificacionPropietario controladorMod = new ControladorModificacionPropietario(
+                    vistaMod,
+                    propietarioService,
+                    propietarioOriginal // ¡El objeto fresco y validado!
+            );
+
+            // 4. Cargar datos y Visualización
+            vistaMod.setDatosPropietario(propietarioOriginal);
+
+            // 5. Lógica de JInternalFrame y centrado
+            if (escritorio != null) {
+                escritorio.add(vistaMod);
+                vistaMod.setVisible(true);
+
+                SwingUtilities.invokeLater(() -> {
+                    vistaMod.pack();
+                    int x = (escritorio.getWidth() - vistaMod.getWidth()) / 2;
+                    int y = (escritorio.getHeight() - vistaMod.getHeight()) / 2;
+                    vistaMod.setLocation(Math.max(0, x), Math.max(0, y));
+                });
+            } else {
+                vista.mostrarError("No se pudo obtener la referencia al escritorio principal.");
+            }
+
+        } catch (Exception ex) {
+            vista.mostrarError("Error al abrir la ventana de modificación: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    // --- 4. Lógica de Modificación ---
+    /*private void iniciarModificacion() {
         int selectedRow = vista.getTable().getSelectedRow();
         if (selectedRow == -1) {
             vista.mostrarError("Debe seleccionar un propietario de la lista para modificar.");
@@ -129,7 +221,7 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
             Propietario propietarioOriginal = propietarioService.obtenerPropietarioPorId(propietarioDelModelo.getIdPropietario());
 
           //DEBUG PUNTO 2: ¿Qué ID se obtiene del servicio?
-            System.out.println("DEBUG MODIFICAR - ID obtenido del Servicio: " + propietarioOriginal.getIdPropietario());
+           // System.out.println("DEBUG MODIFICAR - ID obtenido del Servicio: " + propietarioOriginal.getIdPropietario());
 
             // 3. Ensamblaje MVC para Modificación
             VentanaModificacionPropietario vistaMod = new VentanaModificacionPropietario(String.valueOf(propietarioOriginal.getIdPropietario()), vista);
@@ -161,7 +253,7 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
         } catch (Exception ex) {
             vista.mostrarError("Error al iniciar la modificación: " + ex.getMessage());
         }
-    }
+    }*/
 
     // Archivo: ControladorConsultaPropietario.java (MÉTODO iniciarModificacion)
 
@@ -229,6 +321,102 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
             ex.printStackTrace(); // ¡Y EN LA CONSOLA!
         }
     }*/
+
+
+    // Archivo: ControladorConsultaPropietario.java
+
+   /* private void iniciarModificacion() {
+        int selectedRow = vista.getTable().getSelectedRow();
+
+        if (selectedRow == -1) {
+            vista.mostrarError("Debe seleccionar un propietario de la lista para modificar.");
+            return;
+        }
+
+        if (vista.getTableModel().getRowCount() == 0) {
+            vista.mostrarError("Error: La lista de propietarios está vacía. No hay datos para modificar.");
+            return;
+        }
+
+        if (selectedRow >= vista.getTableModel().getRowCount()) {
+            vista.mostrarError("Error: La fila seleccionada no es válida en el modelo actual.");
+            return;
+        }
+
+        // --- ¡DECLARACIONES OBLIGATORIAS! ---
+        // Inicializamos con valores seguros.
+        int idPropietario = -1;
+        Propietario propietarioOriginal = null;
+        // ------------------------------------
+
+        try {
+            // 1. OBTENCIÓN DEL ID: Usamos la función aislada para convertir el Object a int
+            Object idObj = vista.getTableModel().getValueAt(selectedRow, 0);
+            idPropietario = obtenerIdPropietario(idObj); // ¡Llamada simple y limpia!
+
+            if (idPropietario <= 0) {
+                vista.mostrarError("Error: El ID seleccionado no es válido.");
+                return;
+            }
+
+            // 2. OBTENER LA INSTANCIA FRESCA DESDE EL SERVICE (Sabemos que funciona)
+            propietarioOriginal = propietarioService.obtenerPropietarioPorId(idPropietario);
+
+            if (propietarioOriginal == null) {
+                vista.mostrarError("Error: El propietario no se pudo cargar desde la base de datos.");
+                return;
+            }
+
+        } catch (NumberFormatException ex) {
+            // Captura errores de ID nulo o no numérico
+            vista.mostrarError("Error de formato: El ID de la tabla no es un número válido. Por favor, reinicie.");
+            return;
+        } catch (Exception ex) {
+            // Captura errores generales (conexión, servicio, etc.)
+            vista.mostrarError("Error crítico al obtener datos: " + ex.getMessage());
+            ex.printStackTrace();
+            return;
+        }
+
+        // ----------------------------------------------------------------------
+        // --- LÓGICA DE APERTURA (Sólo se ejecuta si los datos son VÁLIDOS) ---
+        // ----------------------------------------------------------------------
+
+        try {
+            // 3. Ensamblaje MVC para Modificación
+            VentanaModificacionPropietario vistaMod = new VentanaModificacionPropietario(String.valueOf(idPropietario), vista);
+
+            ControladorModificacionPropietario controladorMod = new ControladorModificacionPropietario(
+                    vistaMod,
+                    propietarioService,
+                    propietarioOriginal // ¡El objeto fresco y validado!
+            );
+
+            // 4. Cargar datos y Visualización
+            vistaMod.setDatosPropietario(propietarioOriginal);
+
+            // 5. Lógica de JInternalFrame y centrado
+            if (escritorio != null) {
+                escritorio.add(vistaMod);
+                vistaMod.setVisible(true);
+
+                SwingUtilities.invokeLater(() -> {
+                    vistaMod.pack();
+                    int x = (escritorio.getWidth() - vistaMod.getWidth()) / 2;
+                    int y = (escritorio.getHeight() - vistaMod.getHeight()) / 2;
+                    vistaMod.setLocation(Math.max(0, x), Math.max(0, y));
+                });
+            } else {
+                vista.mostrarError("No se pudo obtener la referencia al escritorio principal. La ventana no se abrirá.");
+            }
+
+        } catch (Exception ex) {
+            vista.mostrarError("Error al abrir la ventana de modificación: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }*/
+
+
 
     // --- 5. Lógica de Eliminación ---
     private void eliminarPropietario() {
@@ -320,5 +508,19 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
             vista.mostrarError("Error al cargar la ficha de modificación: " + ex.getMessage());
         }
     }*/
+
+    private int obtenerIdPropietario(Object idObj) throws NumberFormatException {
+        if (idObj == null) {
+            throw new NumberFormatException("ID es nulo.");
+        }
+
+        // Si ya es un Integer (lo ideal), lo devuelve directamente.
+        if (idObj instanceof Integer) {
+            return (Integer) idObj;
+        }
+
+        // Si es un String o cualquier otra cosa, intentamos el parseo.
+        return Integer.parseInt(idObj.toString());
+    }
 
 }

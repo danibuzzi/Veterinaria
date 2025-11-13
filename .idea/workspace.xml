@@ -10,25 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="704de9b8-27da-49cf-b00b-d65902c68e99" name="Changes" comment="consulta y modificacion eliminacion de turnos">
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorConsultaPropietario.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorModificacionPropietario.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorConsultaPropietario.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioTableModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorConsultaMascota.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorConsultaMascota.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorGestionTurnos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorGestionTurnos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorGestionTurnos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/LanzadorGestionTurnos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/FactoriaServicios.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/MascotaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/MascotaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/MascotaTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/MascotaTableModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorConsultaPropietario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/controlador/ControladorConsultaPropietario.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/principal/Principal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaConsultaPropietario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaConsultaPropietario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionMascota.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionMascota.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioTableModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionPropietario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionPropietario.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionTurnos.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaModificacionTurnos.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/veterinaria/vista/VentanaPrincipal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -221,11 +207,6 @@
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/veterinaria/modelo/PropietarioDAO.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
