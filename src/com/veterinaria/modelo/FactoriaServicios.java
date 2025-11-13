@@ -135,7 +135,8 @@ public class FactoriaServicios {
 
     private final GestorTurno3 gestorTurno;          // Para Registro turno (
     private final GestorGestionTurnos gestorGestionTurnos; // Para Gestión
-    private final MascotaService mascotaService; //Para registro de mascota
+    private final MascotaService mascotaService;//Para registro de mascota
+    private final PropietarioService propietarioService;
 
     public FactoriaServicios() {
         this.consultaService = new ConsultaService();
@@ -150,6 +151,11 @@ public class FactoriaServicios {
                 propietarioDAO,mascotaDAO,tipoPracticaDAO);
 
         this.mascotaService = new MascotaService(propietarioDAO, mascotaDAO);
+
+        //PAra consulta modfica porteirario
+
+        this.propietarioService=new PropietarioService(propietarioDAO,mascotaDAO);
+
 
         // CREACIÓN DE GESTORES (Inyección de dependencias)
 
@@ -206,6 +212,10 @@ public class FactoriaServicios {
 
     public MascotaService getMascotaService() {
         return mascotaService;
+    }
+
+    public PropietarioService getPropietarioService() {
+        return propietarioService;
     }
 
 }

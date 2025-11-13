@@ -21,7 +21,7 @@ public class Principal {
                     VentanaPrincipal vistaPrincipal = new VentanaPrincipal(
                             servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
                             servicios.getConsultaService(),servicios.getHistoriaClinicaService(),
-                            servicios.getMascotaService()
+                            servicios.getMascotaService(),servicios.getPropietarioService()
                     );
                     // MOSTRAR LA VISTA PRINCIPAL
                     vistaPrincipal.setVisible(true);

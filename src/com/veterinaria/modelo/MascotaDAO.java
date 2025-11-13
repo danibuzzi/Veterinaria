@@ -210,5 +210,26 @@ public class MascotaDAO {
         return mascotas;
     }
 
+    //Agregado para integridad
+
+    // Chequeo de integridad: cuenta mascotas activas asociadas a un propietario.
+    public int contarMascotasActivasPorPropietario(int idPropietario) {
+        String sql = "SELECT COUNT(*) FROM Mascota WHERE idPropietario = ?";
+        int count=0;
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idPropietario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al contar mascotas activas del propietario: " + e.getMessage(), e);
+        }
+        return count;
+    }
+
 
 }

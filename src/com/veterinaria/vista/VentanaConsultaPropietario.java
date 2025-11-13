@@ -1,5 +1,9 @@
 package com.veterinaria.vista;
 
+import com.veterinaria.controlador.ControladorConsultaMascota;
+import com.veterinaria.controlador.ControladorConsultaPropietario;
+import com.veterinaria.modelo.PropietarioTableModel;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -11,11 +15,13 @@ public class VentanaConsultaPropietario extends JInternalFrame {
     private JRadioButton apellidoRadio;
     private JRadioButton dniRadio;
     private JTable table;
-    private DefaultTableModel tableModel;
+   private PropietarioTableModel tableModel;
+
 
     private JButton modificarButton;
     private JButton eliminarButton;
     private JButton salirButton;
+    private ControladorConsultaPropietario controlador;
 
     public VentanaConsultaPropietario() {
         setTitle("Consulta y Gestión de Propietarios");
@@ -75,8 +81,8 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         buscarTextoButton.setForeground(Color.WHITE);
         buscarTextoButton.setFocusPainted(false);
         buscarTextoButton.setBorderPainted(false);
-        buscarTextoButton.addActionListener(e -> handleBuscarAction());
-
+       // buscarTextoButton.addActionListener(e -> handleBuscarAction());
+        buscarTextoButton.setActionCommand("BUSCAR");
         searchPanel.add(searchField);
         searchPanel.add(buscarTextoButton); // Se añade el botón
         topContainer.add(searchPanel);
@@ -111,7 +117,7 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         mainPanel.add(topContainer, BorderLayout.NORTH);
 
         // --- Tabla de Resultados (Centro) ---
-        String[] columnNames = {"Apellidos", "Nombres", "Dirección", "Ciudad", "País"};
+       /* String[] columnNames = {"Apellidos", "Nombres", "Dirección", "Ciudad", "País"};
         Object[][] data = {
                 {"Perez", "Elvira Manuela", "Los Tilos 60", "Córdoba", "Argentina"},
                 {"Dig", "Drap", "Nuca casa 400", "Lima", "Perú"}
@@ -122,9 +128,30 @@ public class VentanaConsultaPropietario extends JInternalFrame {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
+        };*/
+
+        // --- Tabla de Resultados
+        String[] columnNames = {"ID", "DNI", "Apellidos", "Nombres", "Email", "Teléfono"};
+
+
+// INICIALIZACIÓN
+        tableModel = new PropietarioTableModel(java.util.List.of(), columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
         };
 
         table = new JTable(tableModel);
+        // 1. Forzar que la selección sea SIEMPRE por fila completa
+        table.setRowSelectionAllowed(true);
+
+        // 2. Deshabilitar la selección individual de columnas (para que no parezca que selecciona la celda)
+        table.setColumnSelectionAllowed(false);
+
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         table.setRowHeight(30);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -151,6 +178,8 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         eliminarButton = createActionButton("Eliminar", new Color(220, 53, 69)); // Rojo
         salirButton = createActionButton("Salir", new Color(108, 117, 125)); // Gris Oscuro
 
+        modificarButton.setActionCommand("MODIFICAR");
+        eliminarButton.setActionCommand("ELIMINAR");
         actionPanel.add(modificarButton);
         actionPanel.add(eliminarButton);
         actionPanel.add(salirButton);
@@ -158,8 +187,8 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         mainPanel.add(actionPanel, BorderLayout.SOUTH);
 
         // --- Lógica de Eventos ---
-        modificarButton.addActionListener(e -> handleModificarAction());
-        eliminarButton.addActionListener(e -> handleEliminarAction());
+        //modificarButton.addActionListener(e -> handleModificarAction());
+        //eliminarButton.addActionListener(e -> handleEliminarAction());
         salirButton.addActionListener(e -> dispose());
 
         setContentPane(mainPanel);
@@ -177,7 +206,7 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         return button;
     }
 
-    private void handleBuscarAction() {
+  /*  private void handleBuscarAction() {
         String query = searchField.getText().trim();
         String filter = apellidoRadio.isSelected() ? "Apellido" : "DNI";
 
@@ -191,7 +220,7 @@ public class VentanaConsultaPropietario extends JInternalFrame {
                 "Buscando por " + filter + ": '" + query + "'.",
                 "Búsqueda",
                 JOptionPane.INFORMATION_MESSAGE);
-    }
+    }*/
 
     private void handleModificarAction() {
         int selectedRow = table.getSelectedRow();
@@ -222,15 +251,93 @@ public class VentanaConsultaPropietario extends JInternalFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             // Lógica de eliminación (Tabla de Decisión R1: Éxito)
-            tableModel.removeRow(selectedRow);
+            //tableModel.removeRow(selectedRow);
             JOptionPane.showMessageDialog(this, "Propietario " + apellido + " eliminado.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             VentanaConsultaPropietario frame = new VentanaConsultaPropietario();
             frame.setVisible(true);
         });
+    }*/
+
+    // Agegado para consulta modfiacion propteiarios
+
+    // Archivo: VentanaConsultaPropietario.java (AGREGAR ESTOS MÉTODOS)
+
+    // Getters de Componentes de Búsqueda
+    public JTextField getSearchField() { return searchField; }
+    public JRadioButton getApellidoRadio() { return apellidoRadio; }
+    public JRadioButton getDniRadio() { return dniRadio; }
+
+    // Getters de Botones de Acción
+    public JButton getModificarButton() { return modificarButton; }
+    public JButton getEliminarButton() { return eliminarButton; }
+    public JTable getTable() { return table; }
+
+    // Métodos de la Grilla
+    public void setTableModel(TableModel model) {
+        this.tableModel=tableModel;
+        table.setModel(model);
+        // Opcional: Ocultar la columna ID si es la 0
+        // table.getColumnModel().getColumn(0).setMinWidth(0);
+        // table.getColumnModel().getColumn(0).setMaxWidth(0);
+        // table.getColumnModel().getColumn(0).setWidth(0);
     }
+
+    // Métodos de Control
+    public void establecerControlador(ControladorConsultaPropietario controlador) {
+        // Asignar el controlador a los botones
+        this.controlador=controlador;
+        buscarTextoButton.addActionListener(controlador);
+        modificarButton.addActionListener(controlador);
+        eliminarButton.addActionListener(controlador);
+        salirButton.addActionListener(controlador);
+    }
+
+    public void setBotonesAccionHabilitados(boolean enabled) {
+        modificarButton.setEnabled(enabled);
+        eliminarButton.setEnabled(enabled);
+    }
+
+// ... (Asegúrate de tener mostrarError/mostrarMensaje/mostrarConfirmacion) ...
+
+    // Métodos de feedback (Controladores)
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public int mostrarConfirmacion(String mensaje) {
+        return JOptionPane.showConfirmDialog(this, mensaje, "Confirmar", JOptionPane.YES_NO_OPTION);
+    }
+
+    /*public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }*/
+    public ControladorConsultaPropietario getControlador() {
+        return controlador;
+    }
+
+    //vista.mostrarMensaje("Propietario eliminado lógicamente con éxito.",
+    // "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+    public void mostrarMensaje(String mensaje, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, tipo);
+    }
+
+
+    /*public DefaultTableModel getTableModel() {
+        // Devuelve la instancia del modelo que está usando la grilla.
+
+        return (DefaultTableModel) table.getModel();
+    }*/
+
+
+    public PropietarioTableModel getTableModel() {
+        return tableModel;
+    }
+
+
 }

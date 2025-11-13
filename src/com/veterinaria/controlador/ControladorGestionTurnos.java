@@ -158,6 +158,12 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         JDesktopPane escritorio = vista.getEscritorio();
 
         if (escritorio != null) {
+            //vistaMod.pack();
+            // Calcular la posición central en el JDesktopPane
+            int x = (escritorio.getWidth() - vistaMod.getWidth()) / 2;
+            int y = (escritorio.getHeight() - vistaMod.getHeight()) / 2;
+            vistaMod.setLocation(x, y);
+
             escritorio.add(vistaMod);
             vistaMod.setVisible(true);
         } else {

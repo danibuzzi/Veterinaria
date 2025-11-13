@@ -45,7 +45,7 @@ import java.util.List;
         @Override
         // Devolvemos el nombre de la columna para la cabecera de la tabla
         public String getColumnName(int column) {
-            // 🛑 Aunque la columna 0 es 'ID', la ocultaremos en la vista.
+            // Aunque la columna 0 es 'ID', la ocultaremos en la vista.
             return columnNames[column];
         }
 

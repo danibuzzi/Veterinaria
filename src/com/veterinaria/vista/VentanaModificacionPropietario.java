@@ -342,10 +342,16 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.*;
 import com.toedter.calendar.JDateChooser;
+import com.veterinaria.controlador.ControladorModificacionPropietario;
+import com.veterinaria.modelo.Propietario;
+
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class VentanaModificacionPropietario extends JInternalFrame {
+    private final VentanaConsultaPropietario vistaPadre;
+    private ControladorModificacionPropietario controlador;
 
     // CAMPOS DE LA VISTA (Para que el Controlador los acceda)
     private JTextField txtDni;
@@ -363,15 +369,17 @@ public class VentanaModificacionPropietario extends JInternalFrame {
     private JButton btnSalir;
 
     // Constructor que acepta el ID del propietario a modificar
-    public VentanaModificacionPropietario(String idPropietario) {
+    public VentanaModificacionPropietario(String idPropietario,VentanaConsultaPropietario vistaPadre) {
+
+        this.vistaPadre = vistaPadre;
         initComponents();
-        // NOTA: La carga de datos debe ser iniciada por el Controlador
+
     }
 
     // Constructor sin argumentos (Mantenido para Main de prueba)
-    public VentanaModificacionPropietario() {
+   /*public VentanaModificacionPropietario() {
         this("0");
-    }
+    }*/
 
     private void initComponents() {
         setTitle("Modificación de Propietario");
@@ -757,7 +765,7 @@ public class VentanaModificacionPropietario extends JInternalFrame {
     public JButton getBtnSalir() { return btnSalir; }
 
     // Main de prueba
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             VentanaModificacionPropietario vista = new VentanaModificacionPropietario("101");
 
@@ -779,5 +787,69 @@ public class VentanaModificacionPropietario extends JInternalFrame {
 
             vista.setVisible(true);
         });
+    }*/
+
+    //Agregado para consulta modificacion propietario
+
+    public void mostrarMensaje(String mensaje, String titulo, int tipo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, tipo);
     }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public VentanaConsultaPropietario getVistaPadre() {
+        return vistaPadre;
+    }
+    // Getter para el botón Guardar
+
+
+    // *** ESTE ES EL MÉTODO CLAVE ***
+    public void establecerControlador(ControladorModificacionPropietario controlador) {
+        this.controlador = controlador;
+
+        // 1. Definir el comando de acción (el String que el controlador recibe)
+        getBtnGuardar().setActionCommand("GUARDAR");
+        getBtnSalir().setActionCommand("SALIR");
+
+        // 2. Adjuntar el controlador como ActionListener a los botones
+        getBtnGuardar().addActionListener(controlador);
+        getBtnSalir().addActionListener(controlador);
+
+    }
+
+    public void setDatosPropietario(Propietario p) {
+        // 1. Campos de texto (asumiendo los nombres de sus JTextField)
+        txtDni.setText(p.getDni());
+        txtNombres.setText(p.getNombre());
+        txtApellidos.setText(p.getApellido());
+        txtDireccion.setText(p.getDireccion());
+        txtPais.setText(p.getPais());
+        txtCiudad.setText(p.getCiudad());
+        txtTelefono.setText(p.getTelefono());
+        txtEmail.setText(p.getEmail());
+
+        // 2. Campo de Fecha de Nacimiento  LocalDate a String)
+        if (p.getFechaNacimiento() != null) {
+            // Necesitamos convertir LocalDate a java.util.Date para el JDateChooser
+            java.util.Date fechaUtil = java.util.Date.from(
+                    p.getFechaNacimiento()
+                            .atStartOfDay(java.time.ZoneId.systemDefault())
+                            .toInstant()
+            );
+
+            // Asumiendo que su campo de fecha se llama dcFechaNacimiento y tiene un método setDate(java.util.Date)
+            dcFechaNacimiento.setDate(fechaUtil);
+
+        } else {
+            // Si no hay fecha, asegure que el campo esté vacío o nulo.
+            dcFechaNacimiento.setDate(null);
+        }
+    }
+
+   /* public void salir() {
+        dispose();
+    }*/
+
 }

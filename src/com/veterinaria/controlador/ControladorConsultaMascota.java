@@ -8,6 +8,7 @@ import com.veterinaria.vista.VentanaConsultaMascota;
 import com.veterinaria.vista.VentanaModificacionMascota;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -128,6 +129,29 @@ public class ControladorConsultaMascota implements ActionListener {
                 );
 
                 // Mostrar la ventana
+
+//
+                SwingUtilities.invokeLater(() -> {
+
+                    vistaModificacion.pack();
+
+                    // Calcular la posición central.
+                    // EN ESTE MOMENTO, escritorio.getWidth() DEBE SER UN VALOR VÁLIDO.
+                    int x = (escritorio.getWidth() - vistaModificacion.getWidth()) / 2;
+                    int y = (escritorio.getHeight() - vistaModificacion.getHeight()) / 2;
+
+                    // Aplicar el centrado
+                    vistaModificacion.setLocation(x, y);
+                });
+
+               /* vista.pack();
+                // Lógica para centrar la ventana interna
+                Dimension desktopSize = escritorio.getSize();
+                Dimension jInternalFrameSize = vista.getSize();
+                int x = (desktopSize.width - jInternalFrameSize.width) / 2;
+                int y = (desktopSize.height - jInternalFrameSize.height) / 2;
+                vista.setLocation(Math.max(0, x), Math.max(0, y));*/
+
                 escritorio.add(vistaModificacion);
                 vistaModificacion.setVisible(true);
                 //vistaModificacion.setSelected(true);

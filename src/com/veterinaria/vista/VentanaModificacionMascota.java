@@ -669,7 +669,7 @@ public class VentanaModificacionMascota extends JInternalFrame {
     }
 
     private void initComponents() {
-        setTitle("Modificación de Mascota (ID: " + idMascotaActual + ")");
+        setTitle("Modificación de Mascota");
         setSize(700, 600);
         setClosable(true);
         setResizable(false);

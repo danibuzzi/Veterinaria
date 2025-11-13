@@ -38,7 +38,7 @@ public class VentanaModificacionTurnos extends JInternalFrame implements Interna
     private final Object[] datosIniciales;
 
     public VentanaModificacionTurnos(String fechaOriginal, Object[] datosTurno, ControladorGestionTurnos controladorPrincipal) {
-        super("Modificación de Turno ID: " + datosTurno[0], true, true, true, true);
+        super("Modificación de Turno", true, true, true, true);
 
         this.controladorPrincipal = controladorPrincipal;
         this.fechaSeleccionada = fechaOriginal;
@@ -396,7 +396,7 @@ public class VentanaModificacionTurnos extends JInternalFrame implements Interna
     private JComboBox<Mascota> comboMascota;
 
     public void setObjetoPropietarioSeleccionado(Propietario p) {
-        // 🛑 Esto selecciona el objeto si el JComboBox tiene objetos Propietario
+
         propietarioCombo.setSelectedItem(p);
     }
 
