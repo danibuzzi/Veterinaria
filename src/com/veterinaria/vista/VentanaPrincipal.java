@@ -4,6 +4,7 @@ import com.veterinaria.controlador.*;
 import com.veterinaria.modelo.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -53,10 +54,22 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         // ILanzadorModulo lanzadorRegistroConsulta1 = lanzadorRegistroConsulta;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1024, 768);
+        setSize(1200, 800);
 
-        // setLocationRelativeTo(null); ELIMINADO
+        setLocationRelativeTo(null);
+        // --- codigo icono ventana---
+        try {
+            // Intentar cargar la imagen del recurso (es la forma recomendada)
+            Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagen/iconovete32.png"));
 
+            // Si la imagen se cargó correctamente, la establecemos.
+            if (icon != null) {
+                setIconImage(icon);
+            }
+        } catch (Exception e) {
+            System.err.println("Advertencia: No se pudo cargar el icono de la ventana. Verifique la ruta del archivo: /img/veterinaria_icon.png");
+            e.printStackTrace();
+        }
         // ✅ 3. Inicialización del Escritorio y se establece como contenedor principal
 
         this.escritorio = new JDesktopPane();

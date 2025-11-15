@@ -1,6 +1,5 @@
 package com.veterinaria.controlador;
 
-// Archivo: com/veterinaria/controlador/IFactoriaLanzadores.java
 
 public interface IFactoriaLanzadores {
 

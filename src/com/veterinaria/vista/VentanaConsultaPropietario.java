@@ -25,7 +25,7 @@ public class VentanaConsultaPropietario extends JInternalFrame {
 
     public VentanaConsultaPropietario() {
         setTitle("Consulta y Gestión de Propietarios");
-        setSize(780, 480); // Ligeramente más ancho para el botón Buscar
+        setSize(780, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setLocationRelativeTo(null);
         setClosable(true);

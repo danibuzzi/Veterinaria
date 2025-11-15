@@ -36,7 +36,6 @@ public class GestorTurno3 {
             return turnoDAO.obtenerNombresPropietarios();
         } catch (SQLException e) {
             System.err.println("Error al cargar Propietarios: " + e.getMessage());
-
             return Collections.emptyList();
         }
     }

@@ -239,6 +239,12 @@ public class VentanaTurnosPropietario extends JInternalFrame {
         return buscarButton;
     }
 
+
+    public Date getFechaDesdeDate() {
+        // Devuelve la fecha del JDateChooser
+        return dateChooserFechaDesde.getDate();
+    }
+
     public TurnoTableModelConsulta getTableModel() {
         return tableModel;
     }
@@ -351,46 +357,53 @@ public class VentanaTurnosPropietario extends JInternalFrame {
         });
     }*/
 
-
+    /**
+     * Método principal para prueba aislada (si aplica)
+     * NOTA: Este código asume que tienes las clases PropietarioDAO y TurnoDAO3 accesibles.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
+                // 1. Configuración de Look and Feel
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+                // 2. Crear el JFrame principal para contener el JInternalFrame
+                JFrame testFrame = new JFrame("Prueba Aislada de Ventana de Turnos");
+                testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                testFrame.setSize(850, 550);
+                testFrame.setLayout(new BorderLayout());
+
+                // 3. Crear e inyectar las dependencias (DAOs y Service)
+                PropietarioDAO propietarioDAO = new PropietarioDAO();
+                TurnoDAO3 turnoDAO = new TurnoDAO3();
+                TurnoPropietarioService service = new TurnoPropietarioService(propietarioDAO, turnoDAO);
+
+                // 4. Crear la Vista (JInternalFrame)
+                VentanaTurnosPropietario vista = new VentanaTurnosPropietario();
+
+                // 5. Crear el Controlador e iniciar la carga de datos
+                // Se pasa 'null' como JDesktopPane en esta prueba.
+                new ControladorConsultaTurnosPropietario(
+                        vista,
+                        service,
+                        null
+                );
+
+                // 6. Agregar y Mostrar
+                testFrame.add(vista, BorderLayout.CENTER);
+                vista.setVisible(true);
+                testFrame.setLocationRelativeTo(null);
+                testFrame.setVisible(true);
+
             } catch (Exception e) {
+                // Importante: Capturar cualquier error de inicialización
                 e.printStackTrace();
+                JOptionPane.showMessageDialog(null,
+                        "Error al inicializar la aplicación: " + e.getMessage(),
+                        "Error Crítico",
+                        JOptionPane.ERROR_MESSAGE);
             }
-
-            // 1. Crear el Frame Contenedor (para la prueba)
-            JFrame testFrame = new JFrame("Prueba Aislada de Ventana de Turnos");
-            testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            testFrame.setSize(850, 550);
-            testFrame.setLayout(new BorderLayout());
-
-            // 2. Crear las dependencias de servicio
-            // ATENCIÓN: Se asume que PropietarioService y MascotaService tienen
-            // constructores sin argumentos para poder instanciarlos aquí.
-            PropietarioDAO propietarioService = new PropietarioDAO();
-            TurnoDAO3 mascotaService = new TurnoDAO3();
-
-            // 3. Crear el servicio principal, inyectando sus dependencias
-            TurnoPropietarioService service = new TurnoPropietarioService(propietarioService, mascotaService);
-
-            // 4. Crear la Vista e inicializar el Controlador
-            VentanaTurnosPropietario vista = new VentanaTurnosPropietario();
-
-            // 5. Crear el Controlador
-            // El JDesktopPane se pasa como null, ya que no se necesita en esta prueba.
-            new ControladorConsultaTurnosPropietario(
-                    vista,
-                    service,
-                    null
-            );
-
-            // 6. Agregar y Mostrar
-            testFrame.add(vista, BorderLayout.CENTER);
-            vista.setVisible(true); // Mostrar la JInternalFrame
-            testFrame.setLocationRelativeTo(null); // Centrar
-            testFrame.setVisible(true); // Mostrar el JFrame principal
         });
     }
+
 }

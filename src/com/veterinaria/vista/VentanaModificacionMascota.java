@@ -510,7 +510,7 @@ public class VentanaModificacionMascota extends JFrame {
         add(mainPanel);
     }
 
-    // --- Métodos de Ayuda para Creación de Componentes (Sin cambios) ---
+    // --- Métodos de Ayuda para Creación de Componentes
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
@@ -629,13 +629,13 @@ import com.veterinaria.controlador.ControladorModificacionMascota;
 import com.veterinaria.modelo.Mascota;
 import com.toedter.calendar.JDateChooser; // Necesitas la librería jcalendar.jar
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
-// Archivo: com/veterinaria/vista/VentanaModificacionMascota.java
-
 
 
 
@@ -667,7 +667,7 @@ public class VentanaModificacionMascota extends JInternalFrame {
         cmbSexo.addItem("Macho");
         cmbSexo.addItem("Hembra");
     }
-
+/*
     private void initComponents() {
         setTitle("Modificación de Mascota");
         setSize(700, 600);
@@ -676,10 +676,11 @@ public class VentanaModificacionMascota extends JInternalFrame {
         setMaximizable(true);
         setIconifiable(true);
 
-        // ... (Diseño de la UI - Se omite el boilerplate de diseño) ...
-        // Se asume un Layout simple como GridLayout o GridBagLayout.
+
+
 
         // Inicialización de componentes clave
+
         txtNombre = new JTextField(20);
         dcFechaNacimiento = new JDateChooser();
         dcFechaNacimiento.setDateFormatString("dd/MM/yyyy");
@@ -723,6 +724,222 @@ public class VentanaModificacionMascota extends JInternalFrame {
         this.add(buttonPanel, BorderLayout.SOUTH);
 
         this.pack();
+    }*/
+
+
+    private void initComponents() {
+        setTitle("Modificación de Mascota");
+        setSize(700, 580);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        //setLocationRelativeTo(null);
+        setResizable(false);
+
+        // --- Panel principal ---
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(Color.WHITE);
+        mainPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
+
+        // --- Panel del formulario (GridBagLayout) ---
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 5, 6, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // ----------------------------------------------------
+        // 1. Propietario (Inicialmente vacío)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        JLabel lblPropietarioLabel = createLabel("Propietario");
+        formPanel.add(lblPropietarioLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+
+        lblPropietarioInfo = new JLabel(""); // INICIALMENTE VACÍO
+        lblPropietarioInfo.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        lblPropietarioInfo.setForeground(new Color(37, 99, 235));
+        lblPropietarioInfo.setPreferredSize(new Dimension(300, 35));
+        formPanel.add(lblPropietarioInfo, gbc);
+
+        // Espacio separador
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.insets = new Insets(0, 0, 10, 0);
+        formPanel.add(Box.createRigidArea(new Dimension(0, 0)), gbc);
+
+        gbc.insets = new Insets(6, 5, 6, 5);
+
+        // ----------------------------------------------------
+        // 2. Nombre (Inicialmente vacío)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(createLabel("Nombre"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtNombre = createTextField(300, 35); // Se inicializa sin texto
+        formPanel.add(txtNombre, gbc);
+
+        // ----------------------------------------------------
+        // 3. Fecha nacimiento (JDateChooser) (Inicialmente nulo)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(createLabel("Fecha nacimiento"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+
+        dcFechaNacimiento = new JDateChooser(); // Se inicializa con fecha nula
+        dcFechaNacimiento.setDateFormatString("dd/MM/yyyy");
+        dcFechaNacimiento.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        dcFechaNacimiento.setPreferredSize(new Dimension(160, 35));
+
+        JTextField dateTextField = (JTextField) dcFechaNacimiento.getDateEditor().getUiComponent();
+        dateTextField.setPreferredSize(new Dimension(120, 35));
+        dateTextField.setHorizontalAlignment(JTextField.LEFT);
+
+        formPanel.add(dcFechaNacimiento, gbc);
+
+        // ----------------------------------------------------
+        // 4. Especie (Inicialmente vacío)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(createLabel("Especie"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtEspecie = createTextField(300, 35);
+        formPanel.add(txtEspecie, gbc);
+
+        // ----------------------------------------------------
+        // 5. Raza (Inicialmente vacío)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(createLabel("Raza"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        txtRaza = createTextField(300, 35);
+        formPanel.add(txtRaza, gbc);
+
+        // ----------------------------------------------------
+        // 6. Sexo (Opciones estáticas)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.EAST;
+        formPanel.add(createLabel("Sexo"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.NONE;
+        String[] sexos = {"Macho", "Hembra"};
+        cmbSexo = new JComboBox<>(sexos);
+        cmbSexo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        cmbSexo.setPreferredSize(new Dimension(150, 35));
+        cmbSexo.setBackground(Color.WHITE);
+        cmbSexo.setBorder(BorderFactory.createLineBorder(new Color(160, 160, 160)));
+        formPanel.add(cmbSexo, gbc);
+
+        // ----------------------------------------------------
+        // 7. Señas Particulares (Inicialmente vacío)
+        // ----------------------------------------------------
+        gbc.gridx = 0;
+        gbc.gridy = 7;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        formPanel.add(createLabel("Señas Particulares"), gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weighty = 1.0;
+
+        txtSenasParticulares = new JTextArea(5, 30); // Se inicializa sin texto
+        txtSenasParticulares.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        txtSenasParticulares.setLineWrap(true);
+        txtSenasParticulares.setWrapStyleWord(true);
+        txtSenasParticulares.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JScrollPane scrollPane = new JScrollPane(txtSenasParticulares);
+        scrollPane.setPreferredSize(new Dimension(400, 100));
+
+        formPanel.add(scrollPane, gbc);
+
+        mainPanel.add(formPanel, BorderLayout.NORTH);
+
+        // --- Panel de botones ---
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 20));
+        buttonPanel.setBackground(Color.WHITE);
+
+        btnGuardar = createButton("Guardar", new Color(37, 99, 235));
+
+        btnSalir = createButton("Salir", new Color(37, 99, 235));
+
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnSalir);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(mainPanel);
+    }
+
+    // --- Métodos de Ayuda para Creación de Componentes
+
+    private JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        label.setHorizontalAlignment(SwingConstants.RIGHT);
+        label.setPreferredSize(new Dimension(140, 25));
+        return label;
+    }
+
+    private JTextField createTextField(int width, int height) {
+        JTextField field = new JTextField();
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        field.setPreferredSize(new Dimension(width, height));
+        field.setBorder(BorderFactory.createLineBorder(new Color(160, 160, 160)));
+        return field;
+    }
+
+    private JButton createButton(String text, Color bgColor) {
+        JButton button = new JButton(text);
+        button.setPreferredSize(new Dimension(180, 45));
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(bgColor.darker());
+            }
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(bgColor);
+            }
+        });
+        return button;
     }
 
     // --- MÉTODOS PÚBLICOS PARA EL CONTROLADOR ---

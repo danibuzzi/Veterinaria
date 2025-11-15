@@ -79,7 +79,7 @@ public class TurnoDAO3 {
     // MÉTODOS DE BÚSQUEDA DE IDS Y NOMBRES
     // ----------------------------------------------------
 
-    public int obtenerIdPropietario(String nombrePropietario) throws SQLException {
+   /* public int obtenerIdPropietario(String nombrePropietario) throws SQLException {
         String sql = "SELECT idPropietario FROM propietario WHERE nombre = ?";
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -89,7 +89,89 @@ public class TurnoDAO3 {
             }
         }
         return -1;
+    }*/
+
+
+
+    public List<String> obtenerNombresPropietarios() throws SQLException {
+        List<String> nombres = new ArrayList<>();
+        //nombres.add("-- Seleccione un Propietario --"); // Elemento por defecto
+
+        // Consulta que concatena los campos: Apellido, Nombre - DNI
+        String sql = "SELECT CONCAT(apellido, ', ', nombre, ' - ', dni) AS nombreCompleto FROM propietario ORDER BY apellido";
+
+        try (Connection conn = Conexion.conectar();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                // Se agrega el String completo formateado a la lista
+                nombres.add(rs.getString("nombreCompleto"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error de SQL al cargar Propietarios en TurnoDAO: " + e.getMessage());
+            throw e;
+        }
+        return nombres;
     }
+
+    /**
+     * Busca el ID de un Propietario a partir de la cadena completa del JComboBox (Apellido, Nombre - DNI).
+     * Desglosa la cadena para obtener el DNI y lo usa para buscar el ID real.
+     *
+     * @param propietarioString La cadena completa del JComboBox (p. ej., "Pérez, Juan - 12345678").
+     * @return El idPropietario, o -1 si falla el desglose o la búsqueda.
+     */
+    public int obtenerIdPropietario(String propietarioString) throws SQLException {
+
+        if (propietarioString == null || propietarioString.isEmpty() || propietarioString.startsWith("--")) {
+            return -1;
+        }
+
+        String dni = null;
+
+        // 1. Lógica para desglosar la cadena y extraer el DNI
+        try {
+            // Buscamos el separador principal " - "
+            String[] partesDni = propietarioString.split(" - ", 2);
+
+            if (partesDni.length == 2) {
+                dni = partesDni[1].trim(); // El DNI se encuentra en la segunda parte
+            } else {
+                System.err.println("Advertencia: Formato de cadena de propietario incorrecto. No se encontró el separador ' - '.");
+                return -1;
+            }
+
+        } catch (Exception ex) {
+            System.err.println("Error al desglosar la cadena del propietario: " + ex.getMessage());
+            return -1;
+        }
+
+        if (dni == null || dni.isEmpty()) {
+            return -1;
+        }
+
+        // 2. Consulta a la base de datos usando el DNI
+        String sql = "SELECT idPropietario FROM propietario WHERE dni = ?";
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, dni); // Buscamos por DNI
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("idPropietario");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error de SQL al buscar ID por DNI: " + e.getMessage());
+            throw e;
+        }
+
+        return -1;
+    }
+
+
+
+
 
     public int obtenerIdTipoConsulta(String nombreTipo) throws SQLException {
         String sql = "SELECT idTipoConsulta FROM tipoconsulta WHERE descripcion = ?";
@@ -142,16 +224,27 @@ public class TurnoDAO3 {
         return nombres;
     }
 
-    public List<String> obtenerNombresPropietarios() throws SQLException {
+    /*public List<String> obtenerNombresPropietarios() throws SQLException {
         List<String> nombres = new ArrayList<>();
-        String sql = "SELECT CONCAT(apellido, ', ',nombre) as nombre FROM propietario ORDER BY apellido";
+        String sql = "SELECT CONCAT(apellido, ', ',nombre,'-',' ',dni) as nombre FROM propietario ORDER BY apellido";
+
+        //String sql = "SELECT nombre FROM propietario ORDER BY nombre";
         try (Connection conn = Conexion.conectar();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) nombres.add(rs.getString("nombre"));
+            while (rs.next()) nombres.add(rs.getString("apellido"),rs.getString("nombre"));
         }
         return nombres;
-    }
+    }*/
+
+
+
+
+
+
+
+
+
 
     public List<String> obtenerNombresMascotasPorPropietario(int idPropietario) throws SQLException {
         List<String> nombres = new ArrayList<>();
@@ -233,21 +326,25 @@ public class TurnoDAO3 {
     }
 
     // Actualziacion del turno  Recibe el ID por separado y el objeto 'Turno' con los nuevos datos.
+
     public boolean actualizarTurno(int idTurno, Turno turno) throws SQLException {
 
         // Actualiza los campos modificables (usamos los getters de tu objeto Turno)
-        String sql = "UPDATE turno SET idTipoConsulta=?, fechaturno=?, hora=? WHERE idTurno = ?";
+        String sql = "UPDATE turno SET idTipoConsulta=?,idPropietario=?,idMascota=?,fechaturno=?, hora=? WHERE idTurno = ?";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             // Seteamos los nuevos valores del objeto Turno
             ps.setInt(1, turno.getIdTipoConsulta());
-            ps.setString(2, turno.getFechaTurno());
-            ps.setString(3, turno.getHora());
+            ps.setInt(2,turno.getIdPropietario());
+            ps.setInt(3,turno.getIdMascota());
+            ps.setString(4, turno.getFechaTurno());
+            ps.setString(5, turno.getHora());
+
 
             // Seteamos el ID del turno para la cláusula WHERE
-            ps.setInt(4, idTurno);
+            ps.setInt(6, idTurno);
 
             return ps.executeUpdate() > 0;
         }
@@ -356,8 +453,8 @@ public class TurnoDAO3 {
                 "FROM turno t " +
                 "JOIN mascota m ON t.idMascota = m.idMascota " +
                 "JOIN tipoconsulta tc ON t.idTipoConsulta = tc.idTipoConsulta " +
-                "WHERE t.idPropietario = ? AND t.fechaTurno >= ? " + // <-- DOBLE FILTRO
-                "ORDER BY t.fechaTurno ASC, t.hora ASC"; // Ordenamos ascendentemente para ver los más viejos primero
+                "WHERE t.idPropietario = ? AND t.fechaTurno >= ? " +
+                "ORDER BY t.fechaTurno ASC, t.hora ASC";
 
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {

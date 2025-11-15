@@ -21,6 +21,16 @@ public class Propietario {
         this.apellido = apellido;
 
     }
+
+    public Propietario(int idPropietario, String nombre, String apellido,String dni
+    ) {
+        this.idPropietario = idPropietario;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni=dni;
+
+    }
+
     public Propietario(String dni, String nombre, String apellido, LocalDate fechaNacimiento, String direccion, String pais, String ciudad
                        ,String telefono,String email) {
         this.dni = dni;
@@ -130,7 +140,8 @@ public class Propietario {
 
     @Override
     public String toString() {
-        return apellido + ", " + nombre;
+        String dniDisplay = (dni != null && !dni.isEmpty()) ? "  " + dni : "";
+        return apellido + ", " + nombre +"-"+" "+dniDisplay;
     }
 
 

@@ -295,7 +295,7 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         return tablaResultados.getSelectedRow();
     }
 
-    // 🛑 Método de utilidad para mostrar mensajes
+    //  Método de utilidad para mostrar mensajes
     public void mostrarMensaje(String mensaje, int tipoMensaje) {
         JOptionPane.showMessageDialog(this, mensaje, getTitle(), tipoMensaje);
     }

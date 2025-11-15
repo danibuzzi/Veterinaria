@@ -35,10 +35,10 @@ public class ControladorModificacionMascota implements ActionListener {
         String comando = e.getActionCommand();
         try {
             switch (comando) {
-                case "GUARDAR":
+                case "Guardar":
                     guardarModificacion();
                     break;
-                case "SALIR":
+                case "Salir":
                     // Delegar el control de salida a la vista (puede pedir confirmación)
                     vista.salir();
                     break;

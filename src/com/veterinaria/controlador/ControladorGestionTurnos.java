@@ -34,7 +34,7 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
 
     // 1. CONSTRUCTOR
     public ControladorGestionTurnos(GestorGestionTurnos gestor, VentanaGestionTurnos vista, TurnoDAO3 turnoDAO, PropietarioDAO propietarioDAO, MascotaDAO mascotaDAO, TipoConsultaDAO tipoConsultaDAO) {
-        this.gestor = gestor; // 👈 Ahora inyecta el gestor
+        this.gestor = gestor;
         this.vista = vista;
         this.turnoDAO = turnoDAO;
         this.propietarioDAO = propietarioDAO;
@@ -103,7 +103,7 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         }
 
         // -------------------------------------------------------------------------
-        // 🛑 3. OBTENER LOS 3 IDs OCULTOS (Construyendo el Array de 9 posiciones)
+        // } OBTENEMOS LOS 3 IDs OCULTOS (Construyendo el Array de 9 posiciones)
         // -------------------------------------------------------------------------
         if (idTurno>0) {
             try{
@@ -120,7 +120,7 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         else{return;}
 
         // 4. CREAR EL ARRAY FINAL DE 9 POSICIONES
-        Object[] datosTurnoCompleto = new Object[9]; // 🛑 ¡TAMAÑO 9!
+        Object[] datosTurnoCompleto = new Object[9];
 
         // Llenar las 6 columnas visibles (0 a 5)
         for (int i = 0; i < numColumnasVisibles; i++) { // numColumnasVisibles es 6
@@ -273,31 +273,27 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         int filaSeleccionada = tabla.getSelectedRow();
 
         if (filaSeleccionada == -1) {
-            // Asumo que tienes un método mostrarMensaje en tu vista
+
             vista.mostrarMensaje("Debe seleccionar una fila para modificar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // --- 1. OBTENER TODOS LOS DATOS DE LA FILA SELECCIONADA ---
 
         // Obtener la cantidad de columnas visibles en la tabla
         int numColumnas = tabla.getColumnModel().getColumnCount();
         Object[] datosTurno = new Object[numColumnas];
 
-        // Iterar sobre las columnas visibles para obtener todos los valores
-        // Nota: Si el ID está en una columna oculta, debes asegurarte de obtenerlo desde el modelo.
-        // Aquí usamos getValueAt() que trabaja sobre el modelo.
+
         for (int i = 0; i < numColumnas; i++) {
             datosTurno[i] = tabla.getValueAt(filaSeleccionada, i);
         }
 
         // 2. OBTENER LA FECHA SELECCIONADA (necesaria para el constructor de la Vista)
-        // Asumo que la columna 1 (índice 1) contiene la fecha como String ("2025-10-10")
+
         String fechaSeleccionada = datosTurno[1].toString();
 
         // 3. LLAMADA AL MÉTODO DE LA VISTA
-        // Debemos modificar el método en la Vista para que reciba la fecha y el array de datos.
-        //abrirVentanaModificacion(fechaSeleccionada, datosTurno);
+
         abrirVentanaModificacion();
     }
 
@@ -324,7 +320,7 @@ public class ControladorGestionTurnos implements ActionListener, ListSelectionLi
         // 1. OBTENER LA FECHA NECESARIA:
 
 
-        // 🛑 Obtener la fecha activa de la vista como String.
+        // Obtener la fecha activa de la vista como String.
 
         String fechaStringDB = vista.getFechaSeleccionadaComoString(); // <-- DEBES CREAR ESTE MÉTODO EN LA VISTA
 

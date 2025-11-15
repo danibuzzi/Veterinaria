@@ -421,7 +421,7 @@ public class VentanaConsultaMascota extends JInternalFrame {
         this.tableModel = new MascotaTableModel();
         this.table = new JTable(tableModel);
 
-        // 🛑 2. LÓGICA DE OCULTAMIENTO (Usamos el índice 0 que corresponde al ID)
+        // LÓGICA DE OCULTAMIENTO (Usamos el índice 0 que corresponde al ID)
         if (table.getColumnModel().getColumnCount() > 0) {
             TableColumn idColumn = table.getColumnModel().getColumn(0);
             idColumn.setMinWidth(0);

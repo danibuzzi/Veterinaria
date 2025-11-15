@@ -9,6 +9,7 @@ import com.veterinaria.vista.VentanaRegistroConsulta;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -169,7 +170,7 @@ public class    ControladorRegistroConsulta implements ActionListener {
         String pronostico = vista.getPronostico().trim();
         String tratamiento = vista.getTratamiento().trim();
 
-        // 🛑 VALIDACIÓN DE CAMOPOS
+        // VALIDACIÓN DE CAMOPOS
         if (propietario == null || propietario.getIdPropietario() == 0 ||
                 mascota == null || mascota.getIdMascota() == 0 || tipoPractica == null ||
                 tipoPractica.getIdTipoPractica() == 0 || fechaUtil == null
@@ -182,13 +183,25 @@ public class    ControladorRegistroConsulta implements ActionListener {
         }
 
 
-        // 🛑 LÓGICA PARA CAMPO OPCIONAL (Resultado Estudios)
+        // LÓGICA PARA CAMPO OPCIONAL (Resultado Estudios)
         if (resultadoEstudios.isEmpty()) {
             resultadoEstudios = "Sin estudios realizados"; // Asignar valor por defecto si está vacío
         }
 
         try {
+            //Guardamos la fecha actual
+
+            LocalDate hoy = LocalDate.now();
+            java.sql.Date fechaSql = java.sql.Date.valueOf(hoy);
+
+            long currentTimeMillis = System.currentTimeMillis();
+
+
+            // ***************************************************************
+
             java.sql.Time horaActual = new java.sql.Time(System.currentTimeMillis());
+
+
             Consulta nuevaConsulta = new Consulta();
 
             // Asignación de IDs
@@ -197,10 +210,11 @@ public class    ControladorRegistroConsulta implements ActionListener {
             nuevaConsulta.setIdTipoPractica(tipoPractica.getIdTipoPractica());
 
             // Asignación de datos
-            nuevaConsulta.setFechaConsulta(fechaUtil);
+            //nuevaConsulta.setFechaConsulta(fechaUtil);
+            nuevaConsulta.setFechaConsulta(fechaSql);
             nuevaConsulta.setHora(horaActual);
 
-            // 🛑 Usar los valores validados/por defecto
+            // Usar los valores validados/por defecto
             nuevaConsulta.setResultadoEstudio(resultadoEstudios);
             nuevaConsulta.setDiagnostico(diagnostico);
             nuevaConsulta.setPronostico(pronostico);

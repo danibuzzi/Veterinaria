@@ -28,7 +28,7 @@ public class MascotaDAO {
 
     // LISTAR POR PROPIETARIO
     private static final String SQL_SELECT_ACTIVAS_POR_PROPIETARIO =
-            "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa FROM Mascota WHERE idPropietario = ? AND activa = TRUE ORDER BY nombre";
+            "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa FROM Mascota WHERE idPropietario = ? AND activa=1 ORDER BY nombre";
 
 
     public MascotaDAO() {}
@@ -179,7 +179,7 @@ public class MascotaDAO {
     }
 
     public List<Mascota> listarActivasPorPropietario(int idPropietario) {
-        // ... (Implementación, asegurando que se lea la 'raza' del ResultSet) ...
+
         List<Mascota> mascotas = new ArrayList<>();
 
         try (Connection conn = Conexion.conectar();

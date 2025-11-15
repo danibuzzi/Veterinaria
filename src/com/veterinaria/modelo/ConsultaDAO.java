@@ -7,13 +7,14 @@ import com.veterinaria.modelo.Consulta;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultaDAO {
 
     // --- Sentencias SQL ---
-    private static final String SQL_SELECT_PROPIETARIOS = "SELECT idPropietario, nombre, apellido FROM Propietario ORDER BY apellido";
+    private static final String SQL_SELECT_PROPIETARIOS = "SELECT idPropietario, nombre, apellido,dni FROM Propietario ORDER BY apellido";
     private static final String SQL_SELECT_MASCOTAS_BY_PROPIETARIO = "SELECT idMascota, nombre, idPropietario FROM Mascota WHERE idPropietario = ?";
     private static final String SQL_SELECT_TIPOS_CONSULTA = "SELECT DISTINCT idTipoPractica, descripcion FROM TipoPractica ORDER BY descripcion";
     private static final String SQL_INSERT_CONSULTA =
@@ -32,7 +33,7 @@ public class ConsultaDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                propietarios.add(new Propietario(rs.getInt("idPropietario"), rs.getString("nombre"), rs.getString("apellido")));
+                propietarios.add(new Propietario(rs.getInt("idPropietario"), rs.getString("nombre"), rs.getString("apellido"), rs.getString("dni")));
             }
             return propietarios;
 
@@ -137,7 +138,7 @@ public class ConsultaDAO {
                     "JOIN Mascota m ON c.idMascota = m.idMascota " + // Necesarios para el WHERE
                     "JOIN Propietario p ON c.idPropietario = p.idPropietario " + // Necesarios para el WHERE
                     "JOIN TipoPractica t ON c.idTipoPractica = t.idTipoPractica " +
-                    "WHERE p.idPropietario = ? AND c.idMascota = ? AND c.fechaConsulta >= ? " +
+                    "WHERE p.idPropietario = ? AND c.idMascota = ? AND c.fechaConsulta >= ? AND c.fechaConsulta <= ? " +
                     "ORDER BY c.fechaConsulta DESC";
 
     // SQL para la consulta DETALLE (Incluye TODOS los campos, especialmente los textos largos)
@@ -187,12 +188,20 @@ public class ConsultaDAO {
         List<Object[]> lista = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+        // Obtener la fecha actual (Fecha Hasta)
+        LocalDate hoy = LocalDate.now();
+        Date fechaHastaSql = Date.valueOf(hoy);
+
+        // 2. Convertir fechaDesde String a java.sql.Date
+        //Date fechaDesdeSql = Date.valueOf(fecha);
+
         try (Connection conn = Conexion.obtenerConexion();
              PreparedStatement stmt = conn.prepareStatement(SQL_SELECT_CONSULTAS_RESUMEN)) {
 
             stmt.setInt(1, idPropietario);
             stmt.setInt(2, idMascota); // ⬅️ Segundo Parámetro (idMascota)
             stmt.setDate(3, fecha);
+            stmt.setDate(4, fechaHastaSql);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

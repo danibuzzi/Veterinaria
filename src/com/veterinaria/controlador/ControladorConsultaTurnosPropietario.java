@@ -20,10 +20,12 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
     private final TurnoPropietarioService turnoPropietarioService;
     private final SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Formato para SQL
     private final JDesktopPane escritorio;
+
     public ControladorConsultaTurnosPropietario(VentanaTurnosPropietario vista, TurnoPropietarioService turnoPropietarioService, JDesktopPane escritorio) {
         this.vista = vista;
         this.turnoPropietarioService = turnoPropietarioService;
         this.escritorio = escritorio;
+
         // Inicializar listeners
         vista.getBuscarButton().addActionListener(this);
 
@@ -35,38 +37,51 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
      * Carga el JComboBox con los propietarios, usando el formato ID;Nombre Apellido.
      */
     private void cargarPropietarios() {
-        JComboBox<String> combo = vista.getPropietarioCombo();
+        try {
+            // 1. Obtener la lista del Service
+            // La lista viene como List<String> donde cada String es "ID;Nombre Apellido"
+            List<String> propietarios = turnoPropietarioService.listarPropietariosConId();
 
-        // Obtener la lista del Service
-        List<String> propietarios = turnoPropietarioService.listarPropietariosConId();
+            // 2. Limpiar y repoblar el JComboBox
+            vista.getPropietarioCombo().removeAllItems();
+            vista.getPropietarioCombo().addItem("Seleccione un Propietario"); // Valor por defecto y ayuda
 
-        // Limpiar y poblar el combo
-        combo.removeAllItems();
-        combo.addItem("0;-- Seleccione Propietario --");
-        for (String p : propietarios) {
-            combo.addItem(p);
+            // 3. Añadir todos los propietarios obtenidos
+            for (String propietario : propietarios) {
+                vista.getPropietarioCombo().addItem(propietario);
+            }
+        } catch (Exception e) {
+            vista.mostrarError("Error al cargar la lista de propietarios: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Buscar")) { // Comando del botón "Buscar"
-            buscarTurnos();
+        if (e.getSource() == vista.getBuscarButton()) {
+            consultarTurnos();
         }
-        // Manejar otros eventos si es necesario
     }
 
-    /**
-     * Lógica principal de búsqueda: Obtiene el ID seleccionado, la fecha y consulta el Service.
-     */
-    private void buscarTurnos() {
-        int idPropietario = vista.getIdPropietarioSeleccionado();
-        Date fechaDesdeDate = vista.getDateChooserFechaDesde().getDate();
+    private void consultarTurnos() {
+        String propietarioSeleccionado = (String) vista.getPropietarioCombo().getSelectedItem();
+        Date fechaDesdeDate = vista.getFechaDesdeDate();
         String fechaDesdeSql = null;
+        int idPropietario = -1;
 
-        // 1. Validar selección de Propietario
-        if (idPropietario <= 0) {
+        // 1. Validar y obtener el ID del Propietario
+        if (propietarioSeleccionado == null || propietarioSeleccionado.equals("Seleccione un Propietario")) {
             vista.mostrarError("Debe seleccionar un Propietario válido.");
+            vista.getTableModel().setDatos(java.util.Collections.emptyList());
+            return;
+        }
+
+        try {
+            // El formato es "ID;Nombre Apellido". Separamos por ';' para obtener el ID.
+            idPropietario = Integer.parseInt(propietarioSeleccionado.split(";")[0].trim());
+        } catch (NumberFormatException ex) {
+            vista.mostrarError("Error al obtener el ID del propietario seleccionado.");
             vista.getTableModel().setDatos(java.util.Collections.emptyList());
             return;
         }
@@ -78,7 +93,7 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
             return;
         }
 
-        // 3. Formatear la fecha para la consulta SQL
+        // 3. Formatear la fecha para la consulta SQL (yyyy-MM-dd)
         try {
             fechaDesdeSql = sqlDateFormat.format(fechaDesdeDate);
         } catch (Exception e) {
@@ -95,7 +110,9 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
 
         // 6. Mostrar mensaje si no hay resultados
         if (turnos.isEmpty()) {
-            vista.mostrarError("No se encontraron turnos agendados para ese propietario a partir de la fecha seleccionada.");
+            vista.mostrarMensaje("No se encontraron turnos agendados para ese propietario a partir de la fecha seleccionada.");
+        } else {
+            vista.mostrarMensaje("Consulta realizada con éxito. Mostrando " + turnos.size() + " turno(s).");
         }
 
         // Asegurarse de que la tabla se redibuje

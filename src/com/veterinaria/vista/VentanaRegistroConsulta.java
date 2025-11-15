@@ -183,7 +183,7 @@ public class VentanaRegistroConsulta extends JInternalFrame {
         JPanel panelDetallesConsulta = new JPanel(new GridBagLayout());
         panelDetallesConsulta.setBackground(Color.WHITE);
 
-        // 🛑 Borde estilo Reserva de Turnos: Línea y Título en color azul
+        // Borde estilo Reserva de Turnos: Línea y Título en color azul
         panelDetallesConsulta.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(BLUE_PRIMARY, 1),
                 "Detalles Clínicos",
@@ -381,7 +381,7 @@ public class VentanaRegistroConsulta extends JInternalFrame {
 
     public void cargarPropietarios(DefaultComboBoxModel<Propietario> model) {
         comboPropietario.setModel(model);
-        // 🛑 AGREGUE ESTA LÍNEA si no la tiene, para asegurar que el primer elemento se lea.
+
         if (model.getSize() > 0) {
             comboPropietario.setSelectedIndex(0);
         }
