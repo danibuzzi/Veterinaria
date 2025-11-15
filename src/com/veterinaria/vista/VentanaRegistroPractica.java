@@ -14,8 +14,10 @@ public class VentanaRegistroPractica extends JInternalFrame {
         setTitle("Registro de tipo de práctica");
         setSize(700, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
     }
 
     private void initComponents() {

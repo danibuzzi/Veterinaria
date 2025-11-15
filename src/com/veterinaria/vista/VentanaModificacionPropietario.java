@@ -385,8 +385,10 @@ public class VentanaModificacionPropietario extends JInternalFrame {
         setTitle("Modificación de Propietario");
         setSize(750, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // Panel principal (BorderLayout)
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -484,7 +486,7 @@ public class VentanaModificacionPropietario extends JInternalFrame {
         dcFechaNacimiento.setPreferredSize(new Dimension(120, 28));
         dcFechaNacimiento.setMaximumSize(new Dimension(120, 28)); // Forzar tamaño máximo
 
-        // 🛑 SOLUCIÓN: Usar un JPanel con FlowLayout.LEFT para contener el JDateChooser
+        // Usamos un JPanel con FlowLayout.LEFT para contener el JDateChooser
         // y evitar que GridBagLayout lo estire.
         JPanel fechaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         fechaPanel.setBackground(Color.WHITE);

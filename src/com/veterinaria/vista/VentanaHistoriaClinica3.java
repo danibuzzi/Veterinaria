@@ -42,7 +42,10 @@ public class VentanaHistoriaClinica3 extends JInternalFrame {
         super("Historia Clínica de Mascotas", true, true, true, true);
         setSize(1050, 700);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
         // LLAMADA CLAVE PARA OCULTAR EL ID (Columna 0)

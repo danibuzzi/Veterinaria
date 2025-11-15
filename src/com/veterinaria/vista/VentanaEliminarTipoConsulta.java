@@ -13,8 +13,10 @@ public class VentanaEliminarTipoConsulta extends JInternalFrame {
         setTitle("Eliminar tipo de consulta");
         setSize(700, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // Main panel
         JPanel mainPanel = new JPanel();

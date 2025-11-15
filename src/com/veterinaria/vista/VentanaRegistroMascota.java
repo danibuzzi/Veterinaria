@@ -2167,9 +2167,10 @@ public class VentanaRegistroMascota extends JInternalFrame {
 
         setSize(700, 680);
 
-        //setClosable(true);
-        //setMaximizable(false);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
         //setIconifiable(true);
 
         JPanel mainPanel = new JPanel(new BorderLayout());

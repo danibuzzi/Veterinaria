@@ -29,7 +29,10 @@ public class VentanaRegistroTurno2 extends JInternalFrame {
         this.gestorTurno = gestorTurno;
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // 1. Panel principal con espacio alrededor
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));

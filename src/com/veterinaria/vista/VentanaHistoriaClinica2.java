@@ -46,7 +46,10 @@ public class VentanaHistoriaClinica2 extends JInternalFrame {
         this.escritorio = escritorio;
         setSize(1050, 700);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
         // **IMPORTANTE**: No llamar a ocultarColumnaID aquí. Se llama en mostrarResultados.

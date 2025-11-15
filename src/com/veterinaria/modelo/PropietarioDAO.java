@@ -149,5 +149,94 @@ public class PropietarioDAO {
     }
 
 
+    //Para consulta turno propeitario
+
+
+    public List<String> listarPropietariosConId() {
+        List<String> propietariosCombo = new ArrayList<>();
+        // La consulta trae el ID, Nombre y Apellido
+        String sql = "SELECT idPropietario, nombre, apellido FROM Propietario ORDER BY apellido, nombre";
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                int id = rs.getInt("idPropietario");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+
+                // Formato requerido: "ID;Nombre Apellido"
+                String item = id + ";" + nombre + " " + apellido;
+                propietariosCombo.add(item);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al listar propietarios con ID para ComboBox: " + e.getMessage());
+            // En caso de error, lanzamos una RuntimeException para que sea manejada por el Service
+            throw new RuntimeException("Error de base de datos al listar propietarios.", e);
+        }
+        return propietariosCombo;
+    }
+
+    //APra registro propietario
+
+    public void guardar(Propietario p) {
+        String sql = "INSERT INTO Propietario (dni, nombre, apellido, fechaNacimiento, direccion, pais, ciudad, telefono, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            int i = 1;
+            ps.setString(i++, p.getDni());
+            ps.setString(i++, p.getNombre());
+            ps.setString(i++, p.getApellido());
+            ps.setDate(i++, p.getFechaNacimiento() != null ? Date.valueOf(p.getFechaNacimiento()) : null);
+            ps.setString(i++, p.getDireccion());
+            ps.setString(i++, p.getPais());
+            ps.setString(i++, p.getCiudad());
+            ps.setString(i++, p.getTelefono());
+            ps.setString(i++, p.getEmail());
+
+            int filasAfectadas = ps.executeUpdate();
+            if (filasAfectadas > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        p.setIdPropietario(rs.getInt(1)); // Asignar el ID generado
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al guardar el propietario: " + e.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * Verifica si ya existe un propietario con el mismo número de DNI.
+     * @param dni DNI a verificar.
+     * @return true si existe, false en caso contrario.
+     */
+    public boolean existeDni(String dni) {
+        String sql = "SELECT COUNT(*) FROM Propietario WHERE dni = ?";
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, dni);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al verificar existencia de DNI: " + e.getMessage());
+            throw new RuntimeException("Error en la capa de datos al verificar DNI.", e);
+        }
+        return false;
+    }
+
+
+
 }
 

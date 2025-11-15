@@ -26,7 +26,10 @@ public class VentanaRegistroTurnoFuncional extends JInternalFrame {
         super("Reserva de Turnos");
         setSize(850, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBackground(Color.WHITE);

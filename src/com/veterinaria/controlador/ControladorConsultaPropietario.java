@@ -1,10 +1,12 @@
 package com.veterinaria.controlador;
 
+import com.veterinaria.modelo.GestorTurno3;
 import com.veterinaria.modelo.Propietario;
 import com.veterinaria.modelo.PropietarioService;
 import com.veterinaria.vista.VentanaConsultaPropietario;
 import com.veterinaria.vista.VentanaModificacionPropietario;
 import com.veterinaria.modelo.PropietarioTableModel;
+import com.veterinaria.vista.VentanaTurnosPropietario;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -31,9 +33,25 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
 
         this.vista.establecerControlador(this); // Conecta botones (Buscar, Modificar, Eliminar, Salir)
         this.vista.getTable().getSelectionModel().addListSelectionListener(this); // Listener para la selección de fila
+         //Para ocultar Id tabla
+
+        vista.getTable().setModel(vista.getTableModel());
+
+        // 2. OBTENER EL MODELO DE COLUMNAS DE LA TABLA
+        javax.swing.table.TableColumnModel tcm = vista.getTable().getColumnModel();
+
+        // 3. ENCONTRAR Y OCULTAR LA COLUMNA 0 (EL ID)
+        // El 'getColumnIndex(0)' es el índice que tiene el ID en la matriz de datos
+        javax.swing.table.TableColumn idColumn = tcm.getColumn(0);
+
+        // 4. ELIMINAR LA COLUMNA DE LA VISTA (la oculta)
+        // Usamos el método removeColumn, no setMaxWidth(0), porque es más limpio.
+        tcm.removeColumn(idColumn);
 
         actualizarEstadoBotones(false); // Inicialmente deshabilitados
     }
+
+
 
     // --- 1. Eventos de Botón (ActionListener) ---
     @Override

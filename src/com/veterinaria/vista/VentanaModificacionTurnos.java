@@ -46,7 +46,10 @@ public class VentanaModificacionTurnos extends JInternalFrame implements Interna
 
         setSize(700, 550);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
         //cargarDatosIniciales();

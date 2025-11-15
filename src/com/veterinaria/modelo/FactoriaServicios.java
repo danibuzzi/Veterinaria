@@ -130,6 +130,8 @@ public class FactoriaServicios {
     private final ConsultaService consultaService;
     private final ConsultaDAO consultaDAO;
     private final HistoriaClinicaService historiaClinicaService;
+    private final TurnoPropietarioService turnoPropietarioService;
+    private final RegistroPropietarioService registroPropietarioService;
 
     // --- 2. DECLARACIÓN DE GESTORES ---
 
@@ -139,6 +141,7 @@ public class FactoriaServicios {
     private final PropietarioService propietarioService;
 
     public FactoriaServicios() {
+        //this.turnoPropietarioService = turnoPropietarioService;
         this.consultaService = new ConsultaService();
         // A. CREACIÓN DE TODOS LOS DAOs
         this.consultaDAO=new ConsultaDAO();
@@ -156,6 +159,12 @@ public class FactoriaServicios {
 
         this.propietarioService=new PropietarioService(propietarioDAO,mascotaDAO);
 
+        //Para consulta turno propietario
+        this.turnoPropietarioService = new TurnoPropietarioService(propietarioDAO, turnoDAO);
+
+        //Para registro propietario
+
+        this.registroPropietarioService=new RegistroPropietarioService(propietarioDAO);
 
         // CREACIÓN DE GESTORES (Inyección de dependencias)
 
@@ -216,6 +225,14 @@ public class FactoriaServicios {
 
     public PropietarioService getPropietarioService() {
         return propietarioService;
+    }
+
+    public TurnoPropietarioService getTurnoPropietarioService() {
+        return turnoPropietarioService;
+    }
+
+   public RegistroPropietarioService  getRegistroPropietarioService() {
+        return registroPropietarioService;
     }
 
 }

@@ -39,7 +39,10 @@ public class VentanaDetalleConsulta extends JInternalFrame {
         super("Detalle de Consulta Histórica", true, true, true, true);
         setSize(850, 750); // Tamaño ajustado para ver todos los campos
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
     }

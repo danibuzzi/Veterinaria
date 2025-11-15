@@ -14,8 +14,10 @@ public class VentanaRegistroTipoConsulta extends JInternalFrame {
         setTitle("Registro de tipo de consulta");
         setSize(700, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
     }
 
     private void initComponents() {

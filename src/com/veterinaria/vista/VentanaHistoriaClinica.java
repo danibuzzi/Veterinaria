@@ -35,7 +35,10 @@ public class VentanaHistoriaClinica extends JInternalFrame {
         // El tamaño de ventana se ajusta a una JInternalFrame grande
         setSize(1050, 700);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setResizable(true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
     }

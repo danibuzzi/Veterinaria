@@ -18,9 +18,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private final ILanzadorModulo lanzadorHistoriaClinica;
     private final ILanzadorModulo lanzadorRegistroMascota;
 
+
     private final ILanzadorModulo lanzadorConsultaMascotas;
     private final ILanzadorModulo lanzadorConsultaPropietario;
 
+    private final ILanzadorModulo lanzadorConsultaTurnoPropietario;
+    private final ILanzadorModulo lanzadorRegistroPropietario;
     // Componentes del Menú
     // ... (items existentes)
 
@@ -33,12 +36,16 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private  JMenuItem itemRegistroMascota;
     private JMenuItem itemConsultaMascotas;
     private JMenuItem itemConsultaPropietario;
+    private JMenuItem itemConsultaTurnoPropietario;
+    private JMenuItem itemRegistroPropietario;
 
     // 1. CONSTRUCTOR
     public VentanaPrincipal(GestorTurno3 gestorRegistro, GestorGestionTurnos gestorGestionTurnos, ConsultaService consultaService
     , HistoriaClinicaService historiaClinicaService, MascotaService mascotaService,
-                            PropietarioService propietarioService) {
+                            PropietarioService propietarioService, TurnoPropietarioService turnoPropietarioService, RegistroPropietarioService registroPropietarioService) {
         super("Veterinaria Los Llanos");
+        //this.lanzadorRegistroPropietario = lanzadorRegistroPropietario;
+        // this.lanzadorConsultaTurnoPropietario = lanzadorConsultaTurnoPropietario;
 
         //this.lanzadorRegistroMascota = lanzadorRegistroMascota;
         //private final GestorTurno3 gestorTurno;
@@ -52,7 +59,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         // ✅ 3. Inicialización del Escritorio y se establece como contenedor principal
 
-        escritorio = new JDesktopPane();
+        this.escritorio = new JDesktopPane();
         setContentPane(escritorio);
 
         // ✅ 4. Inicialización de los Lanzadores (Factoría)
@@ -65,6 +72,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         this.lanzadorRegistroMascota=new LanzadorRegistroMascota(mascotaService,escritorio);
         this.lanzadorConsultaMascotas =new LanzadorConsultaMascota(mascotaService,escritorio);
         this.lanzadorConsultaPropietario =new LanzadorConsultaPropietario(propietarioService,escritorio);
+        this.lanzadorConsultaTurnoPropietario = new LanzadorConsultaTurnoPropietario(turnoPropietarioService, this.escritorio);
+        this.lanzadorRegistroPropietario=new LanzadorRegistroPropietario(registroPropietarioService,escritorio);
 
         // --- CONFIGURACIÓN DEL MENÚ ---
 
@@ -75,6 +84,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         itemRegistroTurno = new JMenuItem("Registro de Turno");
         itemGestionTurnos = new JMenuItem("Gestión de Turnos (Consulta/Mod.)");
+        itemConsultaTurnoPropietario=new JMenuItem("Consulta turnos propietario");
+
+
         JMenu menuConsultas = new JMenu("Gestión consulta /Historia clínica");
         itemRegistroConsulta = new JMenuItem("Registro de Consultas");
         itemHistoriaClinica= new JMenuItem("Consulta historias clínicas");
@@ -86,6 +98,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         itemGestionTurnos.addActionListener(this);
         itemGestionTurnos.setActionCommand("ABRIR_GESTION_TURNOS");
 
+        itemConsultaTurnoPropietario.addActionListener(this);
+        itemConsultaTurnoPropietario.setActionCommand("ABRIR_CONSULTA_TURNOS_PROPIETARIO");
+
         itemRegistroConsulta.addActionListener(this);
         itemRegistroConsulta.setActionCommand("ABRIR_REGISTRO_CONSULTA");
 
@@ -93,7 +108,12 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         itemHistoriaClinica.setActionCommand("ABRIR_HISTORIA_CLINICA");
 
 
+
         JMenu menuPacientes = new JMenu("Gestión de propietarios/pacientes");
+
+        itemRegistroPropietario=new JMenuItem("Registro de propietario");
+        itemRegistroPropietario.addActionListener(this);
+        itemRegistroPropietario.setActionCommand("ABRIR_REGISTRO_PROPIETARIO");
 
         itemConsultaPropietario =new JMenuItem("Consulta modificación propietarios");
         itemConsultaPropietario.addActionListener(this);
@@ -113,11 +133,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         menuTurnos.add(itemRegistroTurno);
         menuTurnos.addSeparator();
         menuTurnos.add(itemGestionTurnos);
+        menuTurnos.add(itemConsultaTurnoPropietario);
 
         menuConsultas.add(itemRegistroConsulta);
         menuConsultas.add(itemHistoriaClinica);
 
+        menuPacientes.add(itemRegistroPropietario);
         menuPacientes.add(itemConsultaPropietario);
+        menuPacientes.addSeparator();
         menuPacientes.add(itemRegistroMascota);
         menuPacientes.add(itemConsultaMascotas);
 
@@ -159,6 +182,13 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         else if (comando.equals("ABRIR_CONSULTA_PROPIETARIO")) {
             this.lanzadorConsultaPropietario.lanzar();
+        }
+
+        else if (comando.equals("ABRIR_CONSULTA_TURNOS_PROPIETARIO")) {
+            this.lanzadorConsultaTurnoPropietario.lanzar();
+        }
+        else if (comando.equals("ABRIR_REGISTRO_PROPIETARIO")) {
+            this.lanzadorRegistroPropietario.lanzar();
         }
 
     }

@@ -26,7 +26,7 @@ public class GestorTurno3 {
             return turnoDAO.obtenerNombresTiposConsulta();
         } catch (SQLException e) {
             System.err.println("Error al cargar Tipos de Consulta: " + e.getMessage());
-            // 🛑 RETURN CORREGIDO
+
             return Collections.emptyList();
         }
     }
@@ -36,7 +36,7 @@ public class GestorTurno3 {
             return turnoDAO.obtenerNombresPropietarios();
         } catch (SQLException e) {
             System.err.println("Error al cargar Propietarios: " + e.getMessage());
-            // 🛑 RETURN CORREGIDO
+
             return Collections.emptyList();
         }
     }
@@ -50,7 +50,7 @@ public class GestorTurno3 {
             return turnoDAO.obtenerNombresMascotasPorPropietario(idPropietario);
         } catch (SQLException e) {
             System.err.println("Error al cargar Mascotas: " + e.getMessage());
-            // 🛑 RETURN CORREGIDO
+
             return Collections.emptyList();
         }
     }
@@ -70,7 +70,7 @@ public class GestorTurno3 {
             horasInicioOcupadas = turnoDAO.obtenerHorasInicioOcupadas(fechaSeleccionada);
         } catch (SQLException e) {
             System.err.println("Error al obtener horas ocupadas de la BD: " + e.getMessage());
-            // 🛑 RETURN CORREGIDO
+
             return Collections.singletonList("--- Error de conexión ---");
         }
 
@@ -231,4 +231,36 @@ public class GestorTurno3 {
         int minuto = minutosTotal % 60;
         return String.format("%02d:%02d", hora, minuto);
     }
+
+    //metodos para consulta turnos propietario
+
+    /**
+     * Carga todos los propietarios para el JComboBox (formato ID;Nombre Apellido).
+     */
+    public List<String> cargarPropietariosParaConsulta() {
+        try {
+            return turnoDAO.obtenerPropietariosParaCombo();
+        } catch (SQLException e) {
+            System.err.println("Error al cargar propietarios para la consulta: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Obtiene la lista de turnos para un propietario específico.
+     * @param idPropietario ID del propietario seleccionado.
+     * @return Lista de Object[] con [Fecha Formateada, Hora, Tipo Consulta, Mascota].
+     */
+    /*public List<Object[]> obtenerTurnosPorPropietario(int idPropietario) {
+        if (idPropietario <= 0) {
+            return Collections.emptyList();
+        }
+        try {
+            // El DAO ya devuelve la lista de Object[] mapeada
+            return turnoDAO.obtenerTurnosPorPropietario(idPropietario);
+        } catch (SQLException e) {
+            System.err.println("Error al obtener turnos para propietario ID " + idPropietario + ": " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }*/
 }

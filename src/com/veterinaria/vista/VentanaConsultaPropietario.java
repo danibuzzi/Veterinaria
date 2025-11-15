@@ -28,7 +28,10 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         setSize(780, 480); // Ligeramente más ancho para el botón Buscar
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // --- Panel Principal ---
         JPanel mainPanel = new JPanel(new BorderLayout());

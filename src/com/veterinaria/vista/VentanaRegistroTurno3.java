@@ -5,7 +5,7 @@ package com.veterinaria.vista;
 
 import com.toedter.calendar.JDateChooser;
 import com.veterinaria.controlador.ControladorTurno3; // Importa el nuevo controlador
-import com.veterinaria.modelo.GestorTurno3; // 🛑 Importa V3
+import com.veterinaria.modelo.GestorTurno3;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,13 +18,13 @@ import javax.swing.border.TitledBorder;
 // 🛑 CLASE INDEPENDIENTE (Copia de VentanaRegistroTurno2)
 public class VentanaRegistroTurno3 extends JFrame {
 
-    private final GestorTurno3 gestorTurno; // 🛑 Usa el Gestor V3
+    private final GestorTurno3 gestorTurno;
 
     private JComboBox<String> comboTipoConsulta;
     private JComboBox<String> comboPropietario;
     private JComboBox<String> comboMascota;
     private JDateChooser dateChooserFechaTurno;
-    private JComboBox<String> cmbHora; // 🛑 CAMBIO CLAVE: Usamos ComboBox para la hora
+    private JComboBox<String> cmbHora;
     private JButton btnGuardar;
     private JButton btnSalir;
 
@@ -42,18 +42,18 @@ public class VentanaRegistroTurno3 extends JFrame {
         comboPropietario = new JComboBox<>();
         comboMascota = new JComboBox<>();
         dateChooserFechaTurno = new JDateChooser();
-        cmbHora = new JComboBox<>(); // 🛑 Inicialización
+        cmbHora = new JComboBox<>();
         btnGuardar = new JButton("Guardar Turno");
         btnSalir = new JButton("Salir");
 
-        // ... (Código de layout, omítelo para el foco en la lógica) ...
+        // ... (Código de layout.
         // Simplificación:
         JPanel panel = new JPanel(new GridLayout(6, 2, 10, 10));
         panel.add(new JLabel("Tipo de Consulta:")); panel.add(comboTipoConsulta);
         panel.add(new JLabel("Propietario:")); panel.add(comboPropietario);
         panel.add(new JLabel("Mascota:")); panel.add(comboMascota);
         panel.add(new JLabel("Fecha Turno:")); panel.add(dateChooserFechaTurno);
-        panel.add(new JLabel("Hora:")); panel.add(cmbHora); // Usando cmbHora
+        panel.add(new JLabel("Hora:")); panel.add(cmbHora);
         panel.add(btnGuardar); panel.add(btnSalir);
         this.add(panel, BorderLayout.CENTER);
 
@@ -63,7 +63,7 @@ public class VentanaRegistroTurno3 extends JFrame {
     // GETTERS Y SETTERS V3
     // ----------------------------------------------------
 
-    public void setControlador(ControladorTurno3 controlador) { // 🛑 Usa Controlador V3
+    public void setControlador(ControladorTurno3 controlador) {
         btnGuardar.addActionListener(controlador);
         btnGuardar.setActionCommand("GUARDAR_TURNO");
         btnSalir.addActionListener(e -> dispose());
@@ -74,14 +74,14 @@ public class VentanaRegistroTurno3 extends JFrame {
         comboPropietario.setActionCommand("PROPIETARIO_SELECCIONADO");
     }
 /*
-    /** 🛑 MÉTODO CLAVE V3: Listener de la fecha que incluye validación */
+
     /*public void setListenerFecha(ActionListener listener) {
         dateChooserFechaTurno.getDateEditor().addPropertyChangeListener(evt -> {
             if ("date".equals(evt.getPropertyName())) {
 
                 Date fechaSeleccionada = dateChooserFechaTurno.getDate();
 
-                // 🛑 VALIDACIÓN DE FECHA PASADA
+
                 if (gestorTurno.esFechaPasada(fechaSeleccionada)) {
                     JOptionPane.showMessageDialog(this, "No se puede reservar turnos en una fecha pasada.",
                             "Error de Validación", JOptionPane.ERROR_MESSAGE);
@@ -102,7 +102,7 @@ public class VentanaRegistroTurno3 extends JFrame {
         for (String item : items) { combo.addItem(item); }
     }
 
-    /** 🛑 MÉTODO FALTANTE: Muestra un mensaje al usuario. */
+
     /*public void mostrarMensaje(String mensaje, int tipo) {
         JOptionPane.showMessageDialog(this, mensaje, "Gestión de Turnos", tipo);
     }
@@ -112,7 +112,7 @@ public class VentanaRegistroTurno3 extends JFrame {
     // GETTERS (Asegurándonos de que están todos los necesarios)
     // ----------------------------------------------------
 
-    // 🛑 GETTERS PARA LOS JCOMBOBOX MISMOS (FALTABAN O NO ERAN CLAROS)
+
     public JComboBox<String> getComboTipoConsulta() { return comboTipoConsulta; }
     public JComboBox<String> getComboPropietario() { return comboPropietario; }
     public JComboBox<String> getComboMascota() { return comboMascota; }
@@ -172,6 +172,11 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
         //setLocationRelativeTo(null);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(250, 300);
+
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // 1. Panel principal con espacio alrededor
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
@@ -255,8 +260,7 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
         añadirComponente(panel, new JLabel("Propietario:"), comboPropietario, 0, gbc);
         añadirComponente(panel, new JLabel("Mascota:"), comboMascota, 1, gbc);
         añadirComponente(panel, new JLabel("Tipo de Consulta:"), comboTipoConsulta, 2, gbc);
-        añadirComponente(panel, new JLabel("Hora:"), comboHora, 3, gbc); // 🛑 Usando comboHora
-
+        añadirComponente(panel, new JLabel("Hora:"), comboHora, 3, gbc);
         // Relleno vertical
         gbc.gridx = 0; gbc.gridy = 4; gbc.weighty = 1.0;
         panel.add(new JLabel(""), gbc);
@@ -365,7 +369,7 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
         }
     }
 
-    // 🛑 Getter de la hora ACTUALIZADO para usar el ComboBox
+    // Getter de la hora ACTUALIZADO para usar el ComboBox
 
     public String getHoraSeleccionada() {
         String horaSeleccionada = (String) comboHora.getSelectedItem();
@@ -410,7 +414,7 @@ public class VentanaRegistroTurno3 extends JInternalFrame{
     public Date getFechaSeleccionada() { return dateChooserFechaTurno.getDate(); } // Devuelve Date para el Gestor
 
     public JDateChooser getDateChooserFechaTurno() { return dateChooserFechaTurno; }
-    public JComboBox<String> getComboHora() { return comboHora; } // 🛑 Nuevo Getter para comboHora
+    public JComboBox<String> getComboHora() { return comboHora; }
     public JComboBox<String> getComboMascota() { return comboMascota; }
     public JComboBox<String> getComboTipoConsulta() { return comboTipoConsulta; }
     public JComboBox<String> getComboPropietario() { return comboPropietario; }

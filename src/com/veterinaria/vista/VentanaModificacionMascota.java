@@ -673,6 +673,8 @@ public class VentanaModificacionMascota extends JInternalFrame {
         setSize(700, 600);
         setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // ... (Diseño de la UI - Se omite el boilerplate de diseño) ...
         // Se asume un Layout simple como GridLayout o GridBagLayout.

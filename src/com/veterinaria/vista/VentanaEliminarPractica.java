@@ -15,7 +15,10 @@ public class VentanaEliminarPractica extends JInternalFrame {
         setSize(700, 250);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
     }
 
     private void initComponents() {

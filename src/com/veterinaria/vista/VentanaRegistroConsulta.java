@@ -46,7 +46,10 @@ public class VentanaRegistroConsulta extends JInternalFrame {
         // El tamaño ajustado para el diseño compacto y las alturas definidas
         setSize(750, 720);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         initComponents();
     }

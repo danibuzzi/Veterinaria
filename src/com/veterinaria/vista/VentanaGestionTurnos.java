@@ -38,6 +38,10 @@ public class    VentanaGestionTurnos extends JInternalFrame {
     // 1. CONSTRUCTOR
     public VentanaGestionTurnos(JDesktopPane escritorioContenedor) {
         super("Agenda: Consulta y Gestión de Turnos Asignados", true, true, true, true);
+        setClosable(true);
+        setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
         this.escritorioContenedor = escritorioContenedor;
 
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -98,6 +102,7 @@ public class    VentanaGestionTurnos extends JInternalFrame {
         dateChooserFecha.setDateFormatString("dd/MM/yyyy"); // Formato visible
         dateChooserFecha.setPreferredSize(new Dimension(150, 35));
         dateChooserFecha.setFont(FONT_FIELD);
+
 
         btnBuscar = crearBotonPrincipal("Buscar Agenda");
         btnBuscar.setActionCommand("BUSCAR");

@@ -333,7 +333,7 @@ public class VentanaRegistroPropietario extends JFrame {
         txtPais = createTextField(25);
         txtCiudad = createTextField(25);
 
-        // 🛑 Inicialización de BOTONES RENOMBRADOS
+        // Inicialización de BOTONES RENOMBRADOS
         btnGuardar = createButton("Guardar", new Color(0, 120, 215));
         btnSalir = createButton("Salir", new Color(0, 120, 215));
     }
@@ -440,8 +440,8 @@ public class VentanaRegistroPropietario extends JFrame {
         // Action buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(btnGuardar); // 🛑 Botón
-        buttonPanel.add(btnSalir);   // 🛑 Botón
+        buttonPanel.add(btnGuardar);
+        buttonPanel.add(btnSalir);
         buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         mainPanel.add(buttonPanel);
 
@@ -507,7 +507,7 @@ public class VentanaRegistroPropietario extends JFrame {
 
     private void setupListeners() {
         // Guardar button
-        btnGuardar.addActionListener(e -> { // 🛑 Uso de btnGuardar
+        btnGuardar.addActionListener(e -> {
             if (validateForm()) {
                 // Lógica MVC: Aquí se debería llamar al controlador para registrar.
 
@@ -526,7 +526,7 @@ public class VentanaRegistroPropietario extends JFrame {
         });
 
         // Salir button
-        btnSalir.addActionListener(e -> { // 🛑 Uso de btnSalir
+        btnSalir.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
                     "¿Está seguro que desea salir?",
                     "Confirmar",
@@ -662,6 +662,10 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.*;
 import com.toedter.calendar.JDateChooser;
+import com.veterinaria.controlador.ControladorRegistroPropietario;
+import com.veterinaria.modelo.PropietarioDAO;
+import com.veterinaria.modelo.RegistroPropietarioService;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -691,15 +695,17 @@ public class VentanaRegistroPropietario extends JInternalFrame {
     public VentanaRegistroPropietario() {
         initComponents();
         setupLayout();
-        setupListeners();
+        //setupListeners();
     }
 
     private void initComponents() {
         setTitle("Registro de Propietario");
         setSize(700, 580);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        //setLocationRelativeTo(null);
+        setClosable(true);
         setResizable(false);
+        setMaximizable(true);
+        setIconifiable(true);
 
         // Inicialización de campos de texto
         txtDni = createNumericTextField(15, 10);
@@ -882,7 +888,7 @@ public class VentanaRegistroPropietario extends JInternalFrame {
         panel.add(label);
         panel.add(Box.createHorizontalStrut(20));
 
-        // 🛑 LÍNEA CLAVE: Forzar el tamaño máximo para que BoxLayout no lo estire
+
         dateChooser.setMaximumSize(new Dimension(120, 32));
         dateChooser.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(dateChooser);
@@ -908,7 +914,7 @@ public class VentanaRegistroPropietario extends JInternalFrame {
                 );
 
                 JOptionPane.showMessageDialog(this, message, "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                clearForm();
+                limpiarCampos();
             }
         });
 
@@ -982,17 +988,17 @@ public class VentanaRegistroPropietario extends JInternalFrame {
         }
 
         // --- VALIDACIÓN DE FORMATO DE EMAIL ---
-        if (!isValidEmail(txtEmail.getText().trim())) {
+      /*  if (!isValidEmail(txtEmail.getText().trim())) {
             JOptionPane.showMessageDialog(this, "Por favor ingrese una dirección de Email válida.", "Error", JOptionPane.ERROR_MESSAGE);
             txtEmail.requestFocus();
             return false;
-        }
+        }*/
 
         return true;
     }
 
     // Método de validación de Email (Patrón básico)
-    private boolean isValidEmail(String email) {
+    /*private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
         return email.matches(emailRegex);
     }
@@ -1035,5 +1041,68 @@ public class VentanaRegistroPropietario extends JInternalFrame {
 
             new VentanaRegistroPropietario().setVisible(true);
         });
+    }*/
+
+    /**
+     * Limpia todos los campos del formulario.
+     */
+    public void limpiarCampos() {
+        txtDni.setText("");
+        txtApellidos.setText("");
+        txtNombres.setText("");
+        dcFechaNacimiento.setDate(new Date()); // O null, mejor inicializar a la fecha actual
+        txtDireccion.setText("");
+        txtTelefono.setText("");
+        txtEmail.setText("");
+        txtPais.setText("");
+        txtCiudad.setText("");
+        txtDni.requestFocus();
     }
+
+    // GETTERS PARA EL CONTROLADOR MVC
+    public String getDni() { return txtDni.getText().trim(); }
+    public String getApellidos() { return txtApellidos.getText().trim(); }
+    public String getNombres() { return txtNombres.getText().trim(); }
+    public Date getFechaNacimiento() { return dcFechaNacimiento.getDate(); }
+    public String getDireccion() { return txtDireccion.getText().trim(); }
+    public String getTelefono() { return txtTelefono.getText().trim(); }
+    public String getEmail() { return txtEmail.getText().trim(); }
+    public String getPais() { return txtPais.getText().trim(); }
+    public String getCiudad() { return txtCiudad.getText().trim(); }
+
+    public JButton getBtnGuardar() { return btnGuardar; }
+    public JButton getBtnSalir() { return btnSalir; }
+
+
+    /*public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // --- MAIN DE PRUEBA AISLADA ---
+            // 1. Crear el Frame Contenedor
+            JFrame testFrame = new JFrame("Prueba de Registro de Propietario (Aislada)");
+            testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            testFrame.setSize(750, 550);
+            testFrame.setLayout(new BorderLayout());
+
+            // 2. Crear las dependencias (DAO y Service)
+            // Esto asume que PropietarioDAO puede ser instanciado sin problemas.
+            PropietarioDAO propietarioDAO = new PropietarioDAO();
+            RegistroPropietarioService service = new RegistroPropietarioService(propietarioDAO);
+
+            // 3. Crear la Vista e inicializar el Controlador
+            VentanaRegistroPropietario vista = new VentanaRegistroPropietario();
+            new ControladorRegistroPropietario(vista, service, null);
+
+            // 4. Agregar y Mostrar
+            testFrame.add(vista, BorderLayout.CENTER);
+            vista.setVisible(true);
+            testFrame.setLocationRelativeTo(null);
+            testFrame.setVisible(true);
+        });
+    }*/
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 public class TurnoDAO3 {
-
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     public TurnoDAO3() {
 
     }
@@ -144,7 +144,7 @@ public class TurnoDAO3 {
 
     public List<String> obtenerNombresPropietarios() throws SQLException {
         List<String> nombres = new ArrayList<>();
-        String sql = "SELECT nombre FROM propietario ORDER BY nombre";
+        String sql = "SELECT CONCAT(apellido, ', ',nombre) as nombre FROM propietario ORDER BY apellido";
         try (Connection conn = Conexion.conectar();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -210,7 +210,7 @@ public class TurnoDAO3 {
                     fila[4] = rs.getString("NombreMascota");
                     fila[5] = rs.getString("fechaturno");
 
-                    // 🛑 7. AÑADIMOS LOS IDs NUMÉRICOS (Índices 6, 7, 8)
+                    //AÑADIMOS LOS IDs NUMÉRICOS (Índices 6, 7, 8)
                     fila[6] = rs.getInt("idPropietario"); // El ID de la tabla Propietario
                     fila[7] = rs.getInt("idMascota");     // El ID de la tabla Mascota
                     fila[8] = rs.getInt("idTipoConsulta"); // El ID de la tabla TipoConsulta
@@ -311,7 +311,89 @@ public class TurnoDAO3 {
             }
         }
     }
+    //Metodos para consulta turnos propietario
 
 
+           /* Obtiene una lista de todos los propietarios para el ComboBox.
+             El formato es: ID;Nombre Apellido
+     */
+    public List<String> obtenerPropietariosParaCombo() throws SQLException {
+        List<String> propietarios = new ArrayList<>();
+        // ASUMO una tabla 'propietario' con columnas 'idPropietario', 'nombre', 'apellido'
+        String sql = "SELECT idPropietario, nombre, apellido FROM propietario ORDER BY apellido, nombre";
 
+        try (Connection conn = Conexion.conectar();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int id = rs.getInt("idPropietario");
+                String nombreCompleto = rs.getString("nombre") + " " + rs.getString("apellido");
+                // Formato clave: ID;Nombre Apellido
+                propietarios.add(id + ";" + nombreCompleto);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener propietarios para combo: " + e.getMessage());
+            throw e;
+        }
+        return propietarios;
+    }
+
+    /**
+     * Consulta los turnos de un propietario, uniendo Mascota y TipoConsulta.
+     * Devuelve directamente Object[] para el TableModel.
+     * Columnas: [Fecha Formateada, Hora, Tipo Consulta, Mascota]
+     */
+    public List<Object[]> obtenerTurnosPorPropietario(int idPropietario, String fechaDesde) throws SQLException {
+        List<Object[]> turnos = new ArrayList<>();
+
+        // La condición de filtro incluye el idPropietario Y la fechaDesde
+        String sql = "SELECT " +
+                "t.fechaTurno, " +
+                "t.hora, " +
+                "tc.nombre AS nombreTipoConsulta, " +
+                "m.nombre AS nombreMascota " +
+                "FROM turno t " +
+                "JOIN mascota m ON t.idMascota = m.idMascota " +
+                "JOIN tipoconsulta tc ON t.idTipoConsulta = tc.idTipoConsulta " +
+                "WHERE t.idPropietario = ? AND t.fechaTurno >= ? " + // <-- DOBLE FILTRO
+                "ORDER BY t.fechaTurno ASC, t.hora ASC"; // Ordenamos ascendentemente para ver los más viejos primero
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idPropietario);
+            ps.setString(2, fechaDesde); // Se asigna la fecha
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    // 1. Obtener los datos
+                    Date fecha = rs.getDate("fechaTurno");
+                    String hora = rs.getString("hora");
+                    String tipo = rs.getString("nombreTipoConsulta");
+                    String mascota = rs.getString("nombreMascota");
+
+                    // 2. Formatear la fecha
+                    String fechaFormateada = (fecha != null) ? sdf.format(fecha) : "";
+
+                    // 3. Crear el Object[]
+                    Object[] fila = {
+                            fechaFormateada,
+                            hora,
+                            tipo,
+                            mascota
+                    };
+
+                    turnos.add(fila);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al consultar turnos por propietario y fecha: " + e.getMessage());
+            throw e;
+        }
+        return turnos;
+    }
 }
+
+
+

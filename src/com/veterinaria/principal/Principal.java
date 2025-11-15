@@ -1,6 +1,7 @@
 package com.veterinaria.principal;
 
 
+import com.veterinaria.controlador.ILanzadorModulo;
 import com.veterinaria.modelo.FactoriaServicios; // Importamos la factoria de servicios
 import com.veterinaria.vista.VentanaPrincipal;
 
@@ -21,7 +22,11 @@ public class Principal {
                     VentanaPrincipal vistaPrincipal = new VentanaPrincipal(
                             servicios.getGestorTurno(), servicios.getGestorGestionTurnos(),
                             servicios.getConsultaService(),servicios.getHistoriaClinicaService(),
-                            servicios.getMascotaService(),servicios.getPropietarioService()
+                            servicios.getMascotaService(),servicios.getPropietarioService(),
+                            servicios.getTurnoPropietarioService(),
+                            servicios.getRegistroPropietarioService()
+
+
                     );
                     // MOSTRAR LA VISTA PRINCIPAL
                     vistaPrincipal.setVisible(true);
