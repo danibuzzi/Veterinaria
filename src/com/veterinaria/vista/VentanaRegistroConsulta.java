@@ -115,7 +115,7 @@ public class VentanaRegistroConsulta extends JInternalFrame {
         JPanel panelFecha = new JPanel(new GridBagLayout());
         panelFecha.setBackground(Color.WHITE);
 
-        // 🛑 Borde estilo Reserva de Turnos: Borde simple como "Seleccionar Fecha"
+        // Borde estilo Reserva de Turnos: Borde simple como "Seleccionar Fecha"
         panelFecha.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(GRAY_BORDER, 1),
                 "Fecha de la Consulta",
@@ -159,7 +159,7 @@ public class VentanaRegistroConsulta extends JInternalFrame {
         JPanel panelDetallesTurno = new JPanel(new GridBagLayout());
         panelDetallesTurno.setBackground(Color.WHITE);
 
-        // 🛑 Borde estilo Reserva de Turnos: Línea y Título en color azul
+        //  Borde estilo Reserva de Turnos: Línea y Título en color azul
         panelDetallesTurno.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(BLUE_PRIMARY, 1),
                 "Detalles de la Cita",
@@ -194,13 +194,30 @@ public class VentanaRegistroConsulta extends JInternalFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 5, 10, 5);
+        // Asignamos peso vertical a cada fila de JTextArea para que se expandan por igual (0.25 para 4 filas)
+        gbc.weighty = 1.0;
+        //double rowWeight = 1.0 / 4.0;
+
         int fila = 0;
 
+
+
         // Alturas de campos de texto ajustadas a las dimensiones originales
-        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Resultado de Estudios", new JScrollPane(txtResultadoEstudios), 120);
-        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Diagnóstico", new JScrollPane(txtDiagnostico), 60);
-        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Pronóstico", new JScrollPane(txtPronostico), 60);
-        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Tratamiento", new JScrollPane(txtTratamiento), 80);
+       /* agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Resultado de Estudios", new JScrollPane(txtResultadoEstudios), 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Diagnóstico", new JScrollPane(txtDiagnostico), 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Pronóstico", new JScrollPane(txtPronostico), 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Tratamiento", new JScrollPane(txtTratamiento), 120);
+*/
+        // Utilizamos el método auxiliar modificado sin altura fija
+        /*agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Resultado de Estudios", new JScrollPane(txtResultadoEstudios), 100);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Diagnóstico", new JScrollPane(txtDiagnostico), 100);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Pronóstico", new JScrollPane(txtPronostico), 100);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Tratamiento", new JScrollPane(txtTratamiento), 100);*/
+        //agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Resultado de Estudios", new JScrollPane(txtResultadoEstudios), rowWeight);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Resultado de Estudios", new JScrollPane(txtResultadoEstudios), 100, 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Diagnóstico", new JScrollPane(txtDiagnostico), 100, 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Pronóstico", new JScrollPane(txtPronostico), 100, 120);
+        agregarFilaArea(panelDetallesConsulta, gbc, fila++, "Tratamiento", new JScrollPane(txtTratamiento), 100, 120);
 
         return panelDetallesConsulta;
     }
@@ -244,10 +261,11 @@ public class VentanaRegistroConsulta extends JInternalFrame {
     }
 
     // Método para agregar JTextAreas (campos multi-línea)
-    private void agregarFilaArea(JPanel panel, GridBagConstraints gbc, int fila, String labelText, JScrollPane scrollPane, int height) {
+    private void agregarFilaArea(JPanel panel, GridBagConstraints gbc, int fila, String labelText, JScrollPane scrollPane, int height,int rowWeight) {
         gbc.gridx = 0;
         gbc.gridy = fila;
         gbc.weightx = 0;
+        gbc.weighty = rowWeight;
         gbc.anchor = GridBagConstraints.NORTHEAST;
         gbc.fill = GridBagConstraints.NONE;
 
@@ -258,6 +276,7 @@ public class VentanaRegistroConsulta extends JInternalFrame {
 
         gbc.gridx = 1;
         gbc.weightx = 1.0;
+        gbc.weighty = rowWeight;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.BOTH;
 

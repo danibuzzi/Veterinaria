@@ -54,7 +54,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         // ILanzadorModulo lanzadorRegistroConsulta1 = lanzadorRegistroConsulta;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 800);
+        setSize(1280, 1000);
 
         setLocationRelativeTo(null);
         // --- codigo icono ventana---
@@ -141,7 +141,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         itemConsultaMascotas.addActionListener(this);
         itemConsultaMascotas.setActionCommand("ABRIR_CONSULTA_MASCOTAS");
 
-        JMenu menuConfiguracion = new JMenu("Gestión configuraciòn maestra");
+        //JMenu menuConfiguracion = new JMenu("Gestión configuraciòn maestra");
 
         menuTurnos.add(itemRegistroTurno);
         menuTurnos.addSeparator();
@@ -160,7 +160,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         menuBar.add(menuTurnos);
         menuBar.add(menuConsultas);
         menuBar.add(menuPacientes);
-        menuBar.add(menuConfiguracion);
+        //menuBar.add(menuConfiguracion);
 
         setJMenuBar(menuBar);
     }

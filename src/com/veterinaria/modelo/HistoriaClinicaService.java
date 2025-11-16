@@ -33,7 +33,8 @@ public class HistoriaClinicaService {
      */
     public List<Mascota> listarMascotasPorPropietario(int idPropietario) {
         // Llama al metodo del DAO de Mascota
-        return mascotaDAO.listarActivasPorPropietario(idPropietario);
+        //return mascotaDAO.listarActivasPorPropietario(idPropietario);
+        return mascotaDAO.listarTodasMascotasPorPropietario(idPropietario);
     }
 
     /**

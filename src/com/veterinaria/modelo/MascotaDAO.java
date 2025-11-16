@@ -12,8 +12,8 @@ public class MascotaDAO {
             "INSERT INTO Mascota (idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     //  Se actualizan todos los campos editables, se usa idMascota en el WHERE
-   // private static final String SQL_UPDATE_MASCOTA =
-     //       "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ? WHERE idMascota = ?";
+    // private static final String SQL_UPDATE_MASCOTA =
+    //       "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ? WHERE idMascota = ?";
 
     private static final String SQL_UPDATE_MASCOTA =
             "UPDATE Mascota SET nombre = ?, fechanacimiento = ?, especie = ?, raza = ?, sexo = ?, seniasparticulares = ?, activa = ? WHERE idMascota = ?";
@@ -30,10 +30,15 @@ public class MascotaDAO {
     private static final String SQL_SELECT_ACTIVAS_POR_PROPIETARIO =
             "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa FROM Mascota WHERE idPropietario = ? AND activa=1 ORDER BY nombre";
 
+    //LISTAR TODAS LAS MASCOTAS DE PROPIETAARIO
+    private static final String SQL_SELECT_TODAS_MASCOTAS_POR_PROPIETARIO =
+            "SELECT idMascota, idPropietario, nombre, fechanacimiento, especie, raza, sexo, seniasparticulares, activa FROM Mascota WHERE idPropietario = ? ORDER BY nombre";
 
-    public MascotaDAO() {}
 
-   public void insertar(Mascota mascota) {
+    public MascotaDAO() {
+    }
+
+    public void insertar(Mascota mascota) {
 
         try (Connection conn = Conexion.conectar();
              // Usa RETURN_GENERATED_KEYS para poder obtener el ID generado (opcional)
@@ -147,11 +152,10 @@ public class MascotaDAO {
             //  activa
             ps.setBoolean(i++, mascota.isActiva());
             // ID de la Mascota para el WHERE
-           ps.setInt(i++, mascota.getIdMascota());
+            ps.setInt(i++, mascota.getIdMascota());
 
             //idPropietario
             //ps.setInt(i++, mascota.getIdPropietario());
-
 
 
             if (ps.executeUpdate() == 0) {
@@ -209,6 +213,40 @@ public class MascotaDAO {
         }
         return mascotas;
     }
+
+
+    public List<Mascota> listarTodasMascotasPorPropietario(int idPropietario) {
+
+        List<Mascota> mascotas = new ArrayList<>();
+
+        try (Connection conn = Conexion.conectar();
+             PreparedStatement ps = conn.prepareStatement(MascotaDAO.SQL_SELECT_TODAS_MASCOTAS_POR_PROPIETARIO)){
+
+            ps.setInt(1, idPropietario);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Mascota m = new Mascota();
+                    m.setIdMascota(rs.getInt("idMascota"));
+                    m.setIdPropietario(rs.getInt("idPropietario"));
+                    m.setNombre(rs.getString("nombre"));
+
+                    Date sqlDate = rs.getDate("fechanacimiento");
+                    m.setFechaNacimiento(sqlDate != null ? sqlDate.toLocalDate() : null);
+
+                    m.setEspecie(rs.getString("especie"));
+                    m.setRaza(rs.getString("raza")); // <--- Se incluye raza
+                    m.setSexo(rs.getString("sexo"));
+                    m.setSeniasParticulares(rs.getString("seniasparticulares"));
+                    m.setActiva(rs.getBoolean("activa"));
+                    mascotas.add(m);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al listar mascotas por propietario.", e);
+        }
+        return mascotas;
+    }
+
 
     //Agregado para integridad
 

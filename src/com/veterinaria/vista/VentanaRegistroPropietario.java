@@ -655,6 +655,7 @@ public class VentanaRegistroPropietario extends JFrame {
 
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -669,7 +670,14 @@ import com.veterinaria.modelo.RegistroPropietarioService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//import static com.veterinaria.vista.VentanaHistoriaClinica2.BLUE_PRIMARY;
+//import static com.veterinaria.vista.VentanaHistoriaClinica2.FONT_BOLD;
+
+
+
 public class VentanaRegistroPropietario extends JInternalFrame {
+
+
 
     // CAMPOS DE TEXTO
     private JTextField txtDni;
@@ -707,12 +715,13 @@ public class VentanaRegistroPropietario extends JInternalFrame {
         setMaximizable(true);
         setIconifiable(true);
 
+
         // Inicialización de campos de texto
         txtDni = createNumericTextField(15, 10);
         txtApellidos = createTextField(30);
         txtNombres = createTextField(30);
 
-        // 🛑 AJUSTE DE ANCHO DEL JDateChooser
+        // AJUSTE DE ANCHO DEL JDateChooser
         dcFechaNacimiento = new JDateChooser();
         dcFechaNacimiento.setDateFormatString("dd/MM/yyyy");
         dcFechaNacimiento.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -800,7 +809,8 @@ public class VentanaRegistroPropietario extends JInternalFrame {
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        // Add form fields
+        // Añadimos campo de formularios
+
         mainPanel.add(createFormRow("DNI", txtDni));
         mainPanel.add(Box.createVerticalStrut(15));
 

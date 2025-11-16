@@ -108,8 +108,8 @@ public class VentanaRegistroTurno extends JInternalFrame { // Renombrada de Vent
         comboMascota.addItem("--- Seleccione Mascota ---");
         comboTipoConsulta = new JComboBox<>();
         comboTipoConsulta.addItem("--- Seleccione Tipo de Consulta ---");
-        comboHorario = new JComboBox<>(); // 🛑 Inicialización del JComboBox
-        comboHorario.addItem("--- Seleccione Fecha ---"); // Placeholder inicial
+        comboHorario = new JComboBox<>();
+        comboHorario.addItem("--- Seleccione Fecha ---");
 
         // 4 campos en el formulario
         añadirComponente(panel, new JLabel("Propietario:"), comboPropietario, 0, gbc, labelFont, fieldFont);
@@ -181,7 +181,7 @@ public class VentanaRegistroTurno extends JInternalFrame { // Renombrada de Vent
 
     // --- MÉTODOS DE DATOS (Getters y Listeners para el Controlador) ---
 
-    // 🛑 Listener para el JDateChooser (nuevo)
+    // Listener para el JDateChooser (nuevo)
     public void setListenerCambioFecha(PropertyChangeListener listener) {
         // La propiedad "date" se dispara al cambiar la fecha
         dateChooserFechaTurno.addPropertyChangeListener("date", listener);
@@ -209,12 +209,12 @@ public class VentanaRegistroTurno extends JInternalFrame { // Renombrada de Vent
     public String getNombrePropietarioSeleccionado() { return (String) comboPropietario.getSelectedItem(); }
     public String getNombreMascotaSeleccionada() { return (String) comboMascota.getSelectedItem(); }
 
-    // 🛑 Getter para obtener el objeto Date (necesario para la lógica de horarios)
+    // Getter para obtener el objeto Date (necesario para la lógica de horarios)
     public Date getFechaSeleccionada() {
         return dateChooserFechaTurno.getDate();
     }
 
-    // 🛑 Getter para obtener el horario seleccionado
+    //  Getter para obtener el horario seleccionado
     public String getHorarioSeleccionado() {
         Object item = comboHorario.getSelectedItem();
         // Protección contra NullPointerException y el placeholder
@@ -224,7 +224,7 @@ public class VentanaRegistroTurno extends JInternalFrame { // Renombrada de Vent
     public JComboBox<String> getComboMascota() { return comboMascota; }
     public JComboBox<String> getComboTipoConsulta() { return comboTipoConsulta; }
     public JComboBox<String> getComboPropietario() { return comboPropietario; }
-    public JComboBox<String> getComboHorario() { return comboHorario; } // 🛑 Nuevo Getter
+    public JComboBox<String> getComboHorario() { return comboHorario; }
 
     public void mostrarMensaje(String mensaje, int tipoMensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Resultado", tipoMensaje);

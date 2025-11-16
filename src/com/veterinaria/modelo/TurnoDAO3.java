@@ -248,7 +248,7 @@ public class TurnoDAO3 {
 
     public List<String> obtenerNombresMascotasPorPropietario(int idPropietario) throws SQLException {
         List<String> nombres = new ArrayList<>();
-        String sql = "SELECT nombre FROM mascota WHERE idPropietario = ? ORDER BY nombre";
+        String sql = "SELECT nombre FROM mascota WHERE idPropietario = ? AND activa=true ORDER BY nombre";
         try (Connection conn = Conexion.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idPropietario);

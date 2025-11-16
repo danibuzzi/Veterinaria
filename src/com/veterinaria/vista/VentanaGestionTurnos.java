@@ -115,8 +115,21 @@ public class    VentanaGestionTurnos extends JInternalFrame {
         return panel;
     }
 
+    //Oculta columna indicada de la tabla
+
+    public void ocultarColumna(JTable tabla, int columnIndex) {
+        if (tabla.getColumnModel().getColumnCount() > columnIndex) {
+            // Obtiene la columna a ocultar
+            TableColumn columna = tabla.getColumnModel().getColumn(columnIndex);
+
+            // Remueve visualmente la columna del TableColumnModel.
+            // Los datos siguen estando disponibles en el TableModel.
+            tabla.getColumnModel().removeColumn(columna);
+        }
+    }
+
     private JScrollPane crearPanelTabla() {
-        String[] columnas = {"ID", "Hora", "Tipo Consulta", "Propietario", "Mascota", "Estado"};
+        String[] columnas = {"ID", "Hora", "Tipo Consulta", "Propietario", "Mascota"};
         modeloTabla = new DefaultTableModel(null, columnas) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -125,6 +138,7 @@ public class    VentanaGestionTurnos extends JInternalFrame {
         };
 
         tablaTurnos = new JTable(modeloTabla);
+        ocultarColumna(tablaTurnos,0);
         tablaTurnos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaTurnos.setRowHeight(25);
         tablaTurnos.setFont(FONT_FIELD); // Fuente para las celdas

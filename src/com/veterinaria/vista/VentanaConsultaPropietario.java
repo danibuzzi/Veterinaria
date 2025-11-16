@@ -5,11 +5,13 @@ import com.veterinaria.controlador.ControladorConsultaPropietario;
 import com.veterinaria.modelo.PropietarioTableModel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class VentanaConsultaPropietario extends JInternalFrame {
+
     private JTextField searchField;
     private JButton buscarTextoButton; // El nuevo botón de texto
     private JRadioButton apellidoRadio;
@@ -47,11 +49,13 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
         searchPanel.setBackground(Color.WHITE);
         searchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        //  Borde estilo Reserva de Turnos: Línea y Título en color azul
 
         searchField = new JTextField("Ingrese búsqueda", 30);
         searchField.setForeground(Color.GRAY);
         searchField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         searchField.setPreferredSize(new Dimension(350, 35)); // Altura fija
+
         searchField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(200, 200, 200)),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)

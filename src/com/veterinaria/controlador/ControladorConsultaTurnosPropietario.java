@@ -11,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 
-/**
- * Controlador para la Consulta de Turnos por Propietario.
- */
+
 public class ControladorConsultaTurnosPropietario implements ActionListener {
 
     private final VentanaTurnosPropietario vista;
