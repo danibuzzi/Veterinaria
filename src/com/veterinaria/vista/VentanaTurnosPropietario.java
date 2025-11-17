@@ -227,6 +227,40 @@ public class VentanaTurnosPropietario extends JInternalFrame {
         }
     }
 
+    /**
+     * Oculta las columnas ID (0)
+     *
+     */
+    public void ocultarColumnasTabla() {
+        // 1. Ocultar ESTADO (índice 5 original)
+        // Se debe ocultar de mayor a menor índice para evitar errores de desplazamiento.
+        ocultarColumna(turnosTable, 5);
+
+        // 2. Ocultar ID (índice 0)
+        ocultarColumna(turnosTable, 0);
+    }
+
+
+    /**
+     * Método auxiliar para ocultar una columna en la JTable.
+     */
+    private void ocultarColumna(JTable tabla, int columnIndex) {
+        int visibleColumnCount = tabla.getColumnModel().getColumnCount();
+
+        if (columnIndex < 0 || columnIndex >= visibleColumnCount) {
+            // Esto es normal si ya se ocultó o si la consulta trae menos columnas
+            return;
+        }
+
+        try {
+            TableColumn columnaAVisualizar = tabla.getColumnModel().getColumn(columnIndex);
+            tabla.getColumnModel().removeColumn(columnaAVisualizar);
+        } catch (Exception e) {
+            // Manejo silencioso de errores de ocultamiento
+            System.err.println("Error al intentar ocultar columna en el índice visual " + columnIndex + ": " + e.getMessage());
+        }
+    }
+
     //=========================================================
     // GETTERS PARA EL CONTROLADOR
     // =========================================================
@@ -361,7 +395,7 @@ public class VentanaTurnosPropietario extends JInternalFrame {
      * Método principal para prueba aislada (si aplica)
      * NOTA: Este código asume que tienes las clases PropietarioDAO y TurnoDAO3 accesibles.
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
                 // 1. Configuración de Look and Feel
@@ -404,6 +438,6 @@ public class VentanaTurnosPropietario extends JInternalFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
-    }
+    }*/
 
 }

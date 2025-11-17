@@ -23,7 +23,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     private final ILanzadorModulo lanzadorConsultaMascotas;
     private final ILanzadorModulo lanzadorConsultaPropietario;
 
-    private final ILanzadorModulo lanzadorConsultaTurnoPropietario;
+    //private final ILanzadorModulo lanzadorConsultaTurnoPropietario;
     private final ILanzadorModulo lanzadorRegistroPropietario;
     // Componentes del Menú
     // ... (items existentes)
@@ -50,7 +50,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         //this.lanzadorRegistroMascota = lanzadorRegistroMascota;
         //private final GestorTurno3 gestorTurno;
-        // Renombrado de gestorTurno para claridad
+
         // ILanzadorModulo lanzadorRegistroConsulta1 = lanzadorRegistroConsulta;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,7 +85,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         this.lanzadorRegistroMascota=new LanzadorRegistroMascota(mascotaService,escritorio);
         this.lanzadorConsultaMascotas =new LanzadorConsultaMascota(mascotaService,escritorio);
         this.lanzadorConsultaPropietario =new LanzadorConsultaPropietario(propietarioService,escritorio);
-        this.lanzadorConsultaTurnoPropietario = new LanzadorConsultaTurnoPropietario(turnoPropietarioService, this.escritorio);
+        //this.lanzadorConsultaTurnoPropietario = new LanzadorConsultaTurnoPropietario(turnoPropietarioService, this.escritorio);
         this.lanzadorRegistroPropietario=new LanzadorRegistroPropietario(registroPropietarioService,escritorio);
 
         // --- CONFIGURACIÓN DEL MENÚ ---
@@ -111,8 +111,8 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         itemGestionTurnos.addActionListener(this);
         itemGestionTurnos.setActionCommand("ABRIR_GESTION_TURNOS");
 
-        itemConsultaTurnoPropietario.addActionListener(this);
-        itemConsultaTurnoPropietario.setActionCommand("ABRIR_CONSULTA_TURNOS_PROPIETARIO");
+       /* itemConsultaTurnoPropietario.addActionListener(this);
+        itemConsultaTurnoPropietario.setActionCommand("ABRIR_CONSULTA_TURNOS_PROPIETARIO");*/
 
         itemRegistroConsulta.addActionListener(this);
         itemRegistroConsulta.setActionCommand("ABRIR_REGISTRO_CONSULTA");
@@ -146,7 +146,7 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         menuTurnos.add(itemRegistroTurno);
         menuTurnos.addSeparator();
         menuTurnos.add(itemGestionTurnos);
-        menuTurnos.add(itemConsultaTurnoPropietario);
+        //menuTurnos.add(itemConsultaTurnoPropietario);
 
         menuConsultas.add(itemRegistroConsulta);
         menuConsultas.add(itemHistoriaClinica);
@@ -171,18 +171,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         String comando = e.getActionCommand();
 
         if (comando.equals("ABRIR_REGISTRO_TURNO")) {
-            // ✅ Delegación limpia al Lanzador
+            // Delegación limpia al Lanzador
             this.lanzadorRegistroTurno.lanzar();
 
         } else if (comando.equals("ABRIR_GESTION_TURNOS")) {
-            // ✅ Delegación limpia al Lanzador
+            //  Delegación limpia al Lanzador
             this.lanzadorGestionTurnos.lanzar();
 
         } else if (comando.equals("ABRIR_REGISTRO_CONSULTA")) {
             this.lanzadorRegistroConsulta.lanzar();
 
         } else if (comando.equals("ABRIR_HISTORIA_CLINICA")) {
-            // ✅ Delegación limpia al Lanzador
+            //  Delegación limpia al Lanzador
             this.lanzadorHistoriaClinica.lanzar();
         }
         else if (comando.equals("ABRIR_REGISTRO_MASCOTA")) {
@@ -197,9 +197,9 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
             this.lanzadorConsultaPropietario.lanzar();
         }
 
-        else if (comando.equals("ABRIR_CONSULTA_TURNOS_PROPIETARIO")) {
+       /* else if (comando.equals("ABRIR_CONSULTA_TURNOS_PROPIETARIO")) {
             this.lanzadorConsultaTurnoPropietario.lanzar();
-        }
+        }*/
         else if (comando.equals("ABRIR_REGISTRO_PROPIETARIO")) {
             this.lanzadorRegistroPropietario.lanzar();
         }

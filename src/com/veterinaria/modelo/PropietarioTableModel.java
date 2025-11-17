@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class PropietarioTableModel extends AbstractTableModel {
 
     private List<Propietario> datos;
-    // Las columnas que se muestran: ID (0 - oculta), DNI(1), Apellidos(2), Nombres(3), Email(4), Telefono(5)
+
     private final String[] nombresColumna = {"ID", "DNI", "Apellidos", "Nombres", "Email", "Teléfono"};
 
     public PropietarioTableModel(List<Propietario> datos,String[] nombresColumna) {
@@ -91,6 +91,14 @@ public class PropietarioTableModel extends AbstractTableModel {
             return null;
         }
         // Devuelve el objeto, que podría ser null si se insertó incorrectamente
+        return datos.get(rowIndex);
+    }
+
+    // Si necesitas obtener el objeto Propietario completo:
+    public Propietario getPropietario(int rowIndex) {
+        if (rowIndex < 0 || rowIndex >= datos.size()) {
+            return null;
+        }
         return datos.get(rowIndex);
     }
 }

@@ -131,16 +131,10 @@ public class GestorTurno3 {
 
             String horaConSegundos = hora + ":00"; // .
 
-            // Creamos el objeto Turno y guardar
-            //Turno nuevoTurno = new Turno();
 
             Turno nuevoTurno = new Turno(idTipo, idPropietario,
                     idMascota, fechaTurnoStr, horaConSegundos);
-            /*nuevoTurno.setIdTipoConsulta(idTipo);
-            nuevoTurno.setIdPropietario(idPropietario);
-            nuevoTurno.setIdMascota(idMascota);
-            nuevoTurno.setFechaTurno(fechaTurnoStr);
-            nuevoTurno.setHora(hora + ":00"); // Hora debe ir como HH:MM:SS*/
+
 
             if (turnoDAO.guardar(nuevoTurno)) {
                 return "ÉXITO: Turno reservado con éxito para el " + fechaTurnoStr + " a las " + hora + ".";

@@ -98,14 +98,14 @@ public class ControladorRegistroMascota implements ActionListener {
         // 4. CREAR EL OBJETO MASCOTA USANDO EL CONSTRUCTOR
         try {
             Mascota nuevaMascota = new Mascota(
-                    propietarioSeleccionado.getIdPropietario(), // idPropietario
-                    nombre,                                     // nombre
-                    fechaNacimiento,                            // fechaNacimiento (LocalDate)
-                    especie,                                    // especie
-                    raza,                                       // raza
-                    sexo,                                       // sexo
-                    seniasParticulares,                         // seniasParticulares
-                    true                                        // activa (siempre true al registrar)
+                    propietarioSeleccionado.getIdPropietario(),
+                    nombre,
+                    fechaNacimiento,
+                    especie,
+                    raza,
+                    sexo,
+                    seniasParticulares,
+                    true
             );
 
             // 5. Llamada al Servicio para registrar

@@ -5,14 +5,15 @@ import java.util.List;
 
 /**
  * Modelo de tabla para la consulta de turnos por propietario.
- * Usa List<Object[]> directamente (sin DTO), para pasar los datos a la JTable.
- * Columnas: [Fecha, Hora, Tipo Consulta, Mascota]
+ * Columnas: [ID, Fecha, Hora, Tipo Consulta, Mascota, Estado]
+ * La columna ID y Estado serán ocultadas en la vista.
  */
 public class TurnoTableModelConsulta extends AbstractTableModel {
 
     // Los datos son una lista de arrays de objetos, donde cada array es una fila
     private List<Object[]> datos;
-    private final String[] columnas = {"Fecha", "Hora", "Tipo Consulta", "Mascota"};
+    // CRÍTICO: Se añade "ID" (índice 0) y "Estado" (índice 5)
+    private final String[] columnas = {"ID", "Fecha", "Hora", "Tipo Consulta", "Mascota", "Estado"};
 
     public TurnoTableModelConsulta() {
         // Inicializa la lista vacía
@@ -29,6 +30,19 @@ public class TurnoTableModelConsulta extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+    // Método para obtener el ID de un turno seleccionado (útil internamente)
+    public Integer getIdTurnoAt(int rowIndex) {
+        if (rowIndex >= 0 && rowIndex < datos.size()) {
+            // El ID está en el índice 0 de la fila Object[]
+            Object id = datos.get(rowIndex)[0];
+            if (id instanceof Integer) {
+                return (Integer) id;
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public int getRowCount() {
         return datos.size();
@@ -41,15 +55,27 @@ public class TurnoTableModelConsulta extends AbstractTableModel {
 
     @Override
     public String getColumnName(int columnIndex) {
-        return columnas[columnIndex];
+        // Se valida el índice para evitar IndexOutOfBoundsException si el modelo de columnas
+        // es accedido antes de que la vista lo tenga totalmente cargado (aunque AbstractTableModel
+        // se encarga de esto)
+        if (columnIndex >= 0 && columnIndex < columnas.length) {
+            return columnas[columnIndex];
+        }
+        return null; // O una cadena vacía, dependiendo de la política
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (rowIndex >= 0 && rowIndex < datos.size() && columnIndex >= 0 && columnIndex < columnas.length) {
-            // Devolvemos el valor de la fila (array) en la columna (índice) solicitada.
+            // Devolvemos el valor de la celda
             return datos.get(rowIndex)[columnIndex];
         }
-        return null;
+        return null; // Devuelve null si está fuera de los límites de los datos.
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        // Ninguna celda es editable en una vista de consulta
+        return false;
     }
 }

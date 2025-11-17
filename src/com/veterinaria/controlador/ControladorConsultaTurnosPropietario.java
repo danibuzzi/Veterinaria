@@ -1,6 +1,7 @@
 package com.veterinaria.controlador;
 
 
+
 import com.veterinaria.modelo.*;
 import com.veterinaria.vista.VentanaTurnosPropietario;
 
@@ -36,22 +37,45 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
      */
     private void cargarPropietarios() {
         try {
-            // 1. Obtener la lista del Service
-            // La lista viene como List<String> donde cada String es "ID;Nombre Apellido"
+            // 1. Obtener la lista de propietarios con ID
             List<String> propietarios = turnoPropietarioService.listarPropietariosConId();
 
-            // 2. Limpiar y repoblar el JComboBox
+            // 2. Vaciar el combo para evitar duplicados
             vista.getPropietarioCombo().removeAllItems();
-            vista.getPropietarioCombo().addItem("Seleccione un Propietario"); // Valor por defecto y ayuda
 
-            // 3. Añadir todos los propietarios obtenidos
-            for (String propietario : propietarios) {
-                vista.getPropietarioCombo().addItem(propietario);
+            // 3. Llenar el combo
+            if (propietarios.isEmpty()) {
+                vista.getPropietarioCombo().addItem("No hay propietarios registrados");
+                vista.getPropietarioCombo().setEnabled(false);
+            } else {
+                for (String p : propietarios) {
+                    vista.getPropietarioCombo().addItem(p);
+                }
+                vista.getPropietarioCombo().setEnabled(true);
             }
         } catch (Exception e) {
             vista.mostrarError("Error al cargar la lista de propietarios: " + e.getMessage());
-            e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Extrae el ID del propietario del String seleccionado en el JComboBox.
+     * El formato es "ID;Nombre Apellido".
+     * @param item El String seleccionado.
+     * @return El ID del propietario (int), o -1 si el formato es incorrecto.
+     */
+    private int extraerIdPropietario(String item) {
+        if (item != null && item.contains(";")) {
+            try {
+                // Divide el String en el separador ';' y toma la primera parte (el ID)
+                return Integer.parseInt(item.split(";")[0].trim());
+            } catch (NumberFormatException e) {
+                // El ID no es un número válido
+                return -1;
+            }
+        }
+        return -1; // No hay ítem seleccionado o formato incorrecto
     }
 
 
@@ -62,24 +86,16 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
         }
     }
 
+
     private void consultarTurnos() {
         String propietarioSeleccionado = (String) vista.getPropietarioCombo().getSelectedItem();
-        Date fechaDesdeDate = vista.getFechaDesdeDate();
-        String fechaDesdeSql = null;
-        int idPropietario = -1;
+        Date fechaDesdeDate = vista.getDateChooserFechaDesde().getDate();
+        String fechaDesdeSql;
 
-        // 1. Validar y obtener el ID del Propietario
-        if (propietarioSeleccionado == null || propietarioSeleccionado.equals("Seleccione un Propietario")) {
+        // 1. Validar selección de Propietario y obtener ID
+        int idPropietario = extraerIdPropietario(propietarioSeleccionado);
+        if (idPropietario <= 0) {
             vista.mostrarError("Debe seleccionar un Propietario válido.");
-            vista.getTableModel().setDatos(java.util.Collections.emptyList());
-            return;
-        }
-
-        try {
-            // El formato es "ID;Nombre Apellido". Separamos por ';' para obtener el ID.
-            idPropietario = Integer.parseInt(propietarioSeleccionado.split(";")[0].trim());
-        } catch (NumberFormatException ex) {
-            vista.mostrarError("Error al obtener el ID del propietario seleccionado.");
             vista.getTableModel().setDatos(java.util.Collections.emptyList());
             return;
         }
@@ -100,23 +116,34 @@ public class ControladorConsultaTurnosPropietario implements ActionListener {
         }
 
         // 4. Consultar al Service/Gestor con DOBLE FILTRO
-        // Esta lista contiene [Fecha, Hora, Tipo Consulta, Mascota]
-        List<Object[]> turnos = turnoPropietarioService.obtenerTurnosPorPropietario(idPropietario, fechaDesdeSql);
+        // Esta lista contiene [ID, Fecha, Hora, Tipo Consulta, Mascota, Estado]
+        List<Object[]> turnos = null;
+        try {
+            turnos = turnoPropietarioService.obtenerTurnosPorPropietario(idPropietario, fechaDesdeSql);
+        } catch (Exception e) {
+            // Manejar errores del DAO/Service (e.g., SQLException)
+            vista.mostrarError("Error al consultar la base de datos: " + e.getMessage());
+            vista.getTableModel().setDatos(java.util.Collections.emptyList());
+            return;
+        }
 
-        // 5. Actualizar la Vista
+
+        // 5. Actualizar la Vista (Modelo y Ocultar Columnas)
         vista.getTableModel().setDatos(turnos);
 
+        // CRÍTICO: Llamamos a ocultar las columnas DESPUÉS de actualizar el modelo
+        if (turnos != null && !turnos.isEmpty()) {
+            vista.ocultarColumnasTabla();
+        }
+
         // 6. Mostrar mensaje si no hay resultados
-        if (turnos.isEmpty()) {
+        if (turnos == null || turnos.isEmpty()) {
             vista.mostrarMensaje("No se encontraron turnos agendados para ese propietario a partir de la fecha seleccionada.");
         } else {
             vista.mostrarMensaje("Consulta realizada con éxito. Mostrando " + turnos.size() + " turno(s).");
         }
 
-        // Asegurarse de que la tabla se redibuje
-        SwingUtilities.invokeLater(() -> {
-            vista.getTurnosTable().revalidate();
-            vista.getTurnosTable().repaint();
-        });
+        // 7. Asegurarse de que la tabla se redibuje
+        vista.getTurnosTable().repaint();
     }
 }

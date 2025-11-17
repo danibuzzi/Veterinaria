@@ -10,7 +10,7 @@ public class LanzadorRegistroTurno implements ILanzadorModulo {
     private final GestorTurno3 gestorTurno;
     private final JDesktopPane escritorio;
 
-    //Constructor: Recibe el Gestor y el Escritorio para inyección
+    //Constructor: Recibe el Gestor y el Escritorio para inyección de dependencias
 
 
     public LanzadorRegistroTurno(GestorTurno3 gestorTurno, JDesktopPane escritorio) {

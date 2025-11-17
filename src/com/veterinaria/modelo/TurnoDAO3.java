@@ -445,7 +445,7 @@ public class TurnoDAO3 {
         List<Object[]> turnos = new ArrayList<>();
 
         // La condición de filtro incluye el idPropietario Y la fechaDesde
-        String sql = "SELECT " +
+        String sql = "SELECT t.idTurno" +
                 "t.fechaTurno, " +
                 "t.hora, " +
                 "tc.nombre AS nombreTipoConsulta, " +
@@ -465,6 +465,7 @@ public class TurnoDAO3 {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     // 1. Obtener los datos
+                    int idTurno = rs.getInt("idTurno");
                     Date fecha = rs.getDate("fechaTurno");
                     String hora = rs.getString("hora");
                     String tipo = rs.getString("nombreTipoConsulta");
@@ -475,6 +476,7 @@ public class TurnoDAO3 {
 
                     // 3. Crear el Object[]
                     Object[] fila = {
+                            idTurno,
                             fechaFormateada,
                             hora,
                             tipo,

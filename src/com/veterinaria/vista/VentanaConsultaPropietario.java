@@ -166,6 +166,8 @@ public class VentanaConsultaPropietario extends JInternalFrame {
         table.getTableHeader().setBackground(new Color(230, 230, 230));
         table.getTableHeader().setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
+
+
         table.getColumnModel().getColumn(0).setPreferredWidth(100);
         table.getColumnModel().getColumn(1).setPreferredWidth(130);
         table.getColumnModel().getColumn(2).setPreferredWidth(130);

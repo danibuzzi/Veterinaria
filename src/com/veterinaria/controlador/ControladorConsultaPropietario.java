@@ -24,7 +24,7 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
     private final JDesktopPane escritorio;
 
     // Columnas a mostrar en la grilla (DNI, Apellidos, Nombres, Email, Telefono)
-    private static final String[] COLUMNAS = {"", "DNI", "Apellidos", "Nombres", "Email", "Teléfono"};
+    private static final String[] COLUMNAS = {"ID", "DNI", "Apellidos", "Nombres", "Email", "Teléfono"};
     private static final int COLUMNA_ID = 0;
     public ControladorConsultaPropietario(VentanaConsultaPropietario vista, PropietarioService propietarioService, JDesktopPane escritorio) {
         this.vista = vista;
@@ -442,7 +442,11 @@ public class ControladorConsultaPropietario implements ActionListener, ListSelec
         if (selectedRow == -1) return;
 
         try {
-            int idPropietario = (int) vista.getTable().getValueAt(selectedRow, COLUMNA_ID);
+            Object idValue = vista.getTable().getValueAt(selectedRow, COLUMNA_ID);
+            // 1. Convertir el Object a String
+            String idPropietarioString = String.valueOf(idValue);
+            int idPropietario = Integer.parseInt(idPropietarioString);
+           // int idPropietario = (int) vista.getTable().getValueAt(selectedRow, COLUMNA_ID);
             String nombreCompleto = vista.getTable().getValueAt(selectedRow, 3).toString() + " " + vista.getTable().getValueAt(selectedRow, 2).toString(); // Nombres + Apellidos
 
             int confirm = vista.mostrarConfirmacion("¿Confirma la ELIMINACIÓN  del propietario: " + nombreCompleto + "?");

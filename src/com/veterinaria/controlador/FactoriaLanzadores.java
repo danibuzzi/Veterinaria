@@ -24,7 +24,7 @@ public class FactoriaLanzadores implements IFactoriaLanzadores {
             case "CONSULTA_FECHA":
                 //return new LanzadorGestionTurnos(gestorTurno, escritorio);
             case "GESTION_CLIENTES":
-                // 🛑 Si tuvieras un módulo de Clientes, iría aquí:
+
                 // return new LanzadorGestionClientes(gestorCliente, escritorio);
             default:
                 throw new IllegalArgumentException("Módulo no reconocido: " + modulo);
